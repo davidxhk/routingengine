@@ -1,0 +1,160 @@
+# Tests for new_support_request
+
+
+## Test Suite 1: Valid inputs
+Title            : Name, email, type index
+ID               : 1.1
+Input            : new_support_request {name:"bob", email:"bob@abc.com", type:1}
+Expected Result  : success
+Expected Payload : {<--support request json object-->}
+
+Title            : Name, email, type string
+ID               : 1.2
+Input            : new_support_request {name:"bob", email:"bob@abc.com", type:"GENERAL_ENQUIRY"}
+Expected Result  : success
+Expected Payload : {<--support request json object-->}
+
+Title            : Name, email, type, address
+ID               : 1.3
+Input            : new_support_request {name:"bob", email:"bob@abc.com", type:1, address:127.0.0.1}
+Expected Result  : success
+Expected Payload : {<--support request json object-->}
+Comments         : Address field is optional, defaults to the socket's host address
+
+
+## Test Suite 2: Errors for name input
+Title            : Missing name
+ID               : 2.1
+Input            : new_support_request {email:"bob@abc.com", type:1}
+Expected Result  : failure
+Expected Payload : "name missing"
+
+Title            : Invalid name case 1
+ID               : 2.2.1
+Input            : new_support_request {name:[], email:"bob@abc.com", type:1}
+Expected Result  : failure
+Expected Payload : "name invalid"
+
+Title            : Invalid name case 2
+ID               : 2.2.2
+Input            : new_support_request {name:{}, email:"bob@abc.com", type:1}
+Expected Result  : failure
+Expected Payload : "name invalid"
+
+
+## Test Suite 3: Errors for email input
+Title            : Missing email
+ID               : 3.1
+Input            : new_support_request {name:"bob", type:1}
+Expected Result  : failure
+Expected Payload : "email missing"
+
+Title            : Invalid email case 1
+ID               : 3.2.1
+Input            : new_support_request {name:"bob", email:[], type:1}
+Expected Result  : failure
+Expected Payload : "email invalid"
+
+Title            : Invalid email case 2
+ID               : 3.2.2
+Input            : new_support_request {name:"bob", email:{}, type:1}
+Expected Result  : failure
+Expected Payload : "email invalid"
+
+
+## Test Suite 4: Errors for type input
+Title            : Missing type
+ID               : 4.1
+Input            : new_support_request {name:"bob", email:"bob@abc.com"}
+Expected Result  : failure
+Expected Payload : "type missing"
+
+Title            : Invalid type case 1
+ID               : 4.2.1
+Input            : new_support_request {name:"bob", email:"bob@abc.com", type:[]}
+Expected Result  : failure
+Expected Payload : "type invalid"
+
+Title            : Invalid type case 2
+ID               : 4.2.2
+Input            : new_support_request {name:"bob", email:"bob@abc.com", type:{}}
+Expected Result  : failure
+Expected Payload : "type invalid"
+
+Title            : Type index out of bounds
+ID               : 4.3
+Input            : new_support_request {name:"bob", email:"bob@abc.com", type:999}
+Expected Result  : failure
+Expected Payload : "type index out of bounds"
+
+Title            : Type string invalid
+ID               : 4.4
+Input            : new_support_request {name:"bob", email:"bob@abc.com", type:"blabla"}
+Expected Result  : failure
+Expected Payload : "type string invalid"
+
+
+## Test Suite 5: Errors for address input
+Title            : Invalid address case 1
+ID               : 5.1.1
+Input            : new_support_request {name:"bob", email:"bob@abc.com", type:1, address=[]}
+Expected Result  : failure
+Expected Payload : "address invalid"
+
+Title            : Invalid address case 2
+ID               : 5.1.2
+Input            : new_support_request {name:"bob", email:"bob@abc.com", type:1, address={}}
+Expected Result  : failure
+Expected Payload : "address invalid"
+
+Title            : Invalid address case 3
+ID               : 5.1.3
+Input            : new_support_request {name:"bob", email:"bob@abc.com", type:1, address="adsflasdfmlsdf"}
+Expected Result  : failure
+Expected Payload : "address invalid"
+
+Title            : Invalid address case 4
+ID               : 5.1.4
+Input            : new_support_request {name:"bob", email:"bob@abc.com", type:1, address="999.999.999.999"}
+Expected Result  : failure
+Expected Payload : "address invalid"
+
+
+## Test Suite 6: Miscellaneous cases
+Title            : Missing input
+ID               : 6.1
+Input            : new_support_request {}
+Expected Result  : failure
+Expected Payload : "name missing"
+Comments         : Input should be parsed in this order: name, email, type
+
+Title            : Unexpected arguments
+ID               : 6.2
+Input            : new_support_request {name:"bob", email:"bob@abc.com", type:1, something:"something?"}
+Expected Result  : success
+Expected Payload : {<--support request json object-->}
+Comments         : Unexpected arguments should be ignored silently
+
+Title            : Malformed JSON object case 1
+ID               : 6.3.1
+Input            : new_support_request "testtest"
+Expected Result  : failure
+Expected Payload : "malformed arguments"
+
+Title            : Malformed JSON object case 2
+ID               : 6.3.2
+Input            : new_support_request []
+Expected Result  : failure
+Expected Payload : "malformed arguments"
+
+Title            : Malformed JSON object case 3
+ID               : 6.3.3
+Input            : new_support_request |;!/
+Expected Result  : failure
+Expected Payload : "malformed arguments"
+
+Title            : Malformed JSON object case 4
+ID               : 6.3.4
+Input            : new_support_request }}}}
+Expected Result  : failure
+Expected Payload : "malformed arguments"

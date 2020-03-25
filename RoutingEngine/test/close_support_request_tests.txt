@@ -1,0 +1,74 @@
+# Tests for close_support_request
+
+
+## Test Suite 1: Valid inputs
+Title            : Valid uuid
+ID               : 1.1
+Input            : close_support_request {uuid:"<--valid uuid string -->"}
+Expected Result  : success
+Expected Payload : {<--support request json object-->}
+
+
+## Test Suite 2: Errors for uuid input
+Title            : Missing uuid
+ID               : 2.1
+Input            : close_support_request {}
+Expected Result  : failure
+Expected Payload : "uuid missing"
+
+Title            : Invalid uuid case 1
+ID               : 2.2.1
+Input            : close_support_request {uuid:[]}
+Expected Result  : failure
+Expected Payload : "uuid invalid"
+
+Title            : Invalid uuid case 2
+ID               : 2.2.2
+Input            : close_support_request {uuid:{}}
+Expected Result  : failure
+Expected Payload : "uuid invalid"
+
+Title            : Invalid uuid case 3
+ID               : 2.2.3
+Input            : close_support_request {uuid:"hahaha test test"}
+Expected Result  : failure
+Expected Payload : "uuid invalid"
+
+
+## Test Suite 3: Miscellaneous cases
+Title            : Missing input
+ID               : 3.1
+Input            : close_support_request {}
+Expected Result  : failure
+Expected Payload : "uuid missing"
+
+Title            : Unexpected arguments
+ID               : 3.2
+Input            : close_support_request {uuid:"<--valid uuid string -->", something:"something?"}
+Expected Result  : success
+Expected Payload : {<--support request json object-->}
+Comments      : Unexpected arguments should be ignored silently
+
+Title            : Malformed JSON object case 1
+ID               : 3.3.1
+Input            : close_support_request "testtest"
+Expected Result  : failure
+Expected Payload : "malformed arguments"
+
+Title            : Malformed JSON object case 2
+ID               : 3.3.2
+Input            : close_support_request []
+Expected Result  : failure
+Expected Payload : "malformed arguments"
+
+Title            : Malformed JSON object case 3
+ID               : 3.3.3
+Input            : close_support_request |;!/
+Expected Result  : failure
+Expected Payload : "malformed arguments"
+
+Title            : Malformed JSON object case 4
+ID               : 3.3.4
+Input            : close_support_request }}}}
+Expected Result  : failure
+Expected Payload : "malformed arguments"
