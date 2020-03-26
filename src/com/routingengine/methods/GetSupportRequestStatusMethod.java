@@ -24,6 +24,9 @@ public class GetSupportRequestStatusMethod extends MethodManager.Method
         JsonObject supportRequestStatus = new JsonObject();
         int totalSupportRequestCount = 0;
         
+        JsonArray closedSupportRequestsArray = new JsonArray();
+        int closedSupportRequestCount = 0;
+        
         JsonArray openSupportRequestsArray = new JsonArray();
         int openSupportRequestCount = 0;
         
@@ -38,23 +41,31 @@ public class GetSupportRequestStatusMethod extends MethodManager.Method
             
             totalSupportRequestCount++;
             
-            if (supportRequest.isOpen()) {
+            if (!supportRequest.isOpen()) {
+                closedSupportRequestsArray.add(supportRequestUUIDString);
+                closedSupportRequestCount++;
+            }
+            
+            else if (supportRequest.isWaiting()) {
+                waitingSupportRequestsArray.add(supportRequestUUIDString);
+                waitingSupportRequestCount++;
+            }
+            
+            else if (supportRequest.hasAssignedAgent()) {
+                assignedSupportRequestsArray.add(supportRequestUUIDString);
+                assignedSupportRequestCount++;
+            }
+            
+            else {
                 openSupportRequestsArray.add(supportRequestUUIDString);
                 openSupportRequestCount++;
-                
-                if (supportRequest.isWaiting()) {
-                    waitingSupportRequestsArray.add(supportRequestUUIDString);
-                    waitingSupportRequestCount++;
-                }
-                
-                else if (supportRequest.hasAssignedAgent()) {
-                    assignedSupportRequestsArray.add(supportRequestUUIDString);
-                    assignedSupportRequestCount++;
-                }
             }
         }
         
-        supportRequestStatus.addProperty("total", totalSupportRequestCount);
+        JsonObject closedSupportRequestsStatus = new JsonObject();
+        closedSupportRequestsStatus.addProperty("count", closedSupportRequestCount);
+        closedSupportRequestsStatus.add("uuids", closedSupportRequestsArray);
+        supportRequestStatus.add("closed", closedSupportRequestsStatus);
         
         JsonObject openSupportRequestsStatus = new JsonObject();
         openSupportRequestsStatus.addProperty("count", openSupportRequestCount);
@@ -70,6 +81,8 @@ public class GetSupportRequestStatusMethod extends MethodManager.Method
         assignedSupportRequestsStatus.addProperty("count", assignedSupportRequestCount);
         assignedSupportRequestsStatus.add("uuids", assignedSupportRequestsArray);
         supportRequestStatus.add("assigned", assignedSupportRequestsStatus);
+        
+        supportRequestStatus.addProperty("total", totalSupportRequestCount);
         
         return supportRequestStatus;
     }

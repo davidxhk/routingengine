@@ -24,27 +24,31 @@ public class GetStatusOverviewMethod extends MethodManager.Method
         Agent[] agents = routingEngine.getAgents();
         
         int totalAgentCount = 0;
-        int activeAgentCount = 0;
+        int inactiveAgentCount = 0;
         int availableAgentCount = 0;
+        int waitingAgentCount = 0;
         int assignedAgentCount = 0;
         
         for (Agent agent : agents) {
             totalAgentCount++;
             
-            if (agent.isActive()) {
-                activeAgentCount++;
-                
-                if (agent.isAvailable())
-                    availableAgentCount++;
-                
-                else if (agent.hasAssignedSupportRequest())
-                    assignedAgentCount++;
-            }    
+            if (!agent.isActivated())
+                inactiveAgentCount++;
+            
+            else if (agent.isWaiting())
+                waitingAgentCount++;
+            
+            else if (agent.hasAssignedSupportRequest())
+                assignedAgentCount++;
+            
+            else
+                availableAgentCount++;
         }
         
         SupportRequest[] supportRequests = routingEngine.getSupportRequests();
         
         int totalSupportRequestCount = 0;
+        int closedSupportRequestCount = 0;
         int openSupportRequestCount = 0;
         int waitingSupportRequestCount = 0;
         int assignedSupportRequestCount = 0;
@@ -52,29 +56,33 @@ public class GetStatusOverviewMethod extends MethodManager.Method
         for (SupportRequest supportRequest : supportRequests) {
             totalSupportRequestCount++;
             
-            if (supportRequest.isOpen()) {
+            if (!supportRequest.isOpen())
+                closedSupportRequestCount++;
+            
+            else if (supportRequest.isWaiting())
+                waitingSupportRequestCount++;
+            
+            else if (supportRequest.hasAssignedAgent())
+                assignedSupportRequestCount++;
+            
+            else
                 openSupportRequestCount++;
-                
-                if (supportRequest.isWaiting())
-                    waitingSupportRequestCount++;
-                
-                else if (supportRequest.hasAssignedAgent())
-                    assignedSupportRequestCount++;
-            }
         }
         
         JsonObject agentStatus = new JsonObject();
-        agentStatus.addProperty("total", totalAgentCount);
-        agentStatus.addProperty("active", activeAgentCount);
+        agentStatus.addProperty("inactive", inactiveAgentCount);
         agentStatus.addProperty("available", availableAgentCount);
+        agentStatus.addProperty("waiting", waitingAgentCount);
         agentStatus.addProperty("assigned", assignedAgentCount);
+        agentStatus.addProperty("total", totalAgentCount);
         status.add("agent", agentStatus);
         
         JsonObject supportRequestStatus = new JsonObject();
-        supportRequestStatus.addProperty("total", totalSupportRequestCount);
+        supportRequestStatus.addProperty("closed", closedSupportRequestCount);
         supportRequestStatus.addProperty("open", openSupportRequestCount);
         supportRequestStatus.addProperty("waiting", waitingSupportRequestCount);
         supportRequestStatus.addProperty("assigned", assignedSupportRequestCount);
+        supportRequestStatus.addProperty("total", totalSupportRequestCount);
         status.add("support_request", supportRequestStatus);
         
         JsonObject queueStatus = new JsonObject();
