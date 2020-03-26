@@ -35,22 +35,22 @@ public class SupportRequest extends InetEntity
         return user;
     }
 
-    public Type getType()
+    public synchronized Type getType()
     {
         return requestType;
     }
     
-    public void setType(String requestTypeString)
+    public synchronized void setType(String requestTypeString)
     {
         setType(SupportRequest.Type.of(requestTypeString));
     }
     
-    public void setType(Integer requestTypeIndex)
+    public synchronized void setType(Integer requestTypeIndex)
     {
         setType(SupportRequest.Type.of(requestTypeIndex));
     }
 
-    public void setType(Type requestType)
+    public synchronized void setType(Type requestType)
     {
         if (requestType == null)
             throw new IllegalArgumentException("type missing");
@@ -58,80 +58,76 @@ public class SupportRequest extends InetEntity
         this.requestType = requestType;
     }
 
-    public boolean isOpen()
+    public synchronized boolean isOpen()
     {
         return open;
     }
 
-    public void close()
+    public synchronized void close()
     {
         open = false;
     }
     
-    public boolean isWaiting()
+    public synchronized boolean isWaiting()
     {
         return waiting;
     }
 
-    public void startWaiting()
+    public synchronized void startWaiting()
         throws InterruptedException, TimeoutException
     {
         startWaiting(TIMEOUT_MILLIS);
     }
     
-    public void startWaiting(long timeout_millis)
+    public synchronized void startWaiting(long timeout_millis)
         throws InterruptedException, TimeoutException
     {
-        synchronized(this) {
-            waiting = true;
-            
-            wait(timeout_millis);
-            
-            waiting = false;
-            
-            if (notified)
-                notified = false;
-            
-            else
-                throw new TimeoutException();
-        }
+        waiting = true;
+        
+        wait(timeout_millis);
+        
+        waiting = false;
+        
+        if (notified)
+            notified = false;
+        
+        else
+            throw new TimeoutException();
     }
     
-    public void stopWaiting()
+    public synchronized void stopWaiting()
     {
-        synchronized(this) {
-            notified = true;
-            
-            notify();
-        }
+        notified = true;
+        
+        notify();
     }
     
-    public Agent getAssignedAgent()
+    public synchronized Agent getAssignedAgent()
     {
         return assignedAgent;
     }
 
-    public void setAssignedAgent(Agent agent)
+    public synchronized void setAssignedAgent(Agent agent)
     {    
         assignedAgent = agent;
     }
 
-    public boolean hasAssignedAgent()
+    public synchronized boolean hasAssignedAgent()
     {
         return assignedAgent != null;
     }
     
-    public int getPriority()
+    public synchronized int getPriority()
     {
         return priority;
     }
 
-    public void incrementPriority()
+    public synchronized void incrementPriority()
     {
         priority++;
     }
     
-    public void doublePriority()
+    public synchronized void doublePriority()
     {
         priority *= 2;
     }
@@ -158,7 +154,7 @@ public class SupportRequest extends InetEntity
             return 0;
     }
     
-    public JsonObject toJson()
+    public synchronized JsonObject toJson()
     {
         JsonObject supportRequestJsonObject = new JsonObject();
         

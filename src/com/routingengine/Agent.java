@@ -11,8 +11,9 @@ import com.routingengine.json.JsonUtils;
 public class Agent extends InetEntity
 {
     private volatile HashMap<SupportRequest.Type, Boolean> skills;
-    private volatile boolean active;
+    private volatile boolean activated;
     private volatile boolean available;
+    private volatile boolean waiting;
     private volatile SupportRequest assignedSupportRequest;
     
     private Agent(AgentBuilder builder)
@@ -25,20 +26,21 @@ public class Agent extends InetEntity
         
         setSkills(builder.skills);
         
-        active = true;
+        activated = true;
         available = false;
+        waiting = false;
         assignedSupportRequest = null;
     }
     
-    public boolean ableToService(SupportRequest.Type requestType)
+    public synchronized boolean ableToService(SupportRequest.Type requestType)
     {
-        if (!active)
+        if (!activated)
             return false;
         
         return skills.get(requestType);
     }
     
-    public SupportRequest.Type[] getSkills()
+    public synchronized SupportRequest.Type[] getSkills()
     {
         return skills.entrySet().stream()
                 .filter(entry -> entry.getValue())
@@ -46,17 +48,17 @@ public class Agent extends InetEntity
                 .toArray(SupportRequest.Type[]::new);
     }
     
-    public void setSkill(int requestTypeIndex, Boolean ableToService)
+    public synchronized void setSkill(int requestTypeIndex, Boolean ableToService)
     {
         setSkill(SupportRequest.Type.of(requestTypeIndex), ableToService);
     }
     
-    public void setSkill(String requestTypeString, Boolean ableToService)
+    public synchronized void setSkill(String requestTypeString, Boolean ableToService)
     {
         setSkill(SupportRequest.Type.of(requestTypeString), ableToService);
     }
     
-    public void setSkill(SupportRequest.Type requestType, Boolean ableToService)
+    public synchronized void setSkill(SupportRequest.Type requestType, Boolean ableToService)
     {
         if (requestType == null)
             throw new IllegalArgumentException("skill missing");
@@ -67,7 +69,7 @@ public class Agent extends InetEntity
         skills.put(requestType, ableToService);
     }
     
-    public void setSkills(Map<String, Boolean> skills)
+    public synchronized void setSkills(Map<String, Boolean> skills)
     {
         if (skills == null)
             throw new IllegalArgumentException("skills missing");
@@ -79,7 +81,7 @@ public class Agent extends InetEntity
         ensureAtLeastOneSkill();
     }
     
-    private void ensureAtLeastOneSkill()
+    private synchronized void ensureAtLeastOneSkill()
     {
         for (boolean ableToService : skills.values()) {
             if (ableToService)
@@ -89,41 +91,69 @@ public class Agent extends InetEntity
         throw new IllegalArgumentException("skill missing");
     }
     
-    public boolean isActive()
+    public synchronized void activate()
     {
-        return active;
+        activated = true;
     }
     
-    public void setInactive()
+    public synchronized void deactivate()
     {
         available = false;
-        active = false;
+        activated = false;
     }
     
-    public boolean isAvailable()
+    public synchronized boolean isActivated()
     {
-        return available;
+        return activated;
     }
     
-    public void setAvailability(Boolean isAvailable)
+    public synchronized void setAvailability(Boolean isAvailable)
     {
         if (isAvailable == null)
             throw new IllegalArgumentException("available missing");
         
-        if (!active)
+        if (!activated)
             return;
         
         available = isAvailable;
     }
     
-    public SupportRequest getAssignedSupportRequest()
+    public synchronized boolean isAvailable()
+    {
+        return available;
+    }
+    
+    public synchronized void startWaiting()
+    {
+        if (!activated)
+            return;
+        
+        waiting = true;
+        available = false;
+    }
+    
+    public synchronized void stopWaiting()
+    {
+        if (!activated)
+            return;
+        
+        waiting = false;
+        available = true;
+    }
+    
+    public synchronized boolean isWaiting()
+    {
+        return waiting;
+    }
+    
+    public synchronized SupportRequest getAssignedSupportRequest()
     {
         return assignedSupportRequest;
     }
     
-    public void setAssignedSupportRequest(SupportRequest supportRequest)
+    public synchronized void setAssignedSupportRequest(SupportRequest supportRequest)
     {
-        if (!active)
+        if (!activated)
             return;
         
         assignedSupportRequest = supportRequest;
@@ -131,12 +161,12 @@ public class Agent extends InetEntity
         available = !hasAssignedSupportRequest();
     }
     
-    public boolean hasAssignedSupportRequest()
+    public synchronized boolean hasAssignedSupportRequest()
     { 
         return assignedSupportRequest != null;
     }
     
-    public JsonObject toJson()
+    public synchronized JsonObject toJson()
     {
         JsonObject agentJsonObject = new JsonObject();
         
@@ -146,7 +176,7 @@ public class Agent extends InetEntity
         
         agentJsonObject.add("skills", new Gson().toJsonTree(getSkills()).getAsJsonArray());
         
-        agentJsonObject.addProperty("active", active);
+        agentJsonObject.addProperty("activated", activated);
         
         agentJsonObject.addProperty("available", available);
         
