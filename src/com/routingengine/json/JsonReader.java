@@ -11,60 +11,60 @@ import com.routingengine.client.ConnectionHandler;
 
 
 public class JsonReader
-  implements Closeable
+    implements Closeable
 {
-  private InputStream inputStream;
-  private InputStreamReader inputStreamReader;
-  private com.google.gson.stream.JsonReader jsonReader;
-  
-  public JsonReader(InputStream inputStream)
-  {    
-    this.inputStream = inputStream;
-    pipeInputStream();
-  }
-  
-  public final boolean ready()
-    throws IOException
-  {
-    return inputStreamReader.ready();
-  }
+    private InputStream inputStream;
+    private InputStreamReader inputStreamReader;
+    private com.google.gson.stream.JsonReader jsonReader;
+    
+    public JsonReader(InputStream inputStream)
+    {        
+        this.inputStream = inputStream;
+        pipeInputStream();
+    }
+    
+    public final boolean ready()
+        throws IOException
+    {
+        return inputStreamReader.ready();
+    }
 
-  public final void pipeInputStream()
-  {
-    inputStreamReader = new InputStreamReader(inputStream);
+    public final void pipeInputStream()
+    {
+        inputStreamReader = new InputStreamReader(inputStream);
+        
+        jsonReader = new com.google.gson.stream.JsonReader(inputStreamReader);
+        jsonReader.setLenient(true);
+    }
     
-    jsonReader = new com.google.gson.stream.JsonReader(inputStreamReader);
-    jsonReader.setLenient(true);
-  }
-  
-  public final String readString()
-    throws IOException
-  {
-    return jsonReader.nextString();
-  }
-  
-  public final JsonObject parseJsonObject()
-  {
-    JsonElement jsonElement = JsonParser.parseReader(jsonReader);
+    public final String readString()
+        throws IOException
+    {
+        return jsonReader.nextString();
+    }
     
-    return JsonUtils.castToJsonObject(jsonElement);
-  }
-  
-  public final void clearInputStream()
-    throws IOException
-  {
-    while (inputStreamReader.ready() && inputStreamReader.skip(1) != 1)
-      ;
+    public final JsonObject parseJsonObject()
+    {
+        JsonElement jsonElement = JsonParser.parseReader(jsonReader);
+        
+        return JsonUtils.castToJsonObject(jsonElement);
+    }
     
-    pipeInputStream();
-  }
-  
-  @Override
-  public final void close()
-    throws IOException
-  {
-    ConnectionHandler.closeQuietly(inputStream);
-    ConnectionHandler.closeQuietly(inputStreamReader);
-    ConnectionHandler.closeQuietly(jsonReader);
-  }
+    public final void clearInputStream()
+        throws IOException
+    {
+        while (inputStreamReader.ready() && inputStreamReader.skip(1) != 1)
+            ;
+        
+        pipeInputStream();
+    }
+    
+    @Override
+    public final void close()
+        throws IOException
+    {
+        ConnectionHandler.closeQuietly(inputStream);
+        ConnectionHandler.closeQuietly(inputStreamReader);
+        ConnectionHandler.closeQuietly(jsonReader);
+    }
 }

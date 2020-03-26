@@ -7,20 +7,20 @@ import com.routingengine.SupportRequest;
 
 public class RemoveSupportRequestMethod extends CloseSupportRequestMethod
 {
-  @Override
-  public JsonElement handle(JsonObject arguments)
-  {
-    SupportRequest supportRequest = getSupportRequest(arguments);
+    @Override
+    public JsonElement handle(JsonObject arguments)
+    {
+        SupportRequest supportRequest = getSupportRequest(arguments);
+        
+        removeSupportRequest(supportRequest);
+        
+        return supportRequest.toJson();
+    }
     
-    removeSupportRequest(supportRequest);
-    
-    return supportRequest.toJson();
-  }
-  
-  public void removeSupportRequest(SupportRequest supportRequest)
-  {
-    closeSupportRequest(supportRequest);
-    
-    routingEngine.removeSupportRequest(supportRequest);
-  }
+    public void removeSupportRequest(SupportRequest supportRequest)
+    {
+        closeSupportRequest(supportRequest);
+        
+        routingEngine.removeSupportRequest(supportRequest);
+    }
 }

@@ -8,19 +8,19 @@ import com.routingengine.json.JsonUtils;
 
 
 public class CheckAgentMethod extends MethodManager.Method
-{  
-  @Override
-  public JsonElement handle(JsonObject arguments)
-  {
-    Agent agent = getAgent(arguments);
+{    
+    @Override
+    public JsonElement handle(JsonObject arguments)
+    {
+        Agent agent = getAgent(arguments);
+        
+        return agent.toJson();
+    }
     
-    return agent.toJson();
-  }
-  
-  public Agent getAgent(JsonObject arguments)
-  {
-    String agentUUIDString = JsonUtils.getAsString(arguments, "uuid");
-    
-    return routingEngine.getAgent(agentUUIDString);
-  }
+    public Agent getAgent(JsonObject arguments)
+    {
+        String agentUUIDString = JsonUtils.getAsString(arguments, "uuid");
+        
+        return routingEngine.getAgent(agentUUIDString);
+    }
 }

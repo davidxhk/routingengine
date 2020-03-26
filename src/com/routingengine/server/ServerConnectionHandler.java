@@ -12,57 +12,59 @@ import com.routingengine.json.JsonResponse;
 
 public final class ServerConnectionHandler extends ConnectionHandler
 {
-  private final MethodManager methodManager;
-  
-  ServerConnectionHandler(Socket socket, RoutingEngine routingEngine)
-    throws IOException
-  {
-    connect(socket);
+    private final MethodManager methodManager;
     
-    methodManager = new MethodManager(routingEngine);
-  }
-  
-  @Override
-  protected final void runMainLoop()
-    throws IOException, InterruptedException
-  {
-    while (socket.isConnected() && !Thread.interrupted()) {
-      try {
-        waitForInput();
-      }
-      
-      catch (InterruptedException exception) {
-        JsonResponse.failedToService(null, "server connection handler interrupted while waiting for input")
-          .publish(jsonWriter);
+    ServerConnectionHandler(Socket socket, RoutingEngine routingEngine)
+        throws IOException
+    {
+        connect(socket);
         
-        Thread.currentThread().interrupt();
-        
-        throw exception;
-      }
-      
-      JsonRequest jsonRequest = new JsonRequest();
-      
-      try {
-        jsonRequest.read(jsonReader);
-      }
-      
-      catch (JsonProtocolException exception) {
-        JsonResponse.failedToService(null, exception.getMessage())
-          .publish(jsonWriter);
-        
-        continue;
-      }
-      
-      if (jsonRequest.getMethod().matches("new_agent|new_support_request")) {
-        if (!jsonRequest.hasArgument("address"))
-          jsonRequest.setArgument("address", getAddress());
-      }
-      
-      JsonResponse jsonResponse = new JsonResponse();
-      
-      jsonRequest.service(methodManager, jsonResponse);
-      
-      jsonResponse.publish(jsonWriter);
+        methodManager = new MethodManager(routingEngine);
     }
-  }
+    
+    @Override
+    protected final void runMainLoop()
+        throws IOException, InterruptedException
+    {
+        while (socket.isConnected() && !Thread.interrupted()) {
+            try {
+                waitForInput();
+            }
+            
+            catch (InterruptedException exception) {
+                JsonResponse
+                    .failure("server connection handler interrupted while waiting for input")
+                    .writeSafe(jsonWriter);
+                
+                Thread.currentThread().interrupt();
+                
+                throw exception;
+            }
+            
+            JsonRequest jsonRequest = new JsonRequest();
+            
+            try {
+                jsonRequest.read(jsonReader);
+            }
+            
+            catch (JsonProtocolException exception) {
+                JsonResponse
+                    .failure(exception.getMessage())
+                    .writeSafe(jsonWriter);
+                
+                continue;
+            }
+            
+            if (jsonRequest.getMethod().matches("new_agent|new_support_request")) {
+                if (!jsonRequest.hasArgument("address"))
+                    jsonRequest.setArgument("address", getAddress());
+            }
+            
+            JsonResponse jsonResponse = new JsonResponse();
+            
+            jsonRequest.service(methodManager, jsonResponse);
+            
+            jsonResponse.writeSafe(jsonWriter);
+        }
+    }
 }

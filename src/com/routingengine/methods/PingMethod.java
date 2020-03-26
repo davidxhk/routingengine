@@ -8,16 +8,16 @@ import com.routingengine.MethodManager;
 
 public class PingMethod extends MethodManager.Method
 {
-  @Override
-  public JsonElement handle(JsonObject arguments)
-  {
-    JsonElement payload = ping();
+    @Override
+    public JsonElement handle(JsonObject arguments)
+    {
+        JsonElement payload = ping();
+        
+        return payload;
+    }
     
-    return payload;
-  }
-  
-  public JsonElement ping()
-  {
-    return new JsonPrimitive("pong");
-  }
+    public JsonElement ping()
+    {
+        return new JsonPrimitive("pong");
+    }
 }

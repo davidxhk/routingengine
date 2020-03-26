@@ -8,23 +8,23 @@ import com.routingengine.SupportRequest;
 
 public class NewSupportRequestMethod extends MethodManager.Method
 {
-  @Override
-  public JsonElement handle(JsonObject arguments)
-  {
-    SupportRequest supportRequest = newSupportRequest(arguments);
+    @Override
+    public JsonElement handle(JsonObject arguments)
+    {
+        SupportRequest supportRequest = newSupportRequest(arguments);
+        
+        addSupportRequest(supportRequest);
+        
+        return supportRequest.toJson();
+    }
     
-    addSupportRequest(supportRequest);
+    public SupportRequest newSupportRequest(JsonObject arguments)
+    {
+        return SupportRequest.fromJson(arguments);
+    }
     
-    return supportRequest.toJson();
-  }
-  
-  public SupportRequest newSupportRequest(JsonObject arguments)
-  {
-    return SupportRequest.fromJson(arguments);
-  }
-  
-  public void addSupportRequest(SupportRequest supportRequest)
-  {
-    routingEngine.addSupportRequest(supportRequest);
-  }
+    public void addSupportRequest(SupportRequest supportRequest)
+    {
+        routingEngine.addSupportRequest(supportRequest);
+    }
 }

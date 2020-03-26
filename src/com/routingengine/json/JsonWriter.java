@@ -11,51 +11,51 @@ import com.routingengine.client.ConnectionHandler;
 
 
 public class JsonWriter
-  implements Closeable
+    implements Closeable
 {
-  private final OutputStream outputStream;
-  private final OutputStreamWriter outputStreamWriter;
-  private final Gson gson;
-  
-  public JsonWriter(OutputStream outputStream)
-  {  
-    this.outputStream = outputStream;
-    outputStreamWriter = new OutputStreamWriter(outputStream);
+    private final OutputStream outputStream;
+    private final OutputStreamWriter outputStreamWriter;
+    private final Gson gson;
     
-    gson = new GsonBuilder().setPrettyPrinting().create();
-  }
-  
-  public final void writeString(String string)
-    throws IOException
-  {
-    outputStreamWriter.write(string);
-  }
-  
-  public final void writeLine(String line)
-    throws IOException
-  {
-    outputStreamWriter.write(line);
-    outputStreamWriter.append("\n");
-  }
-  
-  public final void writeJsonObject(JsonObject jsonObject)
-    throws IOException
-  {
-    gson.toJson(jsonObject, outputStreamWriter);
-    outputStreamWriter.append("\n");
-  }
-  
-  public final void flush()
-    throws IOException
-  {
-    outputStreamWriter.flush();
-  }
-  
-  @Override
-  public void close()
-    throws IOException
-  {
-    ConnectionHandler.closeQuietly(outputStream);
-    ConnectionHandler.closeQuietly(outputStreamWriter);
-  }
+    public JsonWriter(OutputStream outputStream)
+    {    
+        this.outputStream = outputStream;
+        outputStreamWriter = new OutputStreamWriter(outputStream);
+        
+        gson = new GsonBuilder().setPrettyPrinting().create();
+    }
+    
+    public final void writeString(String string)
+        throws IOException
+    {
+        outputStreamWriter.write(string);
+    }
+    
+    public final void writeLine(String line)
+        throws IOException
+    {
+        outputStreamWriter.write(line);
+        outputStreamWriter.append("\n");
+    }
+    
+    public final void writeJsonObject(JsonObject jsonObject)
+        throws IOException
+    {
+        gson.toJson(jsonObject, outputStreamWriter);
+        outputStreamWriter.append("\n");
+    }
+    
+    public final void flush()
+        throws IOException
+    {
+        outputStreamWriter.flush();
+    }
+    
+    @Override
+    public void close()
+        throws IOException
+    {
+        ConnectionHandler.closeQuietly(outputStream);
+        ConnectionHandler.closeQuietly(outputStreamWriter);
+    }
 }

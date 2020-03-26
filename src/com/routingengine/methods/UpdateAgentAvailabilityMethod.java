@@ -8,20 +8,20 @@ import com.routingengine.json.JsonUtils;
 
 public class UpdateAgentAvailabilityMethod extends CheckAgentMethod
 {
-  @Override
-  public JsonElement handle(JsonObject arguments)
-  {
-    Agent agent = getAgent(arguments);
+    @Override
+    public JsonElement handle(JsonObject arguments)
+    {
+        Agent agent = getAgent(arguments);
+        
+        updateAgentAvailability(agent, arguments);
+        
+        return agent.toJson();
+    }
     
-    updateAgentAvailability(agent, arguments);
-    
-    return agent.toJson();
-  }
-  
-  public static void updateAgentAvailability(Agent agent, JsonObject arguments)
-  {
-    Boolean isAvailable = JsonUtils.getAsBoolean(arguments, "available");
-    
-    agent.setAvailability(isAvailable);
-  }
+    public static void updateAgentAvailability(Agent agent, JsonObject arguments)
+    {
+        Boolean isAvailable = JsonUtils.getAsBoolean(arguments, "available");
+        
+        agent.setAvailability(isAvailable);
+    }
 }

@@ -7,25 +7,25 @@ import com.routingengine.Agent;
 
 public class RemoveAgentMethod extends CheckAgentMethod
 {
-  @Override
-  public JsonElement handle(JsonObject arguments)
-  {
-    Agent agent = getAgent(arguments);
-    
-    removeAgent(agent);
-    
-    return agent.toJson();
-  }
-  
-  public void removeAgent(Agent agent)
-  {
-    routingEngine.removeAgent(agent);
-    
-    if (agent.hasAssignedSupportRequest()) {
-      agent.getAssignedSupportRequest().setAssignedAgent(null);
-      agent.setAssignedSupportRequest(null);
+    @Override
+    public JsonElement handle(JsonObject arguments)
+    {
+        Agent agent = getAgent(arguments);
+        
+        removeAgent(agent);
+        
+        return agent.toJson();
     }
     
-    agent.setInactive();
-  }
+    public void removeAgent(Agent agent)
+    {
+        routingEngine.removeAgent(agent);
+        
+        if (agent.hasAssignedSupportRequest()) {
+            agent.getAssignedSupportRequest().setAssignedAgent(null);
+            agent.setAssignedSupportRequest(null);
+        }
+        
+        agent.setInactive();
+    }
 }

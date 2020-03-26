@@ -7,23 +7,23 @@ import com.routingengine.Agent;
 
 public class DropSupportRequestMethod extends CheckAgentMethod
 {
-  @Override
-  public JsonElement handle(JsonObject arguments)
-  {
-    Agent agent = getAgent(arguments);
+    @Override
+    public JsonElement handle(JsonObject arguments)
+    {
+        Agent agent = getAgent(arguments);
+        
+        dropSupportRequest(agent);
+        
+        return agent.toJson();
+    }
     
-    dropSupportRequest(agent);
-    
-    return agent.toJson();
-  }
-  
-  public static void dropSupportRequest(Agent agent)
-  {
-    if (!agent.hasAssignedSupportRequest())
-      throw new IllegalStateException("agent has no assigned request");
-    
-    agent.getAssignedSupportRequest().doublePriority();
-    agent.getAssignedSupportRequest().setAssignedAgent(null);
-    agent.setAssignedSupportRequest(null);
-  }
+    public static void dropSupportRequest(Agent agent)
+    {
+        if (!agent.hasAssignedSupportRequest())
+            throw new IllegalStateException("agent has no assigned request");
+        
+        agent.getAssignedSupportRequest().doublePriority();
+        agent.getAssignedSupportRequest().setAssignedAgent(null);
+        agent.setAssignedSupportRequest(null);
+    }
 }
