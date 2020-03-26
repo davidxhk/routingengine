@@ -21,8 +21,8 @@ public class TakeSupportRequestMethod extends CheckAgentMethod
     
     public void takeSupportRequest(Agent agent)
     {
-        if (!agent.isActive())
-            throw new IllegalStateException("agent not active anymore");
+        if (!agent.isActivated())
+            throw new IllegalStateException("agent not activated");
         
         if (!agent.isAvailable())
             throw new IllegalStateException("agent unavailable");
@@ -31,7 +31,11 @@ public class TakeSupportRequestMethod extends CheckAgentMethod
             throw new IllegalStateException("agent servicing another request");
         
         try {
+            agent.startWaiting();
+            
             SupportRequest supportRequest = routingEngine.takeFromQueue(agent);
+            
+            agent.stopWaiting();
             
             supportRequest.setAssignedAgent(agent);
             
@@ -41,10 +45,14 @@ public class TakeSupportRequestMethod extends CheckAgentMethod
         }
         
         catch (TimeoutException exception) {
+            agent.stopWaiting();
+            
             throw new IllegalStateException("take support request timeout");
         }
         
         catch (InterruptedException exception) {
+            agent.stopWaiting();
+            
             Thread.currentThread().interrupt();
             
             throw new IllegalStateException("take support request interrupted");

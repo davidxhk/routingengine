@@ -26,6 +26,6 @@ public class RemoveAgentMethod extends CheckAgentMethod
             agent.setAssignedSupportRequest(null);
         }
         
-        agent.setInactive();
+        agent.deactivate();
     }
 }
