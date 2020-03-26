@@ -26,7 +26,7 @@ With the necessary information, a [*new support request*][new_support_request] c
 
 A **UUID** (Universally Unique ID) will be assigned to the support request, which will be required to make further requests to the server.
 
-Once the support request has been created, an agent **with the required skillset** to cater to the type of the support request needs to be assigned.
+Once the support request has been created, an agent **with the required skillset** needs to be assigned to the support request to cater to its type.
 
 There may not be enough available agents at the moment, so the support request needs to [*wait for an agent*][wait_for_agent].
 
@@ -34,7 +34,7 @@ If the support request has been waiting for a certain period of time (30 seconds
 
 When an agent has finally been assigned, the customer's web client will be connected to the agent through **Rainbow Unified Communications Platform**.
 
-Sometimes, an administrator might want to [*check the status of his/her support request*][check_support_request].
+Sometimes, an *administrator* might want to [*check the status of a particular support request*][check_support_request].
 
 Rarely, the customer might want to [*change the type of his/her support request*][change_support_request_type].
 
@@ -65,7 +65,7 @@ The agent can then proceed to service the customer's support request on his **Ra
 
 In some occasions, the agent might be unable to service the customer's support request due to certain reasons, and has to [*drop the support request*][drop_support_request].
 
-The support request will have to wait for another agent, but its priority will be **doubled**.
+The support request will have to [wait for another agent][wait_for_agent], but its priority will be **doubled**.
 
 However, in most occasions, the agent should be able to service the customer's support request successfully, and he/she may proceed to [close the support request][close_support_request].
 
@@ -134,6 +134,13 @@ Lastly, if the administrator would just like to have a summary of all the number
 [get_agent_status]: https://github.com/han-keong/routingengine/blob/master/test/admin_methods/get_agent_status_tests.md
 [get_queue_status]: https://github.com/han-keong/routingengine/blob/master/test/admin_methods/get_queue_status_tests.md
 [get_status_overview]: https://github.com/han-keong/routingengine/blob/master/test/admin_methods/get_status_overview_tests.md
+
+
+
+
+
+
+
 
 
 
