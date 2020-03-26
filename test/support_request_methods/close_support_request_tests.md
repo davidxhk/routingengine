@@ -1,4 +1,4 @@
-# Tests for close_support_request
+# Tests for `close_support_request`
 
 ## Contents
 The following types of tests for `close_support_request` are provided in this test suite.
