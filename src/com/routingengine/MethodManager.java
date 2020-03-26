@@ -21,6 +21,7 @@ public final class MethodManager
             Map.entry("remove_support_request",      "RemoveSupportRequestMethod"),
             Map.entry("new_agent",                   "NewAgentMethod"),
             Map.entry("check_agent",                 "CheckAgentMethod"),
+            Map.entry("activate_agent",              "ActivateAgentMethod"),
             Map.entry("update_agent_skills",         "UpdateAgentSkillsMethod"),
             Map.entry("update_agent_availability",   "UpdateAgentAvailabilityMethod"),
             Map.entry("take_support_request",        "TakeSupportRequestMethod"),
