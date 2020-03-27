@@ -273,7 +273,7 @@ public abstract class ClientConnectionHandler extends ConnectionHandler
         return awaitResponse();
     }
     
-    private final JsonResponse awaitResponse()
+    protected final JsonResponse awaitResponse()
         throws IOException, InterruptedException
     {
         waitForInput();
