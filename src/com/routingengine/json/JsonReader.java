@@ -1,17 +1,14 @@
 package com.routingengine.json;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.routingengine.client.ConnectionHandler;
 
 
 public class JsonReader
-    implements Closeable
 {
     private InputStream inputStream;
     private InputStreamReader inputStreamReader;
@@ -57,14 +54,5 @@ public class JsonReader
             ;
         
         pipeInputStream();
-    }
-    
-    @Override
-    public final void close()
-        throws IOException
-    {
-        ConnectionHandler.closeQuietly(inputStream);
-        ConnectionHandler.closeQuietly(inputStreamReader);
-        ConnectionHandler.closeQuietly(jsonReader);
     }
 }
