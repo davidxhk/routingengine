@@ -30,7 +30,7 @@ public class JsonResponse
     
     public boolean hasValidMethod()
     {
-        return method == "null" || supports(method);
+        return supports(method) || "null".equals(method);
     }
     
     public JsonResponse setMethod(String method)
