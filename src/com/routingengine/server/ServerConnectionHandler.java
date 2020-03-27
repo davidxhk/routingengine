@@ -3,6 +3,7 @@ package com.routingengine.server;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
+import com.google.gson.JsonElement;
 import com.routingengine.Logger;
 import com.routingengine.MethodManager;
 import com.routingengine.RoutingEngine;
@@ -67,7 +68,23 @@ public final class ServerConnectionHandler extends ConnectionHandler
             
             JsonResponse jsonResponse = new JsonResponse();
             
-            jsonRequest.service(methodManager, jsonResponse);
+            jsonResponse.setMethod(jsonRequest.getMethod());
+        
+            try {
+                JsonElement payload = methodManager.handle(
+                    jsonRequest.getMethod(),
+                    jsonRequest.getArguments());
+                
+                jsonResponse
+                    .setResult("success")
+                    .setPayload(payload);
+            }
+            
+            catch (IllegalArgumentException | IllegalStateException exception) {
+                jsonResponse
+                    .setResult("failure")
+                    .setPayload(exception.getMessage());
+            }
             
             jsonResponse.writeSafe(jsonWriter);
         }

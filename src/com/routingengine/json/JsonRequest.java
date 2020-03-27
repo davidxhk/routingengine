@@ -221,27 +221,4 @@ public class JsonRequest
             return false;
         }
     }
-    
-    public boolean service(MethodManager manager, JsonResponse jsonResponse)
-    {
-        jsonResponse.setMethod(method);
-        
-        try {
-            JsonElement payload = manager.handle(method, arguments);
-            
-            jsonResponse
-                .setResult("success")
-                .setPayload(payload);
-            
-            return true;
-        }
-        
-        catch (IllegalArgumentException | IllegalStateException exception) {
-            jsonResponse
-                .setResult("failure")
-                .setPayload(exception.getMessage());
-            
-            return false;
-        }
-    }
 }
