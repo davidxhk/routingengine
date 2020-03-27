@@ -1,6 +1,7 @@
 package com.routingengine.methods;
 
 import static com.routingengine.MethodManager.Method;
+import static com.routingengine.json.JsonUtils.getAsString;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.routingengine.SupportRequest;
@@ -20,7 +21,12 @@ public class NewSupportRequestMethod extends Method
     
     public SupportRequest newSupportRequest(JsonObject arguments)
     {
-        return SupportRequest.fromJson(arguments);
+        return SupportRequest.builder()
+            .setName(getAsString(arguments, "name"))
+            .setEmail(getAsString(arguments, "email"))
+            .setType(getAsString(arguments, "type"))
+            .setAddress(getAsString(arguments, "address"))
+            .build();
     }
     
     public void addSupportRequest(SupportRequest supportRequest)
