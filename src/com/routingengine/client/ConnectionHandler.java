@@ -1,6 +1,5 @@
 package com.routingengine.client;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.TimeUnit;
@@ -10,7 +9,7 @@ import com.routingengine.json.JsonWriter;
 
 
 public abstract class ConnectionHandler
-    implements Runnable, Closeable
+    implements Runnable
 {
     protected Socket socket = null;
     protected JsonReader jsonReader = null;
@@ -47,6 +46,9 @@ public abstract class ConnectionHandler
         if (socket == null)
             throw new IllegalStateException("socket not connected!");
         
+        else if (socket.isClosed())
+            throw new IllegalStateException("socket is closed!");
+        
         try {            
             runMainLoop();
         }
@@ -61,34 +63,6 @@ public abstract class ConnectionHandler
             Logger.log("Connection handler interrupted");
             
             return;
-        }
-        
-        finally {
-            Logger.log("Closing socket " + getAddress());
-            
-            close();
-        }
-    }
-    
-    @Override
-    public void close()
-    {
-        ConnectionHandler.closeQuietly(jsonReader);
-        ConnectionHandler.closeQuietly(jsonWriter);
-        ConnectionHandler.closeQuietly(socket);
-        
-        Logger.log("Connection closed");
-    }
-    
-    public static final void closeQuietly(Closeable input)
-    {
-        try {
-            if (input != null)
-                input.close();
-        }
-        
-        catch (IOException e) {
-            Logger.log(input.toString() + " failed to close");
         }
     }
 }

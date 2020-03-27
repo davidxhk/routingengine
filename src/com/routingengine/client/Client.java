@@ -41,8 +41,21 @@ public class Client
     @Override
     public final void close()
     {
-        if (connectionHandler == null)
-            ConnectionHandler.closeQuietly(socket);
+        closeQuietly(socket);
+        
+        Logger.log("Connection closed");
+    }
+    
+    public static final void closeQuietly(Closeable closeable)
+    {
+        try {
+            if (closeable != null)
+                closeable.close();
+        }
+        
+        catch (IOException e) {
+            Logger.log(closeable.toString() + " failed to close");
+        }
     }
     
     public static void main(String[] args)
