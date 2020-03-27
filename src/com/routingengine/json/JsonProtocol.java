@@ -27,9 +27,10 @@ public class JsonProtocol
     public static void readJsonRequest(JsonReader jsonReader, JsonRequest jsonRequest)
         throws IOException, JsonProtocolException
     {
-        String method = null;
         try {
-            method = jsonReader.readString();
+            String method = jsonReader.readString();
+            
+            jsonRequest.setMethod(method);
         }
         
         catch (IllegalStateException | MalformedJsonException exception) {
@@ -38,9 +39,10 @@ public class JsonProtocol
             throw new JsonProtocolException("malformed request");
         }
         
-        JsonObject arguments = null;
         try {
-            arguments = jsonReader.parseJsonObject();
+            JsonObject arguments = jsonReader.parseJsonObject();
+            
+            jsonRequest.setArguments(arguments);
             
             jsonReader.clearInputStream();
         }
@@ -50,9 +52,6 @@ public class JsonProtocol
             
             throw new JsonProtocolException("malformed arguments");
         }
-        
-        jsonRequest.setMethod(method);
-        jsonRequest.setArguments(arguments);
         
         jsonRequest.ensureWellFormed();
     }
