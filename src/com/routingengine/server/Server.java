@@ -36,6 +36,7 @@ public final class Server
     public final void run()
     {
         try (ServerSocket listener = new ServerSocket()) {
+            
             listener.bind(address);
             Logger.log("Server bound to " + address);
             
