@@ -1,5 +1,6 @@
 package com.routingengine;
 
+import static com.routingengine.json.JsonUtils.getAsString;
 import com.google.gson.JsonObject;
 
 
@@ -39,5 +40,16 @@ public class User
         jsonObject.addProperty("email", email);
         
         return jsonObject;
+    }
+    
+    public static User fromJson(JsonObject jsonObject)
+    {
+        if (jsonObject == null)
+            return null;
+        
+        String name = getAsString(jsonObject, "name");
+        String email = getAsString(jsonObject, "email");
+        
+        return new User(name, email);
     }
 }

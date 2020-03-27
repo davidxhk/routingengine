@@ -1,6 +1,9 @@
 package com.routingengine;
 
 import static com.routingengine.json.JsonUtils.getAsString;
+import static com.routingengine.json.JsonUtils.getAsBoolean;
+import static com.routingengine.json.JsonUtils.getAsInt;
+import static com.routingengine.json.JsonUtils.getAsJsonObject;
 import java.util.concurrent.TimeoutException;
 import com.google.gson.JsonObject;
 
@@ -8,7 +11,7 @@ import com.google.gson.JsonObject;
 public class SupportRequest extends InetEntity
     implements Comparable<SupportRequest>
 {
-    private final User user;
+    private User user;
     private volatile Type requestType;
     private volatile boolean open;
     private volatile boolean waiting;
@@ -17,11 +20,28 @@ public class SupportRequest extends InetEntity
     private volatile int priority;
     private static final long TIMEOUT_MILLIS = 30000L;
     
-    private SupportRequest(SupportRequestBuilder builder)
+    private SupportRequest()
     {
-        super(builder.address);
+        super();
+    }
+    
+    private SupportRequest(String address)
+    {
+        super();
+        
+        super.setAddress(address);
+    }
+    
+    private SupportRequest(String uuid, String address)
+    {
+        super(uuid, address);
+    }
+    
+    private void initialize(SupportRequestBuilder builder)
+    {
         user = new User(builder.name, builder.email);
         setType(builder.requestType);
+        
         open = true;
         waiting = false;
         notified = false;
@@ -169,12 +189,14 @@ public class SupportRequest extends InetEntity
         
         supportRequestJsonObject.addProperty("waiting", waiting);
         
-        JsonObject assignedAgentJsonObject = new JsonObject();
+        JsonObject assignedAgentJsonObject = null;
         
         if (hasAssignedAgent()) {
-            assignedAgentJsonObject.addProperty("address", assignedAgent.getAddress().getHostAddress());
-            assignedAgentJsonObject.addProperty("available", assignedAgent.isAvailable());
+            assignedAgentJsonObject = new JsonObject();
             
+            assignedAgentJsonObject.addProperty("address", assignedAgent.getAddress().getHostAddress());
+            
+            assignedAgentJsonObject.addProperty("available", assignedAgent.isAvailable());
         }
         
         supportRequestJsonObject.add("assigned_agent", assignedAgentJsonObject);
@@ -186,12 +208,37 @@ public class SupportRequest extends InetEntity
     
     public static SupportRequest fromJson(JsonObject jsonObject)
     {
-        return builder()
-                .setName(getAsString(jsonObject, "name"))
-                .setEmail(getAsString(jsonObject, "email"))
-                .setType(getAsString(jsonObject, "type"))
-                .setAddress(getAsString(jsonObject, "address"))
-                .build();
+        SupportRequest supportRequest = builder()
+            .setUUID(getAsString(jsonObject, "uuid"))
+            .setAddress(getAsString(jsonObject, "address"))
+            .setName(getAsString(jsonObject, "name"))
+            .setEmail(getAsString(jsonObject, "email"))
+            .setUser(User.fromJson(getAsJsonObject(jsonObject, "user")))
+            .setType(getAsString(jsonObject, "type"))
+            .build();
+        
+        if (jsonObject.has("open"))
+            supportRequest.open = getAsBoolean(jsonObject, "open");
+        
+        if (jsonObject.has("waiting"))
+            supportRequest.waiting = getAsBoolean(jsonObject, "waiting");
+        
+        if (jsonObject.has("assigned_agent")) {
+            JsonObject agentJson = getAsJsonObject(jsonObject, "assigned_agent");
+            
+            if (agentJson != null) {
+                JsonObject skills = new JsonObject();
+                skills.addProperty(supportRequest.getType().toString(), true);
+                agentJson.add("skills", skills);
+                
+                supportRequest.setAssignedAgent(Agent.fromJson(agentJson));
+            }
+        }
+        
+        if (jsonObject.has("priority"))
+            supportRequest.priority = getAsInt(jsonObject, "priority");
+        
+        return supportRequest;
     }
     
     public static SupportRequestBuilder builder()
@@ -201,17 +248,43 @@ public class SupportRequest extends InetEntity
     
     public static class SupportRequestBuilder
     {
+        private String uuid;
+        private String address;
         private String name;
         private String email;
         private String requestType;
-        private String address;
         
         public SupportRequestBuilder()
         {
+            uuid = null;
+            address = null;
             name = null;
             email = null;
             requestType = null;
-            address = null;
+        }
+        
+        public SupportRequestBuilder setUUID(String UUIDString)
+        {
+            uuid = UUIDString;
+            
+            return this;   
+        }
+        
+        public SupportRequestBuilder setAddress(String addressString)
+        {
+            address = addressString;
+            
+            return this;   
+        }
+        
+        public SupportRequestBuilder setUser(User user)
+        {
+            if (user != null) {
+                this.name = user.getName();
+                this.email = user.getEmail();
+            }
+            
+            return this;
         }
         
         public SupportRequestBuilder setName(String name)
@@ -249,16 +322,22 @@ public class SupportRequest extends InetEntity
             return this;
         }
         
-        public SupportRequestBuilder setAddress(String addressString)
-        {
-            address = addressString;
-            
-            return this;   
-        }
-        
         public SupportRequest build()
         {   
-            return new SupportRequest(this);
+            SupportRequest supportRequest;
+            
+            if (uuid != null)
+                supportRequest = new SupportRequest(uuid, address);
+            
+            else if (address != null)
+                supportRequest = new SupportRequest(address);
+            
+            else
+                supportRequest = new SupportRequest();
+            
+            supportRequest.initialize(this);
+            
+            return supportRequest;
         }
     }
     

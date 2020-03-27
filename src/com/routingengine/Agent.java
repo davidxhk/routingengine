@@ -1,7 +1,9 @@
 package com.routingengine;
 
 import static com.routingengine.json.JsonUtils.getAsString;
+import static com.routingengine.json.JsonUtils.getAsBoolean;
 import static com.routingengine.json.JsonUtils.getAsBooleanMap;
+import static com.routingengine.json.JsonUtils.getAsJsonObject;
 import static com.routingengine.SupportRequest.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,16 +13,31 @@ import com.google.gson.JsonObject;
 
 public class Agent extends InetEntity
 {
-    private volatile HashMap<Type, Boolean> skills;
+    private volatile Map<Type, Boolean> skills;
     private volatile boolean activated;
     private volatile boolean available;
     private volatile boolean waiting;
     private volatile SupportRequest assignedSupportRequest;
     
-    private Agent(AgentBuilder builder)
+    private Agent()
     {
-        super(builder.address);
+        super();
+    }
+    
+    private Agent(String address)
+    {
+        super();
         
+        super.setAddress(address);
+    }
+    
+    private Agent(String uuid, String address)
+    {
+        super(uuid, address);
+    }
+    
+    private void initialize(AgentBuilder builder)
+    {
         skills = new HashMap<>();
         for (Type requestType : Type.values())
             skills.put(requestType, false);
@@ -181,9 +198,11 @@ public class Agent extends InetEntity
         
         agentJsonObject.addProperty("available", available);
         
-        JsonObject assignedSupportRequestJsonObject = new JsonObject();
+        JsonObject assignedSupportRequestJsonObject = null;
         
         if (hasAssignedSupportRequest()) {
+            assignedSupportRequestJsonObject = new JsonObject();
+            
             assignedSupportRequestJsonObject.addProperty("uuid", assignedSupportRequest.getUUID().toString());
             
             assignedSupportRequestJsonObject.add("user", assignedSupportRequest.getUser().toJson());
@@ -202,10 +221,26 @@ public class Agent extends InetEntity
     
     public static Agent fromJson(JsonObject jsonObject)
     {
-        return Agent.builder()
-                .setAddress(getAsString(jsonObject, "address"))
-                .setSkills(getAsBooleanMap(jsonObject, "skills"))
-                .build();
+        Agent agent = builder()
+            .setUUID(getAsString(jsonObject, "uuid"))
+            .setAddress(getAsString(jsonObject, "address"))
+            .setSkills(getAsBooleanMap(jsonObject, "skills"))
+            .build();
+        
+        if (jsonObject.has("activated"))
+            agent.activated = getAsBoolean(jsonObject, "activated");
+        
+        if (jsonObject.has("available"))
+            agent.available = getAsBoolean(jsonObject, "available");
+        
+        if (jsonObject.has("assigned_support_request")) {
+            JsonObject supportRequestJson = getAsJsonObject(jsonObject, "assigned_support_request");
+            
+            if (supportRequestJson != null)
+                agent.setAssignedSupportRequest(SupportRequest.fromJson(supportRequestJson));
+        }
+        
+        return agent;
     }
     
     public static AgentBuilder builder()
@@ -215,13 +250,22 @@ public class Agent extends InetEntity
     
     public static class AgentBuilder
     {
+        private String uuid;
         private String address;
         private Map<String, Boolean> skills;
         
         public AgentBuilder()
         {
+            uuid = null;
             address = null;
             skills = new HashMap<>();
+        }
+        
+        public AgentBuilder setUUID(String UUIDString)
+        {
+            uuid = UUIDString;
+            
+            return this;
         }
         
         public AgentBuilder setAddress(String addressString)
@@ -265,7 +309,20 @@ public class Agent extends InetEntity
         
         public Agent build()
         {
-            return new Agent(this);
+            Agent agent;
+            
+            if (uuid != null)
+                agent = new Agent(uuid, address);
+            
+            else if (address != null)
+                agent = new Agent(address);
+            
+            else
+                agent = new Agent();
+            
+            agent.initialize(this);
+            
+            return agent;
         }
     }
 }

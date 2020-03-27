@@ -11,9 +11,14 @@ public class InetEntity
     private volatile InetAddress address;
     public static final long TIMEOUT_MILLIS = 30000L;
     
-    private InetEntity()
+    public InetEntity()
     {
-        uuid = UUID.randomUUID();
+        this(UUID.randomUUID(), null);
+    }
+    
+    public InetEntity(UUID uuid)
+    {
+        this(uuid, null);
     }
     
     public InetEntity(InetAddress address)
@@ -23,11 +28,38 @@ public class InetEntity
         setAddress(address);
     }
     
-    public InetEntity(String address)
+    public InetEntity(String uuidString, String address)
     {
-        this();
+        if (uuidString == null)
+            throw new IllegalArgumentException("uuid missing");
         
-        setAddress(address);
+        try {
+            this.uuid = UUID.fromString(uuidString);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException("uuid invalid");
+        }
+        
+        if (address == null)
+            setLoopbackAddress();
+        
+        else
+            setAddress(address);
+    }
+    
+    public InetEntity(UUID uuid, InetAddress address)
+    {
+        if (uuid == null)
+            throw new IllegalArgumentException("uuid missing");
+        
+        this.uuid = uuid;
+        
+        if (address == null)
+            setLoopbackAddress();
+        
+        else
+            setAddress(address);
     }
     
     public UUID getUUID()
@@ -38,6 +70,11 @@ public class InetEntity
     public InetAddress getAddress()
     {
         return address;
+    }
+    
+    private void setLoopbackAddress()
+    {
+        address = InetAddress.getLoopbackAddress();
     }
     
     public void setAddress(String address)
@@ -56,6 +93,9 @@ public class InetEntity
     
     public void setAddress(InetAddress address)
     {
+        if (address == null)
+            throw new IllegalArgumentException("address missing");
+        
         this.address = address;
     }
 }
