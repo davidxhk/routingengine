@@ -10,16 +10,18 @@ import com.routingengine.Logger;
 import com.routingengine.json.JsonResponse;
 
 
-public class Client
+public final class Client
     implements Runnable, Closeable
 {
-    protected Socket socket;
-    protected ClientConnectionHandler connectionHandler = null;
+    private Socket socket;
+    private ClientConnectionHandler connectionHandler = null;
     
     public Client(String hostname, int port)
         throws IOException
     {
         socket = new Socket(hostname, port);
+        
+        Logger.log("Client connected to " + socket.toString());
     }
     
     public final Client setConnectionHandler(ClientConnectionHandler clientConnectionHandler)
@@ -35,27 +37,42 @@ public class Client
     @Override
     public final void run()
     {
-        connectionHandler.run();
+        if (connectionHandler == null)
+            throw new IllegalStateException("connection handler missing");
+        
+        if (socket == null)
+            throw new IllegalStateException("socket missing!");
+        
+        else if (socket.isClosed())
+            throw new IllegalStateException("socket closed");
+        
+        try {            
+            connectionHandler.runMainLoop();
+        }
+        
+        catch (IOException exception) {
+            Logger.log("I/O error in " + socket.toString());
+            
+            exception.printStackTrace();    
+        }
+        
+        catch (InterruptedException exception) {
+            Logger.log("Client was interrupted");
+        }
     }
     
     @Override
     public final void close()
     {
-        closeQuietly(socket);
-        
-        Logger.log("Connection closed");
-    }
-    
-    public static final void closeQuietly(Closeable closeable)
-    {
         try {
-            if (closeable != null)
-                closeable.close();
+            socket.close();
         }
         
         catch (IOException e) {
-            Logger.log(closeable.toString() + " failed to close");
+            Logger.log("Failed to close " + socket.toString());
         }
+        
+        Logger.log("Client connection closed");
     }
     
     public static void main(String[] args)
@@ -84,7 +101,7 @@ public class Client
             client.setConnectionHandler(new ClientConnectionHandler()
             {
                 @Override
-                protected final void runMainLoop()
+                public final void runMainLoop()
                     throws IOException, InterruptedException
                 {
                     List<String> supportRequestUUIDs = new ArrayList<>();

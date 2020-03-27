@@ -1,7 +1,9 @@
 package com.routingengine.server;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
+import com.routingengine.Logger;
 import com.routingengine.MethodManager;
 import com.routingengine.RoutingEngine;
 import com.routingengine.client.ConnectionHandler;
@@ -11,6 +13,7 @@ import com.routingengine.json.JsonResponse;
 
 
 public final class ServerConnectionHandler extends ConnectionHandler
+    implements Runnable, Closeable
 {
     private final MethodManager methodManager;
     
@@ -19,11 +22,13 @@ public final class ServerConnectionHandler extends ConnectionHandler
     {
         connect(socket);
         
+        Logger.log("Server connected to " + socket.toString());
+        
         methodManager = new MethodManager(routingEngine);
     }
     
     @Override
-    protected final void runMainLoop()
+    public final void runMainLoop()
         throws IOException, InterruptedException
     {
         while (socket.isConnected() && !Thread.interrupted()) {
@@ -66,5 +71,41 @@ public final class ServerConnectionHandler extends ConnectionHandler
             
             jsonResponse.writeSafe(jsonWriter);
         }
+    }
+
+    @Override
+    public final void run()
+    {
+        try {            
+            runMainLoop();
+        }
+        
+        catch (IOException exception) {
+            Logger.log("I/O error in " + socket.toString());
+            
+            exception.printStackTrace();    
+        }
+        
+        catch (InterruptedException exception) {
+            Logger.log("Server connection was interrupted");
+        }
+        
+        finally {
+            close();
+        }
+    }
+    
+    @Override
+    public final void close()
+    {
+        try {
+            socket.close();
+        }
+        
+        catch (IOException e) {
+            Logger.log("Failed to close " + socket.toString());
+        }
+        
+        Logger.log("Server connection closed");
     }
 }
