@@ -25,6 +25,9 @@ public class JsonUtils
         if (jsonElement == null)
             return null;
         
+        if (jsonElement.isJsonNull())
+            return null;
+        
         if (!jsonElement.isJsonPrimitive())
             throw new IllegalArgumentException("invalid");
         
@@ -36,6 +39,9 @@ public class JsonUtils
         if (jsonElement == null)
             return null;
         
+        if (jsonElement.isJsonNull())
+            return null;
+        
         if (!jsonElement.isJsonObject())
             throw new IllegalArgumentException("invalid");
         
@@ -45,6 +51,9 @@ public class JsonUtils
     public static JsonArray castToJsonArray(JsonElement jsonElement)
     {
         if (jsonElement == null)
+            return null;
+        
+        if (jsonElement.isJsonNull())
             return null;
         
         if (!jsonElement.isJsonArray())

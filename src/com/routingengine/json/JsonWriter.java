@@ -17,7 +17,10 @@ public class JsonWriter
     {    
         outputStreamWriter = new OutputStreamWriter(outputStream);
         
-        gson = new GsonBuilder().setPrettyPrinting().create();
+        gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .serializeNulls()
+            .create();
     }
     
     public final void writeString(String string)
