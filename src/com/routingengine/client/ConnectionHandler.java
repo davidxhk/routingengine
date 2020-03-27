@@ -2,7 +2,6 @@ package com.routingengine.client;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.concurrent.TimeUnit;
 import com.routingengine.json.JsonReader;
 import com.routingengine.json.JsonWriter;
 
@@ -30,9 +29,8 @@ public abstract class ConnectionHandler
     protected final void waitForInput()
         throws IOException, InterruptedException
     {
-        while (!jsonReader.ready()) {
-            TimeUnit.MILLISECONDS.sleep(100);
-        }
+        while (!jsonReader.ready())
+            ;
     }
     
     public abstract void runMainLoop() throws IOException, InterruptedException;
