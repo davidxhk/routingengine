@@ -1,9 +1,9 @@
 package com.routingengine.methods;
 
+import static com.routingengine.json.JsonUtils.getAsString;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.routingengine.SupportRequest;
-import com.routingengine.json.JsonUtils;
 
 
 public class ChangeSupportRequestTypeMethod extends CheckSupportRequestMethod
@@ -20,7 +20,7 @@ public class ChangeSupportRequestTypeMethod extends CheckSupportRequestMethod
     
     public static void changeSupportRequestType(SupportRequest supportRequest, JsonObject arguments)
     {
-        String supportRequestTypeString = JsonUtils.getAsString(arguments, "type");
+        String supportRequestTypeString = getAsString(arguments, "type");
         
         supportRequest.setType(supportRequestTypeString);
     }

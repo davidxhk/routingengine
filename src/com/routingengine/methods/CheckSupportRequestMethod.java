@@ -1,10 +1,10 @@
 package com.routingengine.methods;
 
+import static com.routingengine.json.JsonUtils.getAsString;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.routingengine.MethodManager;
 import com.routingengine.SupportRequest;
-import com.routingengine.json.JsonUtils;
 
 
 public class CheckSupportRequestMethod extends MethodManager.Method
@@ -19,7 +19,7 @@ public class CheckSupportRequestMethod extends MethodManager.Method
     
     public SupportRequest getSupportRequest(JsonObject arguments)
     {
-        String supportRequestUUIDString = JsonUtils.getAsString(arguments, "uuid");
+        String supportRequestUUIDString = getAsString(arguments, "uuid");
         
         return routingEngine.getSupportRequest(supportRequestUUIDString);
     }

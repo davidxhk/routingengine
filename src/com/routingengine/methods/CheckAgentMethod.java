@@ -1,10 +1,10 @@
 package com.routingengine.methods;
 
+import static com.routingengine.json.JsonUtils.getAsString;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.routingengine.Agent;
 import com.routingengine.MethodManager;
-import com.routingengine.json.JsonUtils;
 
 
 public class CheckAgentMethod extends MethodManager.Method
@@ -19,7 +19,7 @@ public class CheckAgentMethod extends MethodManager.Method
     
     public Agent getAgent(JsonObject arguments)
     {
-        String agentUUIDString = JsonUtils.getAsString(arguments, "uuid");
+        String agentUUIDString = getAsString(arguments, "uuid");
         
         return routingEngine.getAgent(agentUUIDString);
     }

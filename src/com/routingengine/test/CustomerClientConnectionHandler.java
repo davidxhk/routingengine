@@ -1,5 +1,6 @@
 package com.routingengine.test;
 
+import static com.routingengine.json.JsonUtils.getAsString;
 import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -7,7 +8,6 @@ import com.google.gson.JsonElement;
 import com.routingengine.Logger;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonResponse;
-import com.routingengine.json.JsonUtils;
 
 
 public class CustomerClientConnectionHandler extends ClientConnectionHandler
@@ -64,6 +64,6 @@ public class CustomerClientConnectionHandler extends ClientConnectionHandler
     
     public static final String getUUID(JsonElement jsonElement)
     {
-        return JsonUtils.getAsString(jsonElement, "uuid");
+        return getAsString(jsonElement, "uuid");
     }
 }

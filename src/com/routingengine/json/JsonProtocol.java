@@ -1,5 +1,6 @@
 package com.routingengine.json;
 
+import static com.routingengine.json.JsonUtils.getAsString;
 import java.io.IOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -84,8 +85,8 @@ public class JsonProtocol
         }
         
         jsonResponse
-            .setMethod(JsonUtils.getAsString(response, "method"))
-            .setResult(JsonUtils.getAsString(response, "result"))
+            .setMethod(getAsString(response, "method"))
+            .setResult(getAsString(response, "result"))
             .setPayload(response.get("payload"));
         
         jsonResponse.ensureWellFormed();

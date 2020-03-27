@@ -1,10 +1,10 @@
 package com.routingengine.methods;
 
+import static com.routingengine.json.JsonUtils.getAsBooleanMap;
 import java.util.Map;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.routingengine.Agent;
-import com.routingengine.json.JsonUtils;
 
 
 public class UpdateAgentSkillsMethod extends CheckAgentMethod
@@ -21,7 +21,7 @@ public class UpdateAgentSkillsMethod extends CheckAgentMethod
     
     public static void updateAgentSkills(Agent agent, JsonObject arguments)
     {
-        Map<String, Boolean> skills = JsonUtils.getAsBooleanMap(arguments, "skills");
+        Map<String, Boolean> skills = getAsBooleanMap(arguments, "skills");
         
         agent.setSkills(skills);
     }

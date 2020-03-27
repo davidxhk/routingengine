@@ -1,9 +1,9 @@
 package com.routingengine;
 
+import static com.routingengine.json.JsonUtils.getAsString;
 import java.net.InetAddress;
 import java.util.concurrent.TimeoutException;
 import com.google.gson.JsonObject;
-import com.routingengine.json.JsonUtils;
 
 
 public class SupportRequest extends InetEntity
@@ -188,10 +188,10 @@ public class SupportRequest extends InetEntity
     public static SupportRequest fromJson(JsonObject jsonObject)
     {
         return builder()
-                .setName(JsonUtils.getAsString(jsonObject, "name"))
-                .setEmail(JsonUtils.getAsString(jsonObject, "email"))
-                .setType(JsonUtils.getAsString(jsonObject, "type"))
-                .setAddress(JsonUtils.getAsString(jsonObject, "address"))
+                .setName(getAsString(jsonObject, "name"))
+                .setEmail(getAsString(jsonObject, "email"))
+                .setType(getAsString(jsonObject, "type"))
+                .setAddress(getAsString(jsonObject, "address"))
                 .build();
     }
     

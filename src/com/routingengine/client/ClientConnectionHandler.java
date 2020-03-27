@@ -1,11 +1,11 @@
 package com.routingengine.client;
 
+import static com.routingengine.json.JsonUtils.toJsonElement;
 import java.io.IOException;
 import java.util.Map;
 import com.routingengine.json.JsonProtocolException;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
-import com.routingengine.json.JsonUtils;
 
 
 public abstract class ClientConnectionHandler extends ConnectionHandler
@@ -147,7 +147,7 @@ public abstract class ClientConnectionHandler extends ConnectionHandler
     {
         new JsonRequest()
         .setMethod("new_agent")
-        .setArgument("skills", JsonUtils.toJsonElement(skills))
+        .setArgument("skills", toJsonElement(skills))
         .writeSafe(jsonWriter);
 
     return awaitResponse();

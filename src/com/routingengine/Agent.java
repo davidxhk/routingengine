@@ -1,11 +1,12 @@
 package com.routingengine;
 
+import static com.routingengine.json.JsonUtils.getAsString;
+import static com.routingengine.json.JsonUtils.getAsBooleanMap;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.routingengine.json.JsonUtils;
 
 
 public class Agent extends InetEntity
@@ -202,8 +203,8 @@ public class Agent extends InetEntity
     public static Agent fromJson(JsonObject jsonObject)
     {
         return Agent.builder()
-                .setAddress(JsonUtils.getAsString(jsonObject, "address"))
-                .setSkills(JsonUtils.getAsBooleanMap(jsonObject, "skills"))
+                .setAddress(getAsString(jsonObject, "address"))
+                .setSkills(getAsBooleanMap(jsonObject, "skills"))
                 .build();
     }
     
