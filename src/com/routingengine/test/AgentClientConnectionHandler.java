@@ -20,7 +20,7 @@ public class AgentClientConnectionHandler extends ClientConnectionHandler
     public int j;
     
     @Override
-    protected void runMainLoop()
+    public void runMainLoop()
         throws IOException, InterruptedException
     {
         agentLog("initialized!");

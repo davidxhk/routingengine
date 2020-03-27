@@ -40,7 +40,7 @@ public class ChangeSupportRequestTypeMethodTest
         
         client.setConnectionHandler(new ClientConnectionHandler() {
             @Override
-            protected void runMainLoop()
+            public void runMainLoop()
                 throws IOException, InterruptedException
             {
                 JsonResponse response = ping();
@@ -61,7 +61,7 @@ public class ChangeSupportRequestTypeMethodTest
         
         client.setConnectionHandler(new ClientConnectionHandler() {
             @Override
-            protected void runMainLoop()
+            public void runMainLoop()
                 throws IOException, InterruptedException
             {
                 JsonResponse response = ping();
@@ -82,7 +82,7 @@ public class ChangeSupportRequestTypeMethodTest
         
         client.setConnectionHandler(new ClientConnectionHandler() {
             @Override
-            protected void runMainLoop()
+            public void runMainLoop()
                 throws IOException, InterruptedException
             {
                 JsonResponse response = ping();

@@ -16,7 +16,7 @@ public class CustomerClientConnectionHandler extends ClientConnectionHandler
     public int i;
     
     @Override
-    protected void runMainLoop()
+    public void runMainLoop()
         throws IOException, InterruptedException
     {
         clientLog("initialized!");
