@@ -44,7 +44,7 @@ public class AgentClientConnectionHandler extends ClientConnectionHandler
             response = takeSupportRequest(agentUUIDString);
             agentLog(response);
             
-            if (!didSucceed(response)) {
+            if (!response.didSucceed()) {
                 agentLog("checking agent");
                 response = checkAgent(agentUUIDString);
                 agentLog(response);
@@ -91,10 +91,5 @@ public class AgentClientConnectionHandler extends ClientConnectionHandler
     public static final JsonObject getAssignedSupportRequest(JsonResponse response)
     {
         return JsonUtils.getAsJsonObject(response.getPayload(), "assigned_support_request");
-    }
-    
-    public static final boolean didSucceed(JsonResponse jsonResponse)
-    {
-        return "success".equals(jsonResponse.getResult());
     }
 }
