@@ -55,7 +55,7 @@ public final class ServerConnectionHandler extends ConnectionHandler
             
             catch (JsonProtocolException exception) {
                 JsonResponse
-                    .failure(exception.getMessage())
+                    .failure(jsonRequest, exception)
                     .writeSafe(jsonWriter);
                 
                 continue;
@@ -66,27 +66,21 @@ public final class ServerConnectionHandler extends ConnectionHandler
                     jsonRequest.setArgument("address", getAddress());
             }
             
-            JsonResponse jsonResponse = new JsonResponse();
-            
-            jsonResponse.setMethod(jsonRequest.getMethod());
-        
             try {
                 JsonElement payload = methodManager.handle(
                     jsonRequest.getMethod(),
                     jsonRequest.getArguments());
                 
-                jsonResponse
-                    .setResult("success")
-                    .setPayload(payload);
+                JsonResponse
+                    .success(jsonRequest, payload)
+                    .writeSafe(jsonWriter);
             }
             
             catch (IllegalArgumentException | IllegalStateException exception) {
-                jsonResponse
-                    .setResult("failure")
-                    .setPayload(exception.getMessage());
+                JsonResponse
+                    .failure(jsonRequest, exception)
+                    .writeSafe(jsonWriter);
             }
-            
-            jsonResponse.writeSafe(jsonWriter);
         }
     }
 

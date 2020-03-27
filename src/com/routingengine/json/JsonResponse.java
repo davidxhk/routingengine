@@ -228,6 +228,11 @@ public class JsonResponse
             .setPayload(payload);
     }
     
+    public static JsonResponse failure(JsonRequest jsonRequest, Exception exception)
+    {
+        return failure(jsonRequest, exception.getMessage());
+    }
+    
     public static JsonResponse failure(JsonRequest jsonRequest, String errorMessage)
     {
         return new JsonResponse()
