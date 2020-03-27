@@ -12,7 +12,7 @@ import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonResponse;
 
 
-public class TestNewAgentMethod
+public class GetQueueStatusMethodTest
 {   
     private static Client client;
     private static final String hostname = "localhost";

@@ -12,7 +12,7 @@ import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonResponse;
 
 
-public class TestCheckSupportRequestMethod
+public class UpdateAgentAvailabilityMethodTest
 {   
     private static Client client;
     private static final String hostname = "localhost";
@@ -95,4 +95,3 @@ public class TestCheckSupportRequestMethod
         client.run();
     }
 }
-

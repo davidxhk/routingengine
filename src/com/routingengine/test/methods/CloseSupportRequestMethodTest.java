@@ -12,7 +12,7 @@ import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonResponse;
 
 
-public class TestDropSupportRequestMethod
+public class CloseSupportRequestMethodTest
 {   
     private static Client client;
     private static final String hostname = "localhost";
