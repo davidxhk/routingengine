@@ -59,6 +59,11 @@ public class JsonResponse
         return this;
     }
     
+    public boolean didSucceed()
+    {
+        return "success".equals(result);
+    }
+    
     public JsonElement getPayload()
     {
         return payload;
