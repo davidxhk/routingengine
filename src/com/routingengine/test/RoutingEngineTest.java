@@ -1,11 +1,11 @@
 package com.routingengine.test;
 
+import static com.routingengine.Logger.log;
+import static java.util.concurrent.Executors.newFixedThreadPool;
 import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import com.routingengine.Logger;
 import com.routingengine.client.Client;
 import com.routingengine.server.Server;
 
@@ -15,7 +15,7 @@ public class RoutingEngineTest
     public static void main(String[] args)
         throws IOException
     {
-        Logger.log("Start of Routing Engine Test");
+        log("Start of Routing Engine Test");
         
         String hostname;
         int port;
@@ -45,7 +45,7 @@ public class RoutingEngineTest
         final int NUM_AGENTS = 3;
         final int NUM_CUSTOMERS = 21;
         
-        ExecutorService executorService = Executors.newFixedThreadPool(NUM_AGENTS + NUM_CUSTOMERS);
+        ExecutorService executorService = newFixedThreadPool(NUM_AGENTS + NUM_CUSTOMERS);
         
         for (int i = 0; i < NUM_AGENTS; i++) {
             
@@ -89,12 +89,12 @@ public class RoutingEngineTest
         }
         
         catch (InterruptedException exception) {
-            Logger.log("Interrupted while joining server thread");
+            log("Interrupted while joining server thread");
         }
         
         Thread.getAllStackTraces().keySet().forEach(t ->
-            Logger.log(t.getName() + " -> daemon=" + t.isDaemon() + ", alive=" + t.isAlive()));
+            log(t.getName() + " -> daemon=" + t.isDaemon() + ", alive=" + t.isAlive()));
         
-        Logger.log("End of Routing Engine Test");
+        log("End of Routing Engine Test");
     }
 }

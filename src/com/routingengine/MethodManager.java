@@ -36,7 +36,7 @@ public final class MethodManager
     
     public static final boolean supports(String method)
     {
-        return MethodManager.methodClassNameMap.containsKey(method);
+        return methodClassNameMap.containsKey(method);
     }
     
     public static abstract class Method
@@ -58,17 +58,17 @@ public final class MethodManager
     
     private final void instantiateMethod(String method)
     {
-        if (!MethodManager.supports(method))
+        if (!supports(method))
             throw new IllegalArgumentException("invalid method");
         
-        String methodClassName = MethodManager.methodClassNameMap.get(method);
+        String methodClassName = methodClassNameMap.get(method);
         
         try {
             Method methodInstance = (Method) Class.forName("com.routingengine.methods." + methodClassName)
                 .getConstructor()
                 .newInstance();
             
-            methodInstance.routingEngine = this.routingEngine;
+            methodInstance.routingEngine = routingEngine;
             
             methodMap.put(method, methodInstance);
         }
@@ -80,7 +80,7 @@ public final class MethodManager
     
     public final Method getMethod(String method)
     {
-        if (!MethodManager.supports(method))
+        if (!supports(method))
             throw new IllegalArgumentException("invalid method");
         
         if (!methodMap.containsKey(method))

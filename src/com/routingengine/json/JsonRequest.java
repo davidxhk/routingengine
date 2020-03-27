@@ -1,12 +1,15 @@
 package com.routingengine.json;
 
+import static com.routingengine.MethodManager.supports;
+import static com.routingengine.json.JsonUtils.toJsonElement;
+import static com.routingengine.json.JsonUtils.getAsJsonObject;
+import static com.routingengine.json.JsonProtocol.readJsonRequest;
+import static com.routingengine.json.JsonProtocol.writeJsonRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.routingengine.Logger;
-import com.routingengine.MethodManager;
 
 
 public class JsonRequest
@@ -26,7 +29,7 @@ public class JsonRequest
     
     public boolean hasValidMethod()
     {
-        return method == "null" || MethodManager.supports(method);
+        return method == "null" || supports(method);
     }
     
     public JsonRequest setMethod(String method)
@@ -65,35 +68,35 @@ public class JsonRequest
     
     public JsonRequest setArgument(String property, String value)
     {
-        JsonElement jsonElement = JsonUtils.toJsonElement(value);
+        JsonElement jsonElement = toJsonElement(value);
         
         return setArgument(property, jsonElement);
     }
     
     public JsonRequest setArgument(String property, Boolean value)
     {
-        JsonElement jsonElement = JsonUtils.toJsonElement(value);
+        JsonElement jsonElement = toJsonElement(value);
         
         return setArgument(property, jsonElement);
     }
     
     public JsonRequest setArgument(String property, Number value)
     {
-        JsonElement jsonElement = JsonUtils.toJsonElement(value);
+        JsonElement jsonElement = toJsonElement(value);
         
         return setArgument(property, jsonElement);
     }
     
     public JsonRequest setArgument(String property, @SuppressWarnings("rawtypes") List value)
     {
-        JsonElement jsonElement = JsonUtils.toJsonElement(value);
+        JsonElement jsonElement = toJsonElement(value);
         
         return setArgument(property, jsonElement);
     }
     
     public JsonRequest setArgument(String property, @SuppressWarnings("rawtypes") Map value)
     {
-        JsonElement jsonElement = JsonUtils.toJsonElement(value);
+        JsonElement jsonElement = toJsonElement(value);
         
         return setArgument(property, jsonElement);
     }
@@ -107,35 +110,35 @@ public class JsonRequest
     
     public JsonRequest setArgument(String property, String key, String value)
     {
-        JsonElement jsonElement = JsonUtils.toJsonElement(value);
+        JsonElement jsonElement = toJsonElement(value);
         
         return setArgument(property, key, jsonElement);
     }
     
     public JsonRequest setArgument(String property, String key, Boolean value)
     {
-        JsonElement jsonElement = JsonUtils.toJsonElement(value);
+        JsonElement jsonElement = toJsonElement(value);
         
         return setArgument(property, key, jsonElement);
     }
     
     public JsonRequest setArgument(String property, String key, Number value)
     {
-        JsonElement jsonElement = JsonUtils.toJsonElement(value);
+        JsonElement jsonElement = toJsonElement(value);
         
         return setArgument(property, key, jsonElement);
     }
     
     public JsonRequest setArgument(String property, String key, @SuppressWarnings("rawtypes") List value)
     {
-        JsonElement jsonElement = JsonUtils.toJsonElement(value);
+        JsonElement jsonElement = toJsonElement(value);
         
         return setArgument(property, key, jsonElement);
     }
     
     public JsonRequest setArgument(String property, String key, @SuppressWarnings("rawtypes") Map value)
     {
-        JsonElement jsonElement = JsonUtils.toJsonElement(value);
+        JsonElement jsonElement = toJsonElement(value);
         
         return setArgument(property, key, jsonElement);
     }
@@ -148,7 +151,7 @@ public class JsonRequest
         if (!arguments.get(property).isJsonObject())
             throw new IllegalArgumentException("property " + property + " is not json object!");
         
-        JsonObject argument = JsonUtils.getAsJsonObject(arguments, property);
+        JsonObject argument = getAsJsonObject(arguments, property);
         
         argument.add(key, value);
         
@@ -187,7 +190,7 @@ public class JsonRequest
     public void read(JsonReader jsonReader)
         throws IOException, JsonProtocolException
     {
-        JsonProtocol.readJsonRequest(jsonReader, this);
+        readJsonRequest(jsonReader, this);
     }
     
     public static JsonRequest fromReader(JsonReader jsonReader)
@@ -203,21 +206,19 @@ public class JsonRequest
     public void write(JsonWriter jsonWriter)
         throws IOException, JsonProtocolException
     {
-        JsonProtocol.writeJsonRequest(this, jsonWriter);
+        writeJsonRequest(this, jsonWriter);
     }
     
     public boolean writeSafe(JsonWriter jsonWriter)
         throws IOException
     {
         try {
-            JsonProtocol.writeJsonRequest(this, jsonWriter);
+            write(jsonWriter);
             
             return true;
         }
         
         catch (JsonProtocolException exception) {
-            Logger.log(exception.getMessage());
-            
             return false;
         }
     }

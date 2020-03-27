@@ -1,5 +1,6 @@
 package com.routingengine;
 
+import static com.routingengine.SupportRequest.Type;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
@@ -126,12 +127,12 @@ public class RoutingEngine
         return requestQueueManager.isQueued(supportRequest);
     }
     
-    public int getQueueCount(SupportRequest.Type requestType)
+    public int getQueueCount(Type requestType)
     {
         return requestQueueManager.getQueueCount(requestType);
     }
     
-    public SupportRequest[] getQueuedSupportRequests(SupportRequest.Type requestType)
+    public SupportRequest[] getQueuedSupportRequests(Type requestType)
     {
         return requestQueueManager.getQueuedSupportRequests(requestType);
     }

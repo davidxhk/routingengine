@@ -1,5 +1,6 @@
 package com.routingengine;
 
+import static com.routingengine.SupportRequest.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -10,20 +11,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RequestQueueManager
 {
-    private Map<SupportRequest.Type, RequestQueue> requestQueues;
+    private Map<Type, RequestQueue> requestQueues;
     
     public RequestQueueManager()
     {
         requestQueues = new HashMap<>();
         
-        for (SupportRequest.Type requestType : SupportRequest.Type.values()) {
+        for (Type requestType : Type.values()) {
             requestQueues.put(requestType, new RequestQueue());
         }
         
         requestQueues = Map.copyOf(requestQueues);
     }
     
-    private RequestQueue getQueue(SupportRequest.Type requestType)
+    private RequestQueue getQueue(Type requestType)
     {
         return requestQueues.get(requestType);
     }
@@ -39,7 +40,7 @@ public class RequestQueueManager
         
         RequestQueue queue, maxQueue = null;
         
-        for (SupportRequest.Type requestType : agent.getSkills()) {
+        for (Type requestType : agent.getSkills()) {
             queue = getQueue(requestType);
             
             if (maxQueue == null || queue.getCount() > maxCount) {
@@ -72,19 +73,19 @@ public class RequestQueueManager
         return selectQueue(agent).take();
     }
     
-    public int getQueueCount(SupportRequest.Type requestType)
+    public int getQueueCount(Type requestType)
     {
         return getQueue(requestType).getCount();
     }
     
-    public SupportRequest[] getQueuedSupportRequests(SupportRequest.Type requestType)
+    public SupportRequest[] getQueuedSupportRequests(Type requestType)
     {
         return getQueue(requestType).queue.toArray(SupportRequest[]::new);
     }
     
-     public static class RequestQueue
+    public static class RequestQueue
     {
-         private PriorityBlockingQueue<SupportRequest> queue;
+        private PriorityBlockingQueue<SupportRequest> queue;
         private AtomicInteger count;
         
         private RequestQueue()

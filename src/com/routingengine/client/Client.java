@@ -1,12 +1,12 @@
 package com.routingengine.client;
 
+import static com.routingengine.Logger.log;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import com.routingengine.Logger;
 import com.routingengine.json.JsonResponse;
 
 
@@ -21,7 +21,7 @@ public final class Client
     {
         socket = new Socket(hostname, port);
         
-        Logger.log("Client connected to " + socket.toString());
+        log("Client connected to " + socket.toString());
     }
     
     public final Client setConnectionHandler(ClientConnectionHandler clientConnectionHandler)
@@ -51,13 +51,13 @@ public final class Client
         }
         
         catch (IOException exception) {
-            Logger.log("I/O error in " + socket.toString());
+            log("I/O error in " + socket.toString());
             
             exception.printStackTrace();    
         }
         
         catch (InterruptedException exception) {
-            Logger.log("Client was interrupted");
+            log("Client was interrupted");
         }
     }
     
@@ -69,10 +69,10 @@ public final class Client
         }
         
         catch (IOException e) {
-            Logger.log("Failed to close " + socket.toString());
+            log("Failed to close " + socket.toString());
         }
         
-        Logger.log("Client connection closed");
+        log("Client connection closed");
     }
     
     public static void main(String[] args)
@@ -110,94 +110,94 @@ public final class Client
                     JsonResponse response;
                     
                     response = ping();
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = newSupportRequest("bob", "bob@gmail.com", 1);
                     supportRequestUUIDs.add(response.getPayload().getAsJsonObject().get("uuid").getAsString());
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = newSupportRequest("bob", "bob@gmail.com", "GENERAL_ENQUIRY");
                     supportRequestUUIDs.add(response.getPayload().getAsJsonObject().get("uuid").getAsString());
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = newSupportRequest("bob", "bob@gmail.com", 1, "127.0.0.1");
                     supportRequestUUIDs.add(response.getPayload().getAsJsonObject().get("uuid").getAsString());
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = newSupportRequest("bob", "bob@gmail.com", "GENERAL_ENQUIRY", "127.0.0.1");
                     supportRequestUUIDs.add(response.getPayload().getAsJsonObject().get("uuid").getAsString());
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = checkSupportRequest(supportRequestUUIDs.get(0));
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = changeSupportRequestType(supportRequestUUIDs.get(0), 2);
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = changeSupportRequestType(supportRequestUUIDs.get(1), "CHECK_BILL");
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = closeSupportRequest(supportRequestUUIDs.get(2));
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = removeSupportRequest(supportRequestUUIDs.get(3));
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = newAgent(Map.of(2, true));
                     agentUUIDs.add(response.getPayload().getAsJsonObject().get("uuid").getAsString());
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = newAgent(Map.of("CHECK_SUBSCRIPTION", true), "127.0.0.1");
                     agentUUIDs.add(response.getPayload().getAsJsonObject().get("uuid").getAsString());
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = checkAgent(agentUUIDs.get(0));
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = updateAgentSkills(agentUUIDs.get(0), Map.of(1, true));
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = updateAgentSkills(agentUUIDs.get(1), Map.of("GENERAL_ENQUIRY", true));
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = updateAgentAvailability(agentUUIDs.get(0), true);
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = updateAgentAvailability(agentUUIDs.get(1), true);
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
 //                  response = waitForAgent(supportRequestUUIDs.get(0));
-//                  Logger.log(response.toString());
+//                  log(response.toString());
                     
 //                  response = waitForAgent(supportRequestUUIDs.get(1));
-//                  Logger.log(response.toString());
+//                  log(response.toString());
                     
 //                  response = takeSupportRequest(agentUUIDs.get(0));
-//                  Logger.log(response.toString());
+//                  log(response.toString());
                     
 //                  response = takeSupportRequest(agentUUIDs.get(1));
-//                  Logger.log(response.toString());
+//                  log(response.toString());
                     
 //                  response = dropSupportRequest(agentUUIDs.get(0));
-//                  Logger.log(response.toString());
+//                  log(response.toString());
                     
 //                  response = dropSupportRequest(agentUUIDs.get(0));
-//                  Logger.log(response.toString());
+//                  log(response.toString());
                     
                     response = removeAgent(agentUUIDs.get(0));
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = getStatusOverview();
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = getAgentStatus();
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = getSupportRequestStatus();
-                    Logger.log(response.toString());
+                    log(response.toString());
                     
                     response = getQueueStatus();
-                    Logger.log(response.toString());
+                    log(response.toString());
                 }
             });
             

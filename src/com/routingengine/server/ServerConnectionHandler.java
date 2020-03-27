@@ -1,10 +1,10 @@
 package com.routingengine.server;
 
+import static com.routingengine.Logger.log;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
 import com.google.gson.JsonElement;
-import com.routingengine.Logger;
 import com.routingengine.MethodManager;
 import com.routingengine.RoutingEngine;
 import com.routingengine.client.ConnectionHandler;
@@ -23,7 +23,7 @@ public final class ServerConnectionHandler extends ConnectionHandler
     {
         connect(socket);
         
-        Logger.log("Server connected to " + socket.toString());
+        log("Server connected to " + socket.toString());
         
         methodManager = new MethodManager(routingEngine);
     }
@@ -98,13 +98,13 @@ public final class ServerConnectionHandler extends ConnectionHandler
         }
         
         catch (IOException exception) {
-            Logger.log("I/O error in " + socket.toString());
+            log("I/O error in " + socket.toString());
             
             exception.printStackTrace();    
         }
         
         catch (InterruptedException exception) {
-            Logger.log("Server connection was interrupted");
+            log("Server connection was interrupted");
         }
         
         finally {
@@ -120,9 +120,9 @@ public final class ServerConnectionHandler extends ConnectionHandler
         }
         
         catch (IOException e) {
-            Logger.log("Failed to close " + socket.toString());
+            log("Failed to close " + socket.toString());
         }
         
-        Logger.log("Server connection closed");
+        log("Server connection closed");
     }
 }

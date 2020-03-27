@@ -2,7 +2,7 @@ package com.routingengine;
 
 import static com.routingengine.json.JsonUtils.getAsString;
 import static com.routingengine.json.JsonUtils.getAsBooleanMap;
-import java.net.InetAddress;
+import static com.routingengine.SupportRequest.Type;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.gson.Gson;
@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 
 public class Agent extends InetEntity
 {
-    private volatile HashMap<SupportRequest.Type, Boolean> skills;
+    private volatile HashMap<Type, Boolean> skills;
     private volatile boolean activated;
     private volatile boolean available;
     private volatile boolean waiting;
@@ -22,7 +22,7 @@ public class Agent extends InetEntity
         super(builder.address);
         
         skills = new HashMap<>();
-        for (SupportRequest.Type requestType : SupportRequest.Type.values())
+        for (Type requestType : Type.values())
             skills.put(requestType, false);
         
         setSkills(builder.skills);
@@ -33,7 +33,7 @@ public class Agent extends InetEntity
         assignedSupportRequest = null;
     }
     
-    public synchronized boolean ableToService(SupportRequest.Type requestType)
+    public synchronized boolean ableToService(Type requestType)
     {
         if (!activated)
             return false;
@@ -41,25 +41,25 @@ public class Agent extends InetEntity
         return skills.get(requestType);
     }
     
-    public synchronized SupportRequest.Type[] getSkills()
+    public synchronized Type[] getSkills()
     {
         return skills.entrySet().stream()
                 .filter(entry -> entry.getValue())
                 .map(entry -> entry.getKey())
-                .toArray(SupportRequest.Type[]::new);
+                .toArray(Type[]::new);
     }
     
     public synchronized void setSkill(int requestTypeIndex, Boolean ableToService)
     {
-        setSkill(SupportRequest.Type.of(requestTypeIndex), ableToService);
+        setSkill(Type.of(requestTypeIndex), ableToService);
     }
     
     public synchronized void setSkill(String requestTypeString, Boolean ableToService)
     {
-        setSkill(SupportRequest.Type.of(requestTypeString), ableToService);
+        setSkill(Type.of(requestTypeString), ableToService);
     }
     
-    public synchronized void setSkill(SupportRequest.Type requestType, Boolean ableToService)
+    public synchronized void setSkill(Type requestType, Boolean ableToService)
     {
         if (requestType == null)
             throw new IllegalArgumentException("skill missing");
@@ -76,7 +76,7 @@ public class Agent extends InetEntity
             throw new IllegalArgumentException("skills missing");
         
         skills.entrySet().stream()
-            .filter(entry -> SupportRequest.Type.is(entry.getKey()))
+            .filter(entry -> Type.is(entry.getKey()))
             .forEach(entry -> setSkill(entry.getKey(), entry.getValue()));
         
         ensureAtLeastOneSkill();
@@ -231,13 +231,6 @@ public class Agent extends InetEntity
             return this;   
         }
         
-        public AgentBuilder setAddress(InetAddress address)
-        {
-            this.address = address.getHostAddress().toString();
-            
-            return this;
-        }
-        
         public AgentBuilder setSkill(int requestTypeIndex, boolean ableToService)
         {
             skills.put(String.valueOf(requestTypeIndex), ableToService);
@@ -252,7 +245,7 @@ public class Agent extends InetEntity
             return this;
         }
         
-        public AgentBuilder setSkill(SupportRequest.Type requestType, boolean ableToService)
+        public AgentBuilder setSkill(Type requestType, boolean ableToService)
         {
             skills.put(requestType.toString(), ableToService);
             

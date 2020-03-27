@@ -1,13 +1,13 @@
 package com.routingengine.methods;
 
+import static com.routingengine.MethodManager.Method;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.routingengine.Agent;
-import com.routingengine.MethodManager;
 
 
-public class GetAgentStatusMethod extends MethodManager.Method
+public class GetAgentStatusMethod extends Method
 {
     @Override
     public JsonElement handle(JsonObject arguments)

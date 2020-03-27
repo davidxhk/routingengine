@@ -1,11 +1,11 @@
 package com.routingengine.test;
 
+import static com.routingengine.Logger.log;
 import static com.routingengine.json.JsonUtils.getAsString;
 import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import com.google.gson.JsonElement;
-import com.routingengine.Logger;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonResponse;
 
@@ -54,7 +54,7 @@ public class CustomerClientConnectionHandler extends ClientConnectionHandler
     
     public final void clientLog(String message)
     {
-        Logger.log("Client " + i + " " + message);
+        log("Client " + i + " " + message);
     }
     
     public static final String getUUID(JsonResponse response)

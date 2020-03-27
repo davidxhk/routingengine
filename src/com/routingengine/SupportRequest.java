@@ -1,7 +1,6 @@
 package com.routingengine;
 
 import static com.routingengine.json.JsonUtils.getAsString;
-import java.net.InetAddress;
 import java.util.concurrent.TimeoutException;
 import com.google.gson.JsonObject;
 
@@ -42,12 +41,12 @@ public class SupportRequest extends InetEntity
     
     public synchronized void setType(String requestTypeString)
     {
-        setType(SupportRequest.Type.of(requestTypeString));
+        setType(Type.of(requestTypeString));
     }
     
     public synchronized void setType(Integer requestTypeIndex)
     {
-        setType(SupportRequest.Type.of(requestTypeIndex));
+        setType(Type.of(requestTypeIndex));
     }
 
     public synchronized void setType(Type requestType)
@@ -255,13 +254,6 @@ public class SupportRequest extends InetEntity
             address = addressString;
             
             return this;   
-        }
-        
-        public SupportRequestBuilder setAddress(InetAddress address)
-        {
-            this.address = address.getHostAddress().toString();
-            
-            return this;
         }
         
         public SupportRequest build()

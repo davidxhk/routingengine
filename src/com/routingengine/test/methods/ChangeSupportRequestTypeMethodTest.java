@@ -1,12 +1,12 @@
 package com.routingengine.test.methods;
 
+import static com.routingengine.Logger.log;
 import static org.junit.jupiter.api.Assertions.*;
 import static com.routingengine.json.JsonUtils.*;
 import java.io.IOException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import com.routingengine.Logger;
 import com.routingengine.client.Client;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonResponse;
@@ -36,7 +36,7 @@ public class ChangeSupportRequestTypeMethodTest
     void test()
         throws IOException
     {
-        Logger.log("hello from test");
+        log("hello from test");
         
         client.setConnectionHandler(new ClientConnectionHandler() {
             @Override
@@ -44,7 +44,7 @@ public class ChangeSupportRequestTypeMethodTest
                 throws IOException, InterruptedException
             {
                 JsonResponse response = ping();
-                Logger.log(response.toString());
+                log(response.toString());
                 
                 assertEquals("pong", castToString(response.getPayload()));
             }  
@@ -57,7 +57,7 @@ public class ChangeSupportRequestTypeMethodTest
     void test2()
         throws IOException
     {
-        Logger.log("hello from test2");
+        log("hello from test2");
         
         client.setConnectionHandler(new ClientConnectionHandler() {
             @Override
@@ -65,7 +65,7 @@ public class ChangeSupportRequestTypeMethodTest
                 throws IOException, InterruptedException
             {
                 JsonResponse response = ping();
-                Logger.log(response.toString());
+                log(response.toString());
                 
                 assertEquals("pong", castToString(response.getPayload()));
             }  
@@ -78,7 +78,7 @@ public class ChangeSupportRequestTypeMethodTest
     void test3()
         throws IOException
     {
-        Logger.log("hello from test3");
+        log("hello from test3");
         
         client.setConnectionHandler(new ClientConnectionHandler() {
             @Override
@@ -86,7 +86,7 @@ public class ChangeSupportRequestTypeMethodTest
                 throws IOException, InterruptedException
             {
                 JsonResponse response = ping();
-                Logger.log(response.toString());
+                log(response.toString());
                 
                 assertEquals("pong", castToString(response.getPayload()));
             }  

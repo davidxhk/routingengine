@@ -1,12 +1,15 @@
 package com.routingengine.json;
 
+import static com.routingengine.MethodManager.supports;
+import static com.routingengine.json.JsonUtils.toJsonElement;
+import static com.routingengine.json.JsonUtils.getAsString;
+import static com.routingengine.json.JsonProtocol.readJsonResponse;
+import static com.routingengine.json.JsonProtocol.writeJsonResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.routingengine.Logger;
-import com.routingengine.MethodManager;
 
 
 public class JsonResponse
@@ -27,7 +30,7 @@ public class JsonResponse
     
     public boolean hasValidMethod()
     {
-        return method == "null" || MethodManager.supports(method);
+        return method == "null" || supports(method);
     }
     
     public JsonResponse setMethod(String method)
@@ -76,35 +79,35 @@ public class JsonResponse
     
     public JsonResponse setPayload(String payload)
     {
-        setPayload(JsonUtils.toJsonElement(payload));
+        setPayload(toJsonElement(payload));
         
         return this;
     }
     
     public JsonResponse setPayload(Boolean payload)
     {
-        setPayload(JsonUtils.toJsonElement(payload));
+        setPayload(toJsonElement(payload));
         
         return this;
     }
     
     public JsonResponse setPayload(Number payload)
     {
-        setPayload(JsonUtils.toJsonElement(payload));
+        setPayload(toJsonElement(payload));
         
         return this;
     }
     
     public JsonResponse setPayload(@SuppressWarnings("rawtypes") List payload)
     {
-        setPayload(JsonUtils.toJsonElement(payload));
+        setPayload(toJsonElement(payload));
         
         return this;
     }
     
     public JsonResponse setPayload(@SuppressWarnings("rawtypes") Map payload)
     {
-        setPayload(JsonUtils.toJsonElement(payload));
+        setPayload(toJsonElement(payload));
         
         return this;
     }
@@ -137,9 +140,9 @@ public class JsonResponse
     
     public static JsonResponse fromJson(JsonObject jsonObject)
     {
-        String method = JsonUtils.getAsString(jsonObject, "method");
+        String method = getAsString(jsonObject, "method");
         
-        String result = JsonUtils.getAsString(jsonObject, "result");
+        String result = getAsString(jsonObject, "result");
         
         JsonElement payload = jsonObject.get("payload");
         
@@ -184,7 +187,7 @@ public class JsonResponse
     public void read(JsonReader jsonReader)
         throws IOException, JsonProtocolException
     {
-        JsonProtocol.readJsonResponse(jsonReader, this);
+        readJsonResponse(jsonReader, this);
     }
     
     public static JsonResponse fromReader(JsonReader jsonReader)
@@ -200,21 +203,19 @@ public class JsonResponse
     public void write(JsonWriter jsonWriter)
         throws IOException, JsonProtocolException
     {
-        JsonProtocol.writeJsonResponse(this, jsonWriter);
+        writeJsonResponse(this, jsonWriter);
     }
     
     public boolean writeSafe(JsonWriter jsonWriter)
         throws IOException
     {
         try {
-            JsonProtocol.writeJsonResponse(this, jsonWriter);
+            write(jsonWriter);
             
             return true;
         }
         
         catch (JsonProtocolException exception) {
-            Logger.log(exception.getMessage());
-            
             return false;
         }
     }

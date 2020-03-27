@@ -1,5 +1,6 @@
 package com.routingengine.test;
 
+import static com.routingengine.Logger.log;
 import static com.routingengine.json.JsonUtils.getAsString;
 import static com.routingengine.json.JsonUtils.getAsJsonObject;
 import java.io.IOException;
@@ -8,7 +9,6 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.routingengine.Logger;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonResponse;
 
@@ -76,7 +76,7 @@ public class AgentClientConnectionHandler extends ClientConnectionHandler
     
     public final void agentLog(String message)
     {
-        Logger.log("Agent " + i + " " + message);
+        log("Agent " + i + " " + message);
     }
     
     public static final String getUUID(JsonResponse response)

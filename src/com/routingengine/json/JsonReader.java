@@ -1,11 +1,12 @@
 package com.routingengine.json;
 
+import static com.google.gson.JsonParser.parseReader;
+import static com.routingengine.json.JsonUtils.castToJsonObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 
 public class JsonReader
@@ -42,9 +43,9 @@ public class JsonReader
     
     public final JsonObject parseJsonObject()
     {
-        JsonElement jsonElement = JsonParser.parseReader(jsonReader);
+        JsonElement jsonElement = parseReader(jsonReader);
         
-        return JsonUtils.castToJsonObject(jsonElement);
+        return castToJsonObject(jsonElement);
     }
     
     public final void clearInputStream()
