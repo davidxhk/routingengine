@@ -269,15 +269,15 @@ public class RoutingEngine
         serverThread.start();
         
         final int NUM_AGENTS = 3;
-        final int NUM_CUSTOMERS = 21;
+        final int NUM_CUSTOMERS = 6;
         
         ExecutorService executorService = newFixedThreadPool(NUM_AGENTS + NUM_CUSTOMERS);
         
         for (int i = 0; i < NUM_AGENTS; i++) {
             
             AgentClientConnectionHandler connectionHandler = new AgentClientConnectionHandler();
-            connectionHandler.i = i+1;
-            connectionHandler.j = NUM_CUSTOMERS/NUM_AGENTS;
+            connectionHandler.i = i + 1;
+            connectionHandler.j = NUM_CUSTOMERS/NUM_AGENTS + 1;
             connectionHandler.random = random;
             
             Client client = new Client(hostname, port);
@@ -289,7 +289,7 @@ public class RoutingEngine
         for (int i = 0; i < NUM_CUSTOMERS; i++) {
             
             CustomerClientConnectionHandler connectionHandler = new CustomerClientConnectionHandler();
-            connectionHandler.i = i+1;
+            connectionHandler.i = i + 1;
             connectionHandler.random = random;
             
             Client client = new Client(hostname, port);
@@ -299,6 +299,7 @@ public class RoutingEngine
         }
         
         executorService.shutdown();
+        
         while (!executorService.isTerminated()) {
             try {
                 executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -310,6 +311,7 @@ public class RoutingEngine
         }
         
         serverThread.interrupt();
+        
         try {
             serverThread.join();
         }
@@ -318,8 +320,8 @@ public class RoutingEngine
             log("Interrupted while joining server thread");
         }
         
-        Thread.getAllStackTraces().keySet().forEach(t ->
-            log(t.getName() + " -> daemon=" + t.isDaemon() + ", alive=" + t.isAlive()));
+//        Thread.getAllStackTraces().keySet().forEach(t ->
+//            log(t.getName() + " -> daemon=" + t.isDaemon() + ", alive=" + t.isAlive()));
         
         log("End of Routing Engine Test");
     }
