@@ -242,6 +242,7 @@ public class Agent extends InetEntity
             throw new IllegalStateException("agent has no assigned support request");
         
         synchronized(assignedSupportRequest) {
+            
             if (assignedSupportRequest.assignedAgent == this) {
                 assignedSupportRequest.assignedAgent = null;
                 
