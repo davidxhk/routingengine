@@ -3,7 +3,6 @@ package com.routingengine.methods;
 import java.util.concurrent.TimeoutException;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.routingengine.Logger;
 import com.routingengine.SupportRequest;
 
 
@@ -21,44 +20,39 @@ public class WaitForAgentMethod extends CheckSupportRequestMethod
     
     public void waitForAgent(SupportRequest supportRequest)
     {
-        if (!supportRequest.isOpen())
-            throw new IllegalStateException("support request closed");
-        
-        if (supportRequest.isWaiting())
-            throw new IllegalStateException("support request already waiting");
-        
         if (supportRequest.hasAssignedAgent())
-            throw new IllegalStateException("support request has assigned agent");
+            throw new IllegalStateException("support request already has assigned agent");
         
-        if (!routingEngine.isQueued(supportRequest))
-            routingEngine.putInQueue(supportRequest);
+        try {
+            supportRequest.startWaiting();
+            
+            routingEngine.assignAgent(supportRequest);
+            
+            supportRequest.stopWaiting();
+        }
         
-        while (!supportRequest.hasAssignedAgent()) {
-            try {
-                Logger.log("Started waiting...");
-                
-                supportRequest.startWaiting();
-                
-                Logger.log("Stopped waiting");
-            }
+        catch (TimeoutException exception) {
+            supportRequest.stopWaiting();
             
-            catch (TimeoutException exception) {
-                supportRequest.incrementPriority();
-                Logger.log("Waiting for agent timeout. Priority increased to " + supportRequest.getPriority());
-                
-                routingEngine.replaceIntoQueue(supportRequest);
-            }
+            supportRequest.incrementPriority();
             
-            catch (InterruptedException exception) {
-                routingEngine.removeFromQueue(supportRequest);
-                
-                if (supportRequest.isWaiting())
-                    supportRequest.stopWaiting();
-                
-                Thread.currentThread().interrupt();
-                
-                throw new IllegalStateException("wait for agent interrupted");
-            }
+            throw new IllegalStateException("wait for agent timeout");
+        }
+        
+        catch (InterruptedException exception) {
+            supportRequest.stopWaiting();
+            
+            supportRequest.incrementPriority();
+            
+            Thread.currentThread().interrupt();
+            
+            throw new IllegalStateException("wait for agent interrupted");
+        }
+        
+        if (!supportRequest.hasAssignedAgent()) {
+            supportRequest.incrementPriority();
+            
+            throw new IllegalStateException("routing engine failed to assign agent");
         }
     }
 }

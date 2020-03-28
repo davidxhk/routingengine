@@ -3,7 +3,6 @@ package com.routingengine.methods;
 import java.util.concurrent.TimeoutException;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.routingengine.SupportRequest;
 import com.routingengine.Agent;
 
 
@@ -21,27 +20,15 @@ public class TakeSupportRequestMethod extends CheckAgentMethod
     
     public void takeSupportRequest(Agent agent)
     {
-        if (!agent.isActivated())
-            throw new IllegalStateException("agent not activated");
-        
-        if (!agent.isAvailable())
-            throw new IllegalStateException("agent unavailable");
-        
         if (agent.hasAssignedSupportRequest())
-            throw new IllegalStateException("agent servicing another request");
+            throw new IllegalStateException("agent already has assigned support request");
         
         try {
             agent.startWaiting();
             
-            SupportRequest supportRequest = routingEngine.takeFromQueue(agent);
+            routingEngine.assignSupportRequest(agent);
             
             agent.stopWaiting();
-            
-            supportRequest.setAssignedAgent(agent);
-            
-            agent.setAssignedSupportRequest(supportRequest);
-            
-            supportRequest.stopWaiting();
         }
         
         catch (TimeoutException exception) {
@@ -57,5 +44,8 @@ public class TakeSupportRequestMethod extends CheckAgentMethod
             
             throw new IllegalStateException("take support request interrupted");
         }
+        
+        if (!agent.hasAssignedSupportRequest())
+            throw new IllegalStateException("routing engine failed to assign support request");
     }
 }
