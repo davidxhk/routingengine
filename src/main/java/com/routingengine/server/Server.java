@@ -49,8 +49,6 @@ public final class Server
                 try {
                     Socket socket = listener.accept();
                     
-                    log("Server connected to " + socket.toString());
-                    
                     ServerConnectionHandler connectionHandler =
                         new ServerConnectionHandler(socket, routingEngine);
                     

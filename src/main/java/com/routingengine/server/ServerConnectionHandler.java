@@ -23,6 +23,8 @@ public final class ServerConnectionHandler extends ConnectionHandler
     {
         connect(socket);
         
+        log("Server connected to " + socket.toString());
+        
         methodManager = new MethodManager(routingEngine);
     }
     
@@ -92,7 +94,9 @@ public final class ServerConnectionHandler extends ConnectionHandler
     @Override
     public final void run()
     {
-        try {            
+        log("Server handling connection with " + socket.toString());
+        
+        try {
             runMainLoop();
         }
         

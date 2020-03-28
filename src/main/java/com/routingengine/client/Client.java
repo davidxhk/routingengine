@@ -47,6 +47,8 @@ public final class Client
         else if (socket.isClosed())
             throw new IllegalStateException("socket closed");
         
+        log("Client handling connection with " + socket.toString());
+        
         try {            
             connectionHandler.runMainLoop();
         }
