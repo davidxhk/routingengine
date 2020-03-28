@@ -286,10 +286,9 @@ public class RoutingEngine
         ExecutorService executorService = newFixedThreadPool(numberOfAgents + numberOfCustomers);
         
         for (int i = 0; i < numberOfAgents; i++) {
-            
             AgentClientConnectionHandler connectionHandler = new AgentClientConnectionHandler();
-            connectionHandler.i = i + 1;
-            connectionHandler.j = numberOfCustomers/numberOfAgents + 1;
+            connectionHandler.clientId = i + 1;
+            connectionHandler.numberOfSupportRequestsToService = numberOfCustomers/numberOfAgents + 1;
             connectionHandler.random = random;
             
             Client client = new Client(hostname, port);
@@ -299,9 +298,8 @@ public class RoutingEngine
         }
         
         for (int i = 0; i < numberOfCustomers; i++) {
-            
             CustomerClientConnectionHandler connectionHandler = new CustomerClientConnectionHandler();
-            connectionHandler.i = i + 1;
+            connectionHandler.clientId = i + 1;
             connectionHandler.random = random;
             
             Client client = new Client(hostname, port);

@@ -1,90 +1,67 @@
 package com.routingengine.client;
 
-import static com.routingengine.Logger.log;
-import static com.routingengine.json.JsonUtils.getAsString;
 import static com.routingengine.json.JsonUtils.getAsJsonObject;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonResponse;
 
 
-public class AgentClientConnectionHandler extends ClientConnectionHandler
+public class AgentClientConnectionHandler extends CustomerClientConnectionHandler
 {
-    public Random random;
-    public int i;
-    public int j;
+    public int numberOfSupportRequestsToService;
     
     @Override
     public void runMainLoop()
         throws IOException, InterruptedException, EndConnectionException
     {
-        agentLog("initialized!");
+        log("initialized!");
         
-        randomSleep(10);
+        randomSleep();
         
-        agentLog("creating new agent");
-        JsonResponse response = newAgent(Map.of(i%3, true));
+        log("creating new agent");
+        JsonResponse response = newAgent(Map.of(clientId % 3, true));
         String agentUUIDString = getUUID(response);
-        agentLog("uuid -> " + agentUUIDString);
+        log("uuid -> " + agentUUIDString);
         
-        randomSleep(10);
+        randomSleep();
         
-        agentLog("updating availability");
+        log("updating availability");
         response = updateAgentAvailability(agentUUIDString, true);
-        agentLog(response);
+        log(response);
         
-        randomSleep(10);
+        randomSleep();
         
-        for (int k = 0; k < j; k++) {
-            agentLog("taking support request");
+        for (int i = 0; i < numberOfSupportRequestsToService; i++) {
+            log("taking support request");
             response = takeSupportRequest(agentUUIDString);
-            agentLog(response);
+            log(response);
             
-            if (!response.didSucceed())
+            if (!response.didSucceed()) {
+                log("exiting");
                 exit();
+            }
             
             String supportRequestUUIDString = getUUID(getAssignedSupportRequest(response));
         
-            randomSleep(10);
+            randomSleep();
         
-            agentLog("closing support request");
+            log("closing support request");
             response = closeSupportRequest(supportRequestUUIDString);
-            agentLog(response);
+            log(response);
         }
+        
+        log("exiting");
+        exit();
     }
     
-    public final void randomSleep(int timeout)
-        throws InterruptedException
+    @Override
+    protected void log(String message)
     {
-        TimeUnit.SECONDS.sleep(random.nextInt(timeout));
+        log("Agent " + clientId + " " + message);
     }
     
-    public final void agentLog(JsonResponse jsonResponse)
-    {
-        agentLog(jsonResponse.toString());
-    }
-    
-    public final void agentLog(String message)
-    {
-        log("Agent " + i + " " + message);
-    }
-    
-    public static final String getUUID(JsonResponse response)
-    {
-        return getUUID(response.getPayload());
-    }
-    
-    public static final String getUUID(JsonElement jsonElement)
-    {
-        return getAsString(jsonElement, "uuid");
-    }
-    
-    public static final JsonObject getAssignedSupportRequest(JsonResponse response)
+    private static final JsonObject getAssignedSupportRequest(JsonResponse response)
     {
         return getAsJsonObject(response.getPayload(), "assigned_support_request");
     }
