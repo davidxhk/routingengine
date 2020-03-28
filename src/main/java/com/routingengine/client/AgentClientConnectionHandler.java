@@ -21,7 +21,7 @@ public class AgentClientConnectionHandler extends ClientConnectionHandler
     
     @Override
     public void runMainLoop()
-        throws IOException, InterruptedException
+        throws IOException, InterruptedException, EndConnectionException
     {
         agentLog("initialized!");
         
@@ -45,13 +45,8 @@ public class AgentClientConnectionHandler extends ClientConnectionHandler
             response = takeSupportRequest(agentUUIDString);
             agentLog(response);
             
-            if (!response.didSucceed()) {
-                agentLog("checking agent");
-                response = checkAgent(agentUUIDString);
-                agentLog(response);
-                k--;
-                continue;
-            }
+            if (!response.didSucceed())
+                exit();
             
             String supportRequestUUIDString = getUUID(getAssignedSupportRequest(response));
         

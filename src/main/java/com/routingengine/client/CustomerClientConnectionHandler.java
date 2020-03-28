@@ -17,23 +17,23 @@ public class CustomerClientConnectionHandler extends ClientConnectionHandler
     
     @Override
     public void runMainLoop()
-        throws IOException, InterruptedException
+        throws IOException, InterruptedException, EndConnectionException
     {
-        clientLog("initialized!");
+        customerLog("initialized!");
         
         randomSleep(10);
         
-        clientLog("creating new support request");
+        customerLog("creating new support request");
         JsonResponse response = newSupportRequest("client "+i, "client"+i+"@gmail.com", i%3);
         String supportRequestUUIDString = getUUID(response);
-        clientLog("uuid -> " + supportRequestUUIDString);
+        customerLog("uuid -> " + supportRequestUUIDString);
         
         randomSleep(10);
         
         while (true) {
-            clientLog("waiting for agent");
+            customerLog("waiting for agent");
             response = waitForAgent(supportRequestUUIDString);
-            clientLog(response);
+            customerLog(response);
             
             if (response.didSucceed())
                 break;
@@ -41,9 +41,11 @@ public class CustomerClientConnectionHandler extends ClientConnectionHandler
         
         randomSleep(10);
         
-        clientLog("closing support request");
+        customerLog("closing support request");
         response = closeSupportRequest(supportRequestUUIDString);
-        clientLog(response);
+        customerLog(response);
+        
+        exit();
     }
     
     public final void randomSleep(int timeout)
@@ -52,14 +54,14 @@ public class CustomerClientConnectionHandler extends ClientConnectionHandler
         TimeUnit.SECONDS.sleep(random.nextInt(timeout));
     }
     
-    public final void clientLog(JsonResponse jsonResponse)
+    public final void customerLog(JsonResponse jsonResponse)
     {
-        clientLog(jsonResponse.toString());
+        customerLog(jsonResponse.toString());
     }
     
-    public final void clientLog(String message)
+    public final void customerLog(String message)
     {
-        log("Client " + i + " " + message);
+        log("Customer " + i + " " + message);
     }
     
     public static final String getUUID(JsonResponse response)

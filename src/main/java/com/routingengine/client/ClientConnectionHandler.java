@@ -1,15 +1,24 @@
 package com.routingengine.client;
 
 import static com.routingengine.json.JsonUtils.toJsonElement;
+import static com.routingengine.json.JsonProtocol.JsonProtocolException;
 import java.io.IOException;
 import java.util.Map;
-import com.routingengine.json.JsonProtocolException;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
 
 
 public abstract class ClientConnectionHandler extends ConnectionHandler
 {
+    protected final void exit()
+        throws IOException, EndConnectionException
+    {
+        jsonWriter.writeString("exit");
+        jsonWriter.flush();
+        
+        throw new EndConnectionException();
+    }
+    
     protected final JsonResponse ping()
         throws IOException, InterruptedException
     {

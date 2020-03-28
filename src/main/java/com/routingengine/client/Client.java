@@ -1,6 +1,7 @@
 package com.routingengine.client;
 
 import static com.routingengine.Logger.log;
+import static com.routingengine.client.ConnectionHandler.EndConnectionException;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
@@ -50,14 +51,22 @@ public final class Client
             connectionHandler.runMainLoop();
         }
         
+        catch (InterruptedException exception) {
+            log("Client was interrupted");
+        }
+        
         catch (IOException exception) {
             log("I/O error in " + socket.toString());
             
-            exception.printStackTrace();    
+            exception.printStackTrace();
+            
+            close();
         }
         
-        catch (InterruptedException exception) {
-            log("Client was interrupted");
+        catch (EndConnectionException exception) {
+            log("Client signalled to close");
+            
+            close();
         }
     }
     
