@@ -113,13 +113,14 @@ Also, the administrator may want to oversee all agents by [*checking the status 
 
 The total number and **UUIDs** of all agents for each of the following agent states will be listed:
 
-| State of</br>agent | Agent has</br>not been</br>activated | Agent is</br>waiting for</br>support request | Agent is</br>assigned to a</br>support request |
-| :----------------: | :----------------------------------: | :------------------------------------------: | :--------------------------------------------: |
-| Inactive           | Yes                                  | No                                           | No                                             |
-| Available          | No                                   | No                                           | No                                             |
-| Waiting            | No                                   | Yes                                          | No                                             |
-| Assigned           | No                                   | No                                           | Yes                                            |
-| Total              | Yes/No                               | Yes/No                                       | Yes/No                                         |
+| State of</br>agent | Agent has</br>not been</br>activated | Agent is</br>currently</br>available | Agent is</br>waiting for</br>support request | Agent is</br>assigned to a</br>support request |
+| :----------------: | :----------------------------------: | :----------------------------------: | :------------------------------------------: | :--------------------------------------------: |
+| Inactive           | Yes                                  | No                                   | No                                           | No                                             |
+| Unavailable        | No                                   | No                                   | No                                           | No                                             |
+| Available          | No                                   | Yes                                  | No                                           | No                                             |
+| Waiting            | No                                   | No                                   | Yes                                          | No                                             |
+| Assigned           | No                                   | No                                   | No                                           | Yes                                            |
+| Total              | Yes/No                               | Yes/No                               | Yes/No                                       | Yes/No                                         |
 
 The administrator may choose to [check the status][check_agent] or [activate/inactivate][activate_agent] a particular agent using its **UUID**.
 

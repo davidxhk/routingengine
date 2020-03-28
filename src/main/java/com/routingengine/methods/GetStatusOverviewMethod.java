@@ -25,6 +25,7 @@ public class GetStatusOverviewMethod extends Method
         
         int totalAgentCount = 0;
         int inactiveAgentCount = 0;
+        int unavailableAgentCount = 0;
         int availableAgentCount = 0;
         int waitingAgentCount = 0;
         int assignedAgentCount = 0;
@@ -41,8 +42,11 @@ public class GetStatusOverviewMethod extends Method
             else if (agent.hasAssignedSupportRequest())
                 assignedAgentCount++;
             
-            else
+            else if (agent.isAvailable())
                 availableAgentCount++;
+            
+            else
+                unavailableAgentCount++;
         }
         
         SupportRequest[] supportRequests = routingEngine.getSupportRequests();
@@ -71,6 +75,7 @@ public class GetStatusOverviewMethod extends Method
         
         JsonObject agentStatus = new JsonObject();
         agentStatus.addProperty("inactive", inactiveAgentCount);
+        agentStatus.addProperty("unavailable", unavailableAgentCount);
         agentStatus.addProperty("available", availableAgentCount);
         agentStatus.addProperty("waiting", waitingAgentCount);
         agentStatus.addProperty("assigned", assignedAgentCount);

@@ -27,6 +27,9 @@ public class GetAgentStatusMethod extends Method
         JsonArray inactiveAgentsArray = new JsonArray();
         int inactiveAgentCount = 0;
         
+        JsonArray unavailableAgentsArray = new JsonArray();
+        int unavailableAgentCount = 0;
+        
         JsonArray availableAgentsArray = new JsonArray();
         int availableAgentCount = 0;
         
@@ -56,9 +59,14 @@ public class GetAgentStatusMethod extends Method
                 assignedAgentCount++;
             }
             
-            else {
+            else if (agent.isAvailable()) {
                 availableAgentsArray.add(agentUUIDString);
                 availableAgentCount++;
+            }
+            
+            else {
+                unavailableAgentsArray.add(agentUUIDString);
+                unavailableAgentCount++;
             }
         }
         
@@ -66,6 +74,11 @@ public class GetAgentStatusMethod extends Method
         activeAgentsStatus.addProperty("count", inactiveAgentCount);
         activeAgentsStatus.add("uuids", inactiveAgentsArray);
         agentStatus.add("inactive", activeAgentsStatus);
+        
+        JsonObject unavailableAgentsStatus = new JsonObject();
+        unavailableAgentsStatus.addProperty("count", unavailableAgentCount);
+        unavailableAgentsStatus.add("uuids", unavailableAgentsArray);
+        agentStatus.add("unavailable", unavailableAgentsStatus);
         
         JsonObject availableAgentsStatus = new JsonObject();
         availableAgentsStatus.addProperty("count", availableAgentCount);
