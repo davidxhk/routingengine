@@ -243,22 +243,37 @@ public class RoutingEngine
     {
         log("Start of Routing Engine Test");
         
+        final int DEFAULT_NUM_AGENTS = 60;
+        final int DEFAULT_NUM_CUSTOMERS = 300;
+        
         String hostname;
         int port;
+        int numberOfAgents;
+        int numberOfCustomers;
         
         switch (args.length) {
             case 1:
                 hostname = "localhost";
                 port = Integer.valueOf(args[0]);
+                numberOfAgents = DEFAULT_NUM_AGENTS;
+                numberOfCustomers = DEFAULT_NUM_CUSTOMERS;
                 break;
         
             case 2:
                 hostname = args[0];
                 port = Integer.valueOf(args[1]);
+                numberOfAgents = DEFAULT_NUM_AGENTS;
+                numberOfCustomers = DEFAULT_NUM_CUSTOMERS;
                 break;
-        
+            
+            case 4:
+                hostname = args[0];
+                port = Integer.valueOf(args[1]);
+                numberOfAgents = Integer.valueOf(args[2]);
+                numberOfCustomers = Integer.valueOf(args[3]);
+            
             default:
-                System.out.println("Usage: java com.routingengine.test.RoutingEngineTest [hostname] port");
+                System.out.println("Usage: java com.routingengine.RoutingEngine [hostname] port [num_agents, num_customers]");
                 return;
         }
         
@@ -268,16 +283,13 @@ public class RoutingEngine
         Thread serverThread = new Thread(server);
         serverThread.start();
         
-        final int NUM_AGENTS = 3;
-        final int NUM_CUSTOMERS = 6;
+        ExecutorService executorService = newFixedThreadPool(numberOfAgents + numberOfCustomers);
         
-        ExecutorService executorService = newFixedThreadPool(NUM_AGENTS + NUM_CUSTOMERS);
-        
-        for (int i = 0; i < NUM_AGENTS; i++) {
+        for (int i = 0; i < numberOfAgents; i++) {
             
             AgentClientConnectionHandler connectionHandler = new AgentClientConnectionHandler();
             connectionHandler.i = i + 1;
-            connectionHandler.j = NUM_CUSTOMERS/NUM_AGENTS + 1;
+            connectionHandler.j = numberOfCustomers/numberOfAgents + 1;
             connectionHandler.random = random;
             
             Client client = new Client(hostname, port);
@@ -286,7 +298,7 @@ public class RoutingEngine
             executorService.execute(client);
         }
         
-        for (int i = 0; i < NUM_CUSTOMERS; i++) {
+        for (int i = 0; i < numberOfCustomers; i++) {
             
             CustomerClientConnectionHandler connectionHandler = new CustomerClientConnectionHandler();
             connectionHandler.i = i + 1;
@@ -319,9 +331,6 @@ public class RoutingEngine
         catch (InterruptedException exception) {
             log("Interrupted while joining server thread");
         }
-        
-//        Thread.getAllStackTraces().keySet().forEach(t ->
-//            log(t.getName() + " -> daemon=" + t.isDaemon() + ", alive=" + t.isAlive()));
         
         log("End of Routing Engine Test");
     }
