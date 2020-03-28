@@ -21,7 +21,8 @@ public final class Server
     private final RoutingEngine routingEngine;
     private final ExecutorService executorService;
     private final static int THREAD_POOL_SIZE = 1000;
-    private final static int SO_TIMEOUT = 1000;
+    private final static int SOCKET_TIMEOUT = 1000;
+    private final static int SHUTDOWN_TIMEOUT = 10000;
     
     public Server(String hostname, int port)
     {
@@ -40,14 +41,18 @@ public final class Server
             listener.bind(address);
             log("Server bound to " + address);
             
-            listener.setSoTimeout(SO_TIMEOUT);
+            listener.setSoTimeout(SOCKET_TIMEOUT);
+            
+            log("Server listening to " + listener);
             
             while (!Thread.interrupted()) {
                 try {
                     Socket socket = listener.accept();
                     
+                    log("Server connected to " + socket.toString());
+                    
                     ServerConnectionHandler connectionHandler =
-                            new ServerConnectionHandler(socket, routingEngine);
+                        new ServerConnectionHandler(socket, routingEngine);
                     
                     executorService.execute(connectionHandler);
                 }
@@ -85,25 +90,34 @@ public final class Server
         }
         
         log("Shutting down executor service");
+        
         executorService.shutdown();
         
-        while (!executorService.isTerminated()) {
-            try {
-                log("Waiting for executor service to terminate");
-                executorService.awaitTermination(10, TimeUnit.SECONDS);
-            }
+        try {
+            log("Waiting for executor service to terminate");
             
-            catch (InterruptedException exception) {
-                log("Executor service interrupted while terminating");
-            }
-        
-            finally {
+            if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS)) {
                 log("Shutting down now");
                 executorService.shutdownNow();
+    
+                if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS)) {
+                    log("Executor service did not terminate");
+                    
+                    return;
+                }
             }
+            
+            log("Server closed successfully");
         }
         
-        log("Server closed successfully");
+        catch (InterruptedException exception) {
+            log("Interrupted while shutting down executor service");
+            
+            log("Shutting down now");
+            executorService.shutdownNow();
+            
+            Thread.currentThread().interrupt();
+        }
     }
     
     public static void main(String[] args)
