@@ -9,7 +9,6 @@ public class InetEntity
 {
     private final UUID uuid;
     private volatile InetAddress address;
-    public static final long TIMEOUT_MILLIS = 30000L;
     
     public InetEntity()
     {
