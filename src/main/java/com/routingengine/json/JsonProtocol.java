@@ -1,6 +1,7 @@
 package com.routingengine.json;
 
 import static com.routingengine.json.JsonUtils.getAsString;
+import static com.routingengine.client.ConnectionHandler.EndConnectionException;
 import java.io.IOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -9,13 +10,15 @@ import com.google.gson.stream.MalformedJsonException;
 
 public class JsonProtocol
 {
+    public static final String EXIT_COMMAND = "exit";
+    
     private JsonProtocol()
     {
         throw new UnsupportedOperationException("do not instantiate!");
     }
     
     public static JsonRequest readJsonRequest(JsonReader jsonReader)
-        throws IOException, JsonProtocolException
+        throws IOException, JsonProtocolException, EndConnectionException
     {
         JsonRequest jsonRequest = new JsonRequest();
         
@@ -25,10 +28,13 @@ public class JsonProtocol
     }
     
     public static void readJsonRequest(JsonReader jsonReader, JsonRequest jsonRequest)
-        throws IOException, JsonProtocolException
+        throws IOException, JsonProtocolException, EndConnectionException
     {
         try {
             String method = jsonReader.readString();
+            
+            if (EXIT_COMMAND.equals(method))
+                throw new EndConnectionException();
             
             jsonRequest.setMethod(method);
         }
@@ -117,5 +123,13 @@ public class JsonProtocol
         jsonWriter.writeJsonObject(response);
         
         jsonWriter.flush();
+    }
+    
+    public static class JsonProtocolException extends Exception
+    {
+        public JsonProtocolException(String message)
+        {
+            super(message);
+        }
     }
 }

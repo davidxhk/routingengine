@@ -5,6 +5,8 @@ import static com.routingengine.json.JsonUtils.toJsonElement;
 import static com.routingengine.json.JsonUtils.getAsJsonObject;
 import static com.routingengine.json.JsonProtocol.readJsonRequest;
 import static com.routingengine.json.JsonProtocol.writeJsonRequest;
+import static com.routingengine.json.JsonProtocol.JsonProtocolException;
+import static com.routingengine.client.ConnectionHandler.EndConnectionException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -188,13 +190,13 @@ public class JsonRequest
     }
     
     public void read(JsonReader jsonReader)
-        throws IOException, JsonProtocolException
+        throws IOException, JsonProtocolException, EndConnectionException
     {
         readJsonRequest(jsonReader, this);
     }
     
     public static JsonRequest fromReader(JsonReader jsonReader)
-        throws IOException, JsonProtocolException
+        throws IOException, JsonProtocolException, EndConnectionException
     {
         JsonRequest jsonRequest = new JsonRequest();
         

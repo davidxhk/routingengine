@@ -1,6 +1,7 @@
 package com.routingengine.server;
 
 import static com.routingengine.Logger.log;
+import static com.routingengine.json.JsonProtocol.JsonProtocolException;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
@@ -8,7 +9,6 @@ import com.google.gson.JsonElement;
 import com.routingengine.MethodManager;
 import com.routingengine.RoutingEngine;
 import com.routingengine.client.ConnectionHandler;
-import com.routingengine.json.JsonProtocolException;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
 
@@ -23,23 +23,21 @@ public final class ServerConnectionHandler extends ConnectionHandler
     {
         connect(socket);
         
-        log("Server connected to " + socket.toString());
-        
         methodManager = new MethodManager(routingEngine);
     }
     
     @Override
     public final void runMainLoop()
-        throws IOException, InterruptedException
+        throws IOException, InterruptedException, EndConnectionException
     {
-        while (socket.isConnected() && !Thread.interrupted()) {
+        while (socket.isConnected()) {
             try {
                 waitForInput();
             }
             
             catch (InterruptedException exception) {
                 JsonResponse
-                    .failure("server connection handler interrupted while waiting for input")
+                    .failure("server connection interrupted")
                     .writeSafe(jsonWriter);
                 
                 Thread.currentThread().interrupt();
@@ -59,6 +57,13 @@ public final class ServerConnectionHandler extends ConnectionHandler
                     .writeSafe(jsonWriter);
                 
                 continue;
+            }
+            
+            catch (EndConnectionException exception) {
+                jsonWriter.writeLine("Goodbye!");
+                jsonWriter.flush();
+                
+                throw exception;
             }
             
             if (jsonRequest.getMethod().matches("new_agent|new_support_request")) {
@@ -99,6 +104,10 @@ public final class ServerConnectionHandler extends ConnectionHandler
         
         catch (InterruptedException exception) {
             log("Server connection was interrupted");
+        }
+        
+        catch (EndConnectionException exception) {
+            log("Server connection was exited");
         }
         
         finally {

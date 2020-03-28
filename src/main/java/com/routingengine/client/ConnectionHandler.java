@@ -12,7 +12,7 @@ public abstract class ConnectionHandler
     protected JsonReader jsonReader = null;
     protected JsonWriter jsonWriter = null;
     
-    public final void connect(Socket socket)
+    public void connect(Socket socket)
         throws IOException
     {
         this.socket = socket;
@@ -29,9 +29,25 @@ public abstract class ConnectionHandler
     protected final void waitForInput()
         throws IOException, InterruptedException
     {
-        while (!jsonReader.ready())
-            ;
+        while (!jsonReader.ready()) {
+            
+            if (Thread.interrupted())
+                throw new InterruptedException();
+        }
     }
     
-    public abstract void runMainLoop() throws IOException, InterruptedException;
+    public abstract void runMainLoop() throws IOException, InterruptedException, EndConnectionException;
+    
+    public static class EndConnectionException extends Exception
+    {
+        public EndConnectionException()
+        {
+            super();
+        }
+        
+        public EndConnectionException(String message)
+        {
+            super(message);
+        }
+    }
 }
