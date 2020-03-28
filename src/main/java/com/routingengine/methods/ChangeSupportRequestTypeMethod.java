@@ -13,15 +13,10 @@ public class ChangeSupportRequestTypeMethod extends CheckSupportRequestMethod
     {
         SupportRequest supportRequest = getSupportRequest(arguments);
         
-        changeSupportRequestType(supportRequest, arguments);
-        
-        return supportRequest.toJson();
-    }
-    
-    public static void changeSupportRequestType(SupportRequest supportRequest, JsonObject arguments)
-    {
         String supportRequestTypeString = getAsString(arguments, "type");
         
         supportRequest.setType(supportRequestTypeString);
+        
+        return supportRequest.toJson();
     }
 }

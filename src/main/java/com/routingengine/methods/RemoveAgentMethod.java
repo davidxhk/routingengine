@@ -1,31 +1,31 @@
 package com.routingengine.methods;
 
+import static com.routingengine.json.JsonUtils.getAsString;
+import static com.routingengine.MethodManager.Method;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.routingengine.Agent;
 
 
-public class RemoveAgentMethod extends CheckAgentMethod
+public class RemoveAgentMethod extends Method
 {
     @Override
     public JsonElement handle(JsonObject arguments)
     {
-        Agent agent = getAgent(arguments);
-        
-        removeAgent(agent);
+        Agent agent = removeAgent(arguments);
         
         return agent.toJson();
     }
     
-    public void removeAgent(Agent agent)
+    public Agent removeAgent(JsonObject arguments)
     {
-        routingEngine.removeAgent(agent);
+        String agentUUIDString = getAsString(arguments, "uuid");
         
-        if (agent.hasAssignedSupportRequest()) {
-            agent.getAssignedSupportRequest().setAssignedAgent(null);
-            agent.setAssignedSupportRequest(null);
-        }
+        Agent agent = routingEngine.removeAgent(agentUUIDString);
         
-        agent.deactivate();
+        if (agent.isActivated())
+            agent.deactivate();
+        
+        return agent;
     }
 }

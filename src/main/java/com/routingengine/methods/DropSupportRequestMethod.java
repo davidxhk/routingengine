@@ -12,18 +12,8 @@ public class DropSupportRequestMethod extends CheckAgentMethod
     {
         Agent agent = getAgent(arguments);
         
-        dropSupportRequest(agent);
+        agent.dropAssignedSupportRequest();
         
         return agent.toJson();
-    }
-    
-    public static void dropSupportRequest(Agent agent)
-    {
-        if (!agent.hasAssignedSupportRequest())
-            throw new IllegalStateException("agent has no assigned request");
-        
-        agent.getAssignedSupportRequest().doublePriority();
-        agent.getAssignedSupportRequest().setAssignedAgent(null);
-        agent.setAssignedSupportRequest(null);
     }
 }

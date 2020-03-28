@@ -2,25 +2,30 @@ package com.routingengine.methods;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import static com.routingengine.MethodManager.Method;
+import static com.routingengine.json.JsonUtils.getAsString;
 import com.routingengine.SupportRequest;
 
 
-public class RemoveSupportRequestMethod extends CloseSupportRequestMethod
+public class RemoveSupportRequestMethod extends Method
 {
     @Override
     public JsonElement handle(JsonObject arguments)
     {
-        SupportRequest supportRequest = getSupportRequest(arguments);
-        
-        removeSupportRequest(supportRequest);
+        SupportRequest supportRequest = removeSupportRequest(arguments);
         
         return supportRequest.toJson();
     }
     
-    public void removeSupportRequest(SupportRequest supportRequest)
+    public SupportRequest removeSupportRequest(JsonObject arguments)
     {
-        closeSupportRequest(supportRequest);
+        String supportRequestUUIDString = getAsString(arguments, "uuid");
         
-        routingEngine.removeSupportRequest(supportRequest);
+        SupportRequest supportRequest = routingEngine.removeSupportRequest(supportRequestUUIDString);
+        
+        if (supportRequest.isOpen())
+            supportRequest.close();
+        
+        return supportRequest;
     }
 }

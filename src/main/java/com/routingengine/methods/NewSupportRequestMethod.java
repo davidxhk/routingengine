@@ -14,7 +14,7 @@ public class NewSupportRequestMethod extends Method
     {
         SupportRequest supportRequest = newSupportRequest(arguments);
         
-        addSupportRequest(supportRequest);
+        routingEngine.addSupportRequest(supportRequest);
         
         return supportRequest.toJson();
     }
@@ -27,10 +27,5 @@ public class NewSupportRequestMethod extends Method
             .setType(getAsString(arguments, "type"))
             .setAddress(getAsString(arguments, "address"))
             .build();
-    }
-    
-    public void addSupportRequest(SupportRequest supportRequest)
-    {
-        routingEngine.addSupportRequest(supportRequest);
     }
 }

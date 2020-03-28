@@ -15,7 +15,7 @@ public class NewAgentMethod extends Method
     {
         Agent agent = newAgent(arguments);
         
-        addAgent(agent);
+        routingEngine.addAgent(agent);
         
         return agent.toJson();
     }
@@ -26,10 +26,5 @@ public class NewAgentMethod extends Method
             .setAddress(getAsString(arguments, "address"))
             .setSkills(getAsBooleanMap(arguments, "skills"))
             .build();
-    }
-    
-    public void addAgent(Agent agent)
-    {
-        routingEngine.addAgent(agent);
     }
 }

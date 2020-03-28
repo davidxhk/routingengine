@@ -13,15 +13,10 @@ public class UpdateAgentAvailabilityMethod extends CheckAgentMethod
     {
         Agent agent = getAgent(arguments);
         
-        updateAgentAvailability(agent, arguments);
-        
-        return agent.toJson();
-    }
-    
-    public static void updateAgentAvailability(Agent agent, JsonObject arguments)
-    {
         Boolean isAvailable = getAsBoolean(arguments, "available");
         
         agent.setAvailability(isAvailable);
+        
+        return agent.toJson();
     }
 }

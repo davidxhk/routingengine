@@ -14,15 +14,10 @@ public class UpdateAgentSkillsMethod extends CheckAgentMethod
     {
         Agent agent = getAgent(arguments);
         
-        updateAgentSkills(agent, arguments);
-        
-        return agent.toJson();
-    }
-    
-    public static void updateAgentSkills(Agent agent, JsonObject arguments)
-    {
         Map<String, Boolean> skills = getAsBooleanMap(arguments, "skills");
         
         agent.setSkills(skills);
+        
+        return agent.toJson();
     }
 }

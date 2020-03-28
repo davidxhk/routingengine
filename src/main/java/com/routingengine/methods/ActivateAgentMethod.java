@@ -13,13 +13,6 @@ public class ActivateAgentMethod extends CheckAgentMethod
     {
         Agent agent = getAgent(arguments);
         
-        activateAgent(agent, arguments);
-        
-        return agent.toJson();
-    }
-    
-    public static void activateAgent(Agent agent, JsonObject arguments)
-    {
         Boolean doActivate = getAsBoolean(arguments, "activate");
         
         if (doActivate)
@@ -27,5 +20,7 @@ public class ActivateAgentMethod extends CheckAgentMethod
         
         else
             agent.deactivate();
+        
+        return agent.toJson();
     }
 }
