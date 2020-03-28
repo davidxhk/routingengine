@@ -29,9 +29,7 @@ public class GetQueueStatusMethod extends Method
             
             JsonArray queuedSupportRequestsArray = new JsonArray();
             
-            for (SupportRequest supportRequest : routingEngine.getRequestQueueManager()
-                    .getQueuedSupportRequests(requestType))
-                
+            for (SupportRequest supportRequest : routingEngine.getQueuedSupportRequests(requestType))
                 queuedSupportRequestsArray.add(supportRequest.getUUID().toString());
             
             subQueueStatus.add("uuids", queuedSupportRequestsArray);
