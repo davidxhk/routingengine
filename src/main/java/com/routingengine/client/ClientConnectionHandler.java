@@ -177,6 +177,18 @@ public abstract class ClientConnectionHandler extends ConnectionHandler
         return awaitResponse();
     }
     
+    protected final JsonResponse activateAgent(String agentUUIDString)
+        throws IOException, InterruptedException
+    {
+        return activateAgent(agentUUIDString, true);
+    }
+    
+    protected final JsonResponse deactivateAgent(String agentUUIDString)
+        throws IOException, InterruptedException
+    {
+        return activateAgent(agentUUIDString, false);
+    }
+    
     protected final JsonResponse checkAgent(String agentUUIDString)
         throws IOException, InterruptedException
     {
