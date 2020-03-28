@@ -30,9 +30,14 @@ public class CustomerClientConnectionHandler extends ClientConnectionHandler
         
         randomSleep(10);
         
-        clientLog("waiting for agent");
-        response = waitForAgent(supportRequestUUIDString);
-        clientLog(response);
+        while (true) {
+            clientLog("waiting for agent");
+            response = waitForAgent(supportRequestUUIDString);
+            clientLog(response);
+            
+            if (response.didSucceed())
+                break;
+        }
         
         randomSleep(10);
         
