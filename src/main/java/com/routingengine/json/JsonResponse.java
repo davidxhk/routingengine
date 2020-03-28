@@ -5,6 +5,7 @@ import static com.routingengine.json.JsonUtils.toJsonElement;
 import static com.routingengine.json.JsonUtils.getAsString;
 import static com.routingengine.json.JsonProtocol.readJsonResponse;
 import static com.routingengine.json.JsonProtocol.writeJsonResponse;
+import static com.routingengine.json.JsonProtocol.JsonProtocolException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
