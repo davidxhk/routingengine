@@ -41,11 +41,11 @@ Rarely, the customer might want to [*change the type of his/her support request*
 In any case, once the support request has been serviced successfully, the customer or agent can proceed to [*close the support request*][close_support_request].
 
 
-[new_support_request]: https://github.com/han-keong/routingengine/blob/master/test/support_request_methods/new_support_request_tests.md
-[wait_for_agent]: https://github.com/han-keong/routingengine/blob/master/test/support_request_methods/wait_for_agent_tests.md
-[check_support_request]: https://github.com/han-keong/routingengine/blob/master/test/support_request_methods/check_support_request_tests.md
-[change_support_request_type]: https://github.com/han-keong/routingengine/blob/master/test/support_request_methods/change_support_request_type_tests.md
-[close_support_request]: https://github.com/han-keong/routingengine/blob/master/test/support_request_methods/close_support_request_tests.md
+[new_support_request]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/new_support_request_tests.md
+[wait_for_agent]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/wait_for_agent_tests.md
+[check_support_request]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/check_support_request_tests.md
+[change_support_request_type]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/change_support_request_type_tests.md
+[close_support_request]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/close_support_request_tests.md
 
 ## Agent Methods
 
@@ -79,14 +79,14 @@ Occasionally, an agent might have received training in other skills, so an admin
 
 In the event that an agent is no longer working at the contact center, the administrator may [*remove the agent from the routing engine system*][remove_agent].
 
-[new_agent]: https://github.com/han-keong/routingengine/blob/master/test/agent_methods/new_agent_tests.md
-[update_agent_availability]: https://github.com/han-keong/routingengine/blob/master/test/agent_methods/update_agent_availability_tests.md
-[take_support_request]: https://github.com/han-keong/routingengine/blob/master/test/agent_methods/take_support_request_tests.md
-[drop_support_request]: https://github.com/han-keong/routingengine/blob/master/test/agent_methods/drop_support_request_tests.md
-[activate_agent]: https://github.com/han-keong/routingengine/blob/master/test/agent_methods/activate_agent_tests.md
-[check_agent]: https://github.com/han-keong/routingengine/blob/master/test/agent_methods/check_agent_tests.md
-[update_agent_skills]: https://github.com/han-keong/routingengine/blob/master/test/agent_methods/update_agent_skills_tests.md
-[remove_agent]: https://github.com/han-keong/routingengine/blob/master/test/agent_methods/remove_agent_tests.md
+[new_agent]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/new_agent_tests.md
+[update_agent_availability]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/update_agent_availability_tests.md
+[take_support_request]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/take_support_request_tests.md
+[drop_support_request]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/drop_support_request_tests.md
+[activate_agent]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/activate_agent_tests.md
+[check_agent]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/check_agent_tests.md
+[update_agent_skills]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/update_agent_skills_tests.md
+[remove_agent]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/remove_agent_tests.md
 
 
 ## Admin Methods
@@ -129,9 +129,10 @@ The total number and **UUIDs** of all support requests in each queue will be lis
 
 Lastly, if the administrator would just like to have a summary of all the numbers for each of the above, then he may simply [*get a status overview*][get_status_overview].
 
-[ping]: https://github.com/han-keong/routingengine/blob/master/test/admin_methods/ping_tests.md
-[get_support_request_status]: https://github.com/han-keong/routingengine/blob/master/test/admin_methods/get_support_request_status_tests.md
-[get_agent_status]: https://github.com/han-keong/routingengine/blob/master/test/admin_methods/get_agent_status_tests.md
-[get_queue_status]: https://github.com/han-keong/routingengine/blob/master/test/admin_methods/get_queue_status_tests.md
-[get_status_overview]: https://github.com/han-keong/routingengine/blob/master/test/admin_methods/get_status_overview_tests.md
+[ping]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/ping_tests.md
+[get_support_request_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_support_request_status_tests.md
+[get_agent_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_agent_status_tests.md
+[get_queue_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_queue_status_tests.md
+[get_status_overview]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_status_overview_tests.md
+
 
