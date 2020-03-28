@@ -23,6 +23,7 @@ public class NewSupportRequestMethodTest
     private static Client client;
     private static final String hostname = "localhost";
     private static final int port = 50000;
+    private static final String method = "new_support_request";
     
     @BeforeAll
     static void setUpBeforeClass()
@@ -54,7 +55,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = newSupportRequest(name, email, type);
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertTrue(response.didSucceed());
                 
@@ -91,7 +92,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = newSupportRequest(name, email, type);
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertTrue(response.didSucceed());
                 
@@ -129,7 +130,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = newSupportRequest(name, email, type, address);
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertTrue(response.didSucceed());
                 
@@ -163,14 +164,14 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("email", "bob@abc.com")
                     .setArgument("type", 1)
                     .writeSafe(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -194,7 +195,7 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("name", new ArrayList<>())
                     .setArgument("email", "bob@abc.com")
                     .setArgument("type", 1)
@@ -202,7 +203,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -226,7 +227,7 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("name", new HashMap<>())
                     .setArgument("email", "bob@abc.com")
                     .setArgument("type", 1)
@@ -234,7 +235,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -258,14 +259,14 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("name", "bob")
                     .setArgument("type", 1)
                     .writeSafe(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -289,7 +290,7 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("name", "bob")
                     .setArgument("email", new ArrayList<>())
                     .setArgument("type", 1)
@@ -297,7 +298,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -321,7 +322,7 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("name", "bob")
                     .setArgument("email", new HashMap<>())
                     .setArgument("type", 1)
@@ -329,7 +330,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -353,14 +354,14 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("name", "bob")
                     .setArgument("email", "bob@abc.com")
                     .writeSafe(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -384,7 +385,7 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("name", "bob")
                     .setArgument("email", "bob@abc.com")
                     .setArgument("type", new ArrayList<>())
@@ -392,7 +393,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -416,7 +417,7 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("name", "bob")
                     .setArgument("email", "bob@abc.com")
                     .setArgument("type", new HashMap<>())
@@ -424,7 +425,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -448,7 +449,7 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("name", "bob")
                     .setArgument("email", "bob@abc.com")
                     .setArgument("type", 999)
@@ -456,7 +457,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -480,7 +481,7 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("name", "bob")
                     .setArgument("email", "bob@abc.com")
                     .setArgument("type", "blabla")
@@ -488,7 +489,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -512,7 +513,7 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("name", "bob")
                     .setArgument("email", "bob@abc.com")
                     .setArgument("type", 1)
@@ -521,7 +522,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -545,7 +546,7 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("name", "bob")
                     .setArgument("email", "bob@abc.com")
                     .setArgument("type", 1)
@@ -554,7 +555,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -578,7 +579,7 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("name", "bob")
                     .setArgument("email", "bob@abc.com")
                     .setArgument("type", 1)
@@ -587,7 +588,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -611,7 +612,7 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("name", "bob")
                     .setArgument("email", "bob@abc.com")
                     .setArgument("type", 1)
@@ -620,7 +621,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -644,12 +645,12 @@ public class NewSupportRequestMethodTest
                 throws IOException, InterruptedException
             {
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .writeSafe(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -677,7 +678,7 @@ public class NewSupportRequestMethodTest
                 int type = 1;
                 
                 new JsonRequest()
-                    .setMethod("new_support_request")
+                    .setMethod(method)
                     .setArgument("name", name)
                     .setArgument("email", email)
                     .setArgument("type", 1)
@@ -686,7 +687,7 @@ public class NewSupportRequestMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertTrue(response.didSucceed());
                 
@@ -717,12 +718,12 @@ public class NewSupportRequestMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                jsonWriter.writeString("new_support_request \"testtest\"");
+                jsonWriter.writeString(method + " \"testtest\"");
                 jsonWriter.flush();
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -745,12 +746,12 @@ public class NewSupportRequestMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                jsonWriter.writeString("new_support_request []");
+                jsonWriter.writeString(method + " []");
                 jsonWriter.flush();
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -773,12 +774,12 @@ public class NewSupportRequestMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                jsonWriter.writeString("new_support_request ;!/");
+                jsonWriter.writeString(method + " ;!/");
                 jsonWriter.flush();
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
@@ -801,12 +802,12 @@ public class NewSupportRequestMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                jsonWriter.writeString("new_support_request }}}}");
+                jsonWriter.writeString(method + " }}}}");
                 jsonWriter.flush();
                 
                 JsonResponse response = awaitResponse();
                 
-                assertEquals("new_support_request", response.getMethod());
+                assertEquals(method, response.getMethod());
                 
                 assertFalse(response.didSucceed());
                 
