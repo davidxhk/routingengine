@@ -4,8 +4,6 @@ import static com.routingengine.SupportRequest.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -24,63 +22,9 @@ public class RequestQueueManager
         requestQueues = Map.copyOf(requestQueues);
     }
     
-    private RequestQueue getQueue(Type requestType)
+    public RequestQueue getQueue(Type requestType)
     {
         return requestQueues.get(requestType);
-    }
-    
-    private RequestQueue selectQueue(SupportRequest supportRequest)
-    {
-        return getQueue(supportRequest.getType());
-    }
-    
-    private RequestQueue selectQueue(Agent agent)
-    {
-        int maxCount = Integer.MIN_VALUE;
-        
-        RequestQueue queue, maxQueue = null;
-        
-        for (Type requestType : agent.getSkills()) {
-            queue = getQueue(requestType);
-            
-            if (maxQueue == null || queue.getCount() > maxCount) {
-                maxQueue = queue;
-                maxCount = queue.getCount();
-            }
-        }
-        
-        return maxQueue;
-    }
-    
-    public void putSupportRequest(SupportRequest supportRequest)
-    {
-        selectQueue(supportRequest).put(supportRequest);
-    }
-    
-    public void removeSupportRequest(SupportRequest supportRequest)
-    {
-        selectQueue(supportRequest).remove(supportRequest);
-    }
-    
-    public boolean isQueued(SupportRequest supportRequest)
-    {
-        return selectQueue(supportRequest).contains(supportRequest);
-    }
-    
-    public SupportRequest takeSupportRequest(Agent agent)
-        throws InterruptedException, TimeoutException
-    {
-        return selectQueue(agent).take();
-    }
-    
-    public int getQueueCount(Type requestType)
-    {
-        return getQueue(requestType).getCount();
-    }
-    
-    public SupportRequest[] getQueuedSupportRequests(Type requestType)
-    {
-        return getQueue(requestType).queue.toArray(SupportRequest[]::new);
     }
     
     public static class RequestQueue
@@ -94,17 +38,17 @@ public class RequestQueueManager
             count = new AtomicInteger();
         }
     
-        private int getCount()
+        public int getCount()
         {
             return count.intValue();
         }
         
-        private boolean contains(SupportRequest supportRequest)
+        public boolean contains(SupportRequest supportRequest)
         {
             return queue.contains(supportRequest);
         }
         
-        private boolean put(SupportRequest supportRequest)
+        public boolean put(SupportRequest supportRequest)
         {
             if (contains(supportRequest))
                 return false;
@@ -116,30 +60,33 @@ public class RequestQueueManager
             return true;
         }
         
-        private SupportRequest take()
-            throws InterruptedException, TimeoutException
+        public boolean remove(SupportRequest supportRequest)
         {
-            SupportRequest supportRequest = queue.poll(InetEntity.TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+            if (!contains(supportRequest))
+                return false;
             
-            if (supportRequest != null) {
-                count.getAndDecrement();
+            queue.remove(supportRequest);
             
-                return supportRequest;
-            }
+            count.getAndDecrement();
             
-            else {
-                throw new TimeoutException();
-            }
+            return true;
         }
         
-        private boolean remove(SupportRequest supportRequest)
+        public SupportRequest take()
         {
-            boolean removed = queue.remove(supportRequest);
+            if (queue.size() == 0)
+                return null;
             
-            if (removed)
-                count.getAndDecrement();
+            SupportRequest supportRequest = queue.remove();
             
-            return removed;
+            count.getAndDecrement();
+            
+            return supportRequest;
+        }
+        
+        public SupportRequest[] toArray()
+        {
+            return queue.toArray(SupportRequest[]::new);
         }
     }
 }
