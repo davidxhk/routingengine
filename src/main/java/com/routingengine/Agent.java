@@ -13,11 +13,11 @@ import com.google.gson.JsonObject;
 
 public class Agent extends InetEntity
 {
-    private volatile Map<Type, Boolean> skills;
-    private volatile boolean activated;
-    private volatile boolean available;
-    private volatile boolean waiting;
-    private volatile SupportRequest assignedSupportRequest;
+    volatile Map<Type, Boolean> skills;
+    volatile boolean activated;
+    volatile boolean available;
+    volatile boolean waiting;
+    volatile SupportRequest assignedSupportRequest;
     
     private Agent()
     {
@@ -109,20 +109,35 @@ public class Agent extends InetEntity
         throw new IllegalArgumentException("skill missing");
     }
     
+    public synchronized boolean isActivated()
+    {
+        return activated;
+    }
+    
     public synchronized void activate()
     {
+        if (activated)
+            throw new IllegalStateException("agent already activated");
+        
         activated = true;
     }
     
     public synchronized void deactivate()
     {
+        if (!activated)
+            throw new IllegalStateException("agent already deactivated");
+        
+        if (hasAssignedSupportRequest())
+            dropAssignedSupportRequest();
+        
+        waiting = false;
         available = false;
         activated = false;
     }
     
-    public synchronized boolean isActivated()
+    public synchronized boolean isAvailable()
     {
-        return activated;
+        return available;
     }
     
     public synchronized void setAvailability(Boolean isAvailable)
@@ -131,20 +146,34 @@ public class Agent extends InetEntity
             throw new IllegalArgumentException("available missing");
         
         if (!activated)
-            return;
+            throw new IllegalStateException("agent not activated");
+        
+        if (isAvailable) {
+            if (waiting)
+                throw new IllegalStateException("agent is waiting");
+        
+            if (hasAssignedSupportRequest())
+                throw new IllegalStateException("agent has assigned support request");
+        }
         
         available = isAvailable;
     }
     
-    public synchronized boolean isAvailable()
+    public synchronized boolean isWaiting()
     {
-        return available;
+        return waiting;
     }
     
     public synchronized void startWaiting()
     {
         if (!activated)
-            return;
+            throw new IllegalStateException("agent not activated");
+        
+        if (waiting)
+            throw new IllegalStateException("agent already waiting");
+        
+        if (!available)
+            throw new IllegalStateException("agent not available");
         
         waiting = true;
         available = false;
@@ -153,15 +182,15 @@ public class Agent extends InetEntity
     public synchronized void stopWaiting()
     {
         if (!activated)
-            return;
+            throw new IllegalStateException("agent not activated");
+        
+        if (!waiting)
+            throw new IllegalStateException("agent not waiting");
         
         waiting = false;
-        available = true;
-    }
-    
-    public synchronized boolean isWaiting()
-    {
-        return waiting;
+        
+        if (assignedSupportRequest == null)
+            available = true;
     }
     
     public synchronized SupportRequest getAssignedSupportRequest()
@@ -169,19 +198,61 @@ public class Agent extends InetEntity
         return assignedSupportRequest;
     }
     
-    public synchronized void setAssignedSupportRequest(SupportRequest supportRequest)
-    {
-        if (!activated)
-            return;
-        
-        assignedSupportRequest = supportRequest;
-        
-        available = !hasAssignedSupportRequest();
-    }
-    
     public synchronized boolean hasAssignedSupportRequest()
     { 
         return assignedSupportRequest != null;
+    }
+    
+    public synchronized void setAssignedSupportRequest(SupportRequest supportRequest)
+    {
+        if (supportRequest == null)
+            throw new IllegalArgumentException("support request missing");
+        
+        if (!activated)
+            throw new IllegalStateException("agent not activated");
+        
+        if (!waiting && !available)
+            throw new IllegalStateException("agent not available");
+        
+        if (assignedSupportRequest != null)
+            throw new IllegalStateException("agent already has assigned support request");
+        
+        synchronized(supportRequest) {
+            
+            if (supportRequest.assignedAgent != null)
+                throw new IllegalArgumentException("support request has assigned agent");
+            
+            if (!supportRequest.open)
+                throw new IllegalArgumentException("support request is closed");
+            
+            if (!skills.get(supportRequest.type))
+                throw new IllegalArgumentException("support request unable to be serviced");
+            
+            supportRequest.assignedAgent = this;
+            
+            assignedSupportRequest = supportRequest;
+            
+            available = false;
+        }
+    }
+    
+    public synchronized void dropAssignedSupportRequest()
+    {
+        if (assignedSupportRequest == null)
+            throw new IllegalStateException("agent has no assigned support request");
+        
+        synchronized(assignedSupportRequest) {
+            if (assignedSupportRequest.assignedAgent == this) {
+                assignedSupportRequest.assignedAgent = null;
+                
+                assignedSupportRequest.priority *= 2;
+            }
+        }
+        
+        assignedSupportRequest = null;
+        
+        if (activated)
+            available = true;
     }
     
     public synchronized JsonObject toJson()
@@ -205,13 +276,13 @@ public class Agent extends InetEntity
             
             assignedSupportRequestJsonObject.addProperty("uuid", assignedSupportRequest.getUUID().toString());
             
-            assignedSupportRequestJsonObject.add("user", assignedSupportRequest.getUser().toJson());
-            
             assignedSupportRequestJsonObject.addProperty("address", assignedSupportRequest.getAddress().getHostAddress());
             
-            assignedSupportRequestJsonObject.addProperty("type", assignedSupportRequest.getType().toString());
+            assignedSupportRequestJsonObject.add("user", assignedSupportRequest.user.toJson());
             
-            assignedSupportRequestJsonObject.addProperty("priority", assignedSupportRequest.getPriority());
+            assignedSupportRequestJsonObject.addProperty("type", assignedSupportRequest.type.toString());
+            
+            assignedSupportRequestJsonObject.addProperty("priority", assignedSupportRequest.priority);
         }
         
         agentJsonObject.add("assigned_support_request", assignedSupportRequestJsonObject);
@@ -237,7 +308,7 @@ public class Agent extends InetEntity
             JsonObject supportRequestJson = getAsJsonObject(jsonObject, "assigned_support_request");
             
             if (supportRequestJson != null)
-                agent.setAssignedSupportRequest(SupportRequest.fromJson(supportRequestJson));
+                agent.assignedSupportRequest = SupportRequest.fromJson(supportRequestJson);
         }
         
         return agent;

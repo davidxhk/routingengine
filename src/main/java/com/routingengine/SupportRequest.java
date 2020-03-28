@@ -4,21 +4,18 @@ import static com.routingengine.json.JsonUtils.getAsString;
 import static com.routingengine.json.JsonUtils.getAsBoolean;
 import static com.routingengine.json.JsonUtils.getAsInt;
 import static com.routingengine.json.JsonUtils.getAsJsonObject;
-import java.util.concurrent.TimeoutException;
 import com.google.gson.JsonObject;
 
 
 public class SupportRequest extends InetEntity
     implements Comparable<SupportRequest>
 {
-    private User user;
-    private volatile Type requestType;
-    private volatile boolean open;
-    private volatile boolean waiting;
-    private volatile boolean notified;
-    private volatile Agent assignedAgent;
-    private volatile int priority;
-    private static final long TIMEOUT_MILLIS = 30000L;
+    User user;
+    volatile Type type;
+    volatile boolean open;
+    volatile boolean waiting;
+    volatile Agent assignedAgent;
+    volatile int priority;
     
     private SupportRequest()
     {
@@ -40,11 +37,10 @@ public class SupportRequest extends InetEntity
     private void initialize(SupportRequestBuilder builder)
     {
         user = new User(builder.name, builder.email);
-        setType(builder.requestType);
+        setType(builder.type);
         
         open = true;
         waiting = false;
-        notified = false;
         assignedAgent = null;
         priority = 1;
     }
@@ -56,34 +52,41 @@ public class SupportRequest extends InetEntity
 
     public synchronized Type getType()
     {
-        return requestType;
+        return type;
     }
     
-    public synchronized void setType(String requestTypeString)
+    public synchronized void setType(String typeString)
     {
-        setType(Type.of(requestTypeString));
+        setType(Type.of(typeString));
     }
     
-    public synchronized void setType(Integer requestTypeIndex)
+    public synchronized void setType(Integer typeIndex)
     {
-        setType(Type.of(requestTypeIndex));
+        setType(Type.of(typeIndex));
     }
 
-    public synchronized void setType(Type requestType)
+    public synchronized void setType(Type type)
     {
-        if (requestType == null)
+        if (type == null)
             throw new IllegalArgumentException("type missing");
         
-        this.requestType = requestType;
+        this.type = type;
     }
-
+    
     public synchronized boolean isOpen()
     {
         return open;
     }
-
+    
     public synchronized void close()
     {
+        if (!open)
+            throw new IllegalStateException("support request already closed");
+        
+        if (hasAssignedAgent())
+            dropAssignedAgent();
+        
+        waiting = false;
         open = false;
     }
     
@@ -91,49 +94,63 @@ public class SupportRequest extends InetEntity
     {
         return waiting;
     }
-
-    public synchronized void startWaiting()
-        throws InterruptedException, TimeoutException
-    {
-        startWaiting(TIMEOUT_MILLIS);
-    }
     
-    public synchronized void startWaiting(long timeout_millis)
-        throws InterruptedException, TimeoutException
+    public synchronized void startWaiting()
     {
+        if (!open)
+            throw new IllegalStateException("support request is closed");
+        
+        if (waiting)
+            throw new IllegalStateException("support request already waiting");
+        
         waiting = true;
-        
-        wait(timeout_millis);
-        
-        waiting = false;
-        
-        if (notified)
-            notified = false;
-        
-        else
-            throw new TimeoutException();
     }
     
     public synchronized void stopWaiting()
     {
-        notified = true;
+        if (!open)
+            throw new IllegalStateException("support request is closed");
         
-        notify();
+        if (!waiting)
+            throw new IllegalStateException("support request not waiting");
+        
+        waiting = false;
     }
     
     public synchronized Agent getAssignedAgent()
     {
         return assignedAgent;
     }
-
-    public synchronized void setAssignedAgent(Agent agent)
-    {    
-        assignedAgent = agent;
-    }
-
+    
     public synchronized boolean hasAssignedAgent()
     {
         return assignedAgent != null;
+    }
+    
+    public synchronized void setAssignedAgent(Agent agent)
+    {
+        if (agent == null)
+            throw new IllegalArgumentException("agent missing");
+        
+        if (!open)
+            throw new IllegalStateException("support request is closed");
+        
+        if (assignedAgent != null)
+            throw new IllegalStateException("support request already has assigned agent");
+        
+        agent.setAssignedSupportRequest(this);
+    }
+    
+    public synchronized void dropAssignedAgent()
+    {
+        if (assignedAgent == null)
+            throw new IllegalStateException("support request has no assigned agent");
+        
+        if (assignedAgent.assignedSupportRequest == this)
+            assignedAgent.dropAssignedSupportRequest();
+        
+        else
+            assignedAgent = null;
     }
     
     public synchronized int getPriority()
@@ -144,11 +161,6 @@ public class SupportRequest extends InetEntity
     public synchronized void incrementPriority()
     {
         priority++;
-    }
-    
-    public synchronized void doublePriority()
-    {
-        priority *= 2;
     }
     
     @Override
@@ -183,7 +195,7 @@ public class SupportRequest extends InetEntity
         
         supportRequestJsonObject.add("user", user.toJson());
         
-        supportRequestJsonObject.addProperty("type", requestType.toString());
+        supportRequestJsonObject.addProperty("type", type.toString());
         
         supportRequestJsonObject.addProperty("open", open);
         
@@ -196,7 +208,7 @@ public class SupportRequest extends InetEntity
             
             assignedAgentJsonObject.addProperty("address", assignedAgent.getAddress().getHostAddress());
             
-            assignedAgentJsonObject.addProperty("available", assignedAgent.isAvailable());
+            assignedAgentJsonObject.addProperty("available", assignedAgent.available);
         }
         
         supportRequestJsonObject.add("assigned_agent", assignedAgentJsonObject);
@@ -231,7 +243,7 @@ public class SupportRequest extends InetEntity
                 skills.addProperty(supportRequest.getType().toString(), true);
                 agentJson.add("skills", skills);
                 
-                supportRequest.setAssignedAgent(Agent.fromJson(agentJson));
+                supportRequest.assignedAgent = Agent.fromJson(agentJson);
             }
         }
         
@@ -252,7 +264,7 @@ public class SupportRequest extends InetEntity
         private String address;
         private String name;
         private String email;
-        private String requestType;
+        private String type;
         
         public SupportRequestBuilder()
         {
@@ -260,7 +272,7 @@ public class SupportRequest extends InetEntity
             address = null;
             name = null;
             email = null;
-            requestType = null;
+            type = null;
         }
         
         public SupportRequestBuilder setUUID(String UUIDString)
@@ -301,23 +313,23 @@ public class SupportRequest extends InetEntity
             return this;
         }
         
-        public SupportRequestBuilder setType(int requestTypeIndex)
+        public SupportRequestBuilder setType(int typeIndex)
         {
-            requestType = String.valueOf(requestTypeIndex);
+            type = String.valueOf(typeIndex);
             
             return this;
         }
         
-        public SupportRequestBuilder setType(String requestTypeString)
+        public SupportRequestBuilder setType(String typeString)
         {
-            requestType = requestTypeString;
+            type = typeString;
             
             return this;
         }
         
-        public SupportRequestBuilder setType(Type requestType)
+        public SupportRequestBuilder setType(Type type)
         {
-            this.requestType = requestType.toString();
+            this.type = type.toString();
             
             return this;
         }
@@ -341,16 +353,16 @@ public class SupportRequest extends InetEntity
         }
     }
     
-    public enum Type
+    public static enum Type
     {
         GENERAL_ENQUIRY,
         CHECK_BILL,
         CHECK_SUBSCRIPTION;
         
-        public static boolean is(String requestTypeString)
+        public static boolean is(String typeString)
         {
             try {
-                of(requestTypeString);
+                of(typeString);
                 
                 return true;
             }
@@ -360,31 +372,31 @@ public class SupportRequest extends InetEntity
             }
         }
         
-        public static Type of(Integer requestTypeIndex)
+        public static Type of(Integer typeIndex)
         {
-            if (requestTypeIndex == null)
+            if (typeIndex == null)
                 throw new IllegalArgumentException("type missing");
             
             Type[] types = values();
             
-            if (requestTypeIndex < 0 || requestTypeIndex > types.length-1)
+            if (typeIndex < 0 || typeIndex > types.length-1)
                 throw new IllegalArgumentException("type index out of bounds");
             
-            return types[requestTypeIndex];
+            return types[typeIndex];
         }
         
-        public static Type of(String requestTypeString)
+        public static Type of(String typeString)
         {
-            if (requestTypeString == null)
+            if (typeString == null)
                 throw new IllegalArgumentException("type missing");
             
             try {
-                return of(Integer.valueOf(requestTypeString));
+                return of(Integer.valueOf(typeString));
             }
             
             catch (NumberFormatException exception) {
                 try {
-                    return Type.valueOf(requestTypeString);    
+                    return Type.valueOf(typeString);    
                 }
                 
                 catch (IllegalArgumentException exception2) {
@@ -393,12 +405,12 @@ public class SupportRequest extends InetEntity
             }
         }
         
-        public static Type of(Type requestType)
+        public static Type of(Type type)
         {
-            if (requestType == null)
+            if (type == null)
                 throw new IllegalArgumentException("type missing");
             
-            return requestType;
+            return type;
         }
     }
 }
