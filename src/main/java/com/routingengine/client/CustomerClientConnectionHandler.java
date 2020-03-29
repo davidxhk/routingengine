@@ -78,7 +78,7 @@ public class CustomerClientConnectionHandler extends ClientConnectionHandler
         log(jsonResponse.toString());
     }
     
-    protected void log(String message)
+    private final void log(String message)
     {
         Logger.log("Customer " + clientId + " " + message);
     }

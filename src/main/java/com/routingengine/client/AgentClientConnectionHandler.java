@@ -4,6 +4,7 @@ import static com.routingengine.json.JsonUtils.getAsJsonObject;
 import java.io.IOException;
 import java.util.Map;
 import com.google.gson.JsonObject;
+import com.routingengine.Logger;
 import com.routingengine.json.JsonResponse;
 
 
@@ -55,10 +56,9 @@ public class AgentClientConnectionHandler extends CustomerClientConnectionHandle
         exit();
     }
     
-    @Override
-    protected void log(String message)
+    private final void log(String message)
     {
-        log("Agent " + clientId + " " + message);
+        Logger.log("Agent " + clientId + " " + message);
     }
     
     private static final JsonObject getAssignedSupportRequest(JsonResponse response)
