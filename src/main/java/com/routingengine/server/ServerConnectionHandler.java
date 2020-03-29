@@ -68,7 +68,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
                 throw exception;
             }
             
-            log("Server connection received –> " + jsonRequest.toString());
+            log("Server request –> " + jsonRequest.toString());
             
             if (jsonRequest.getMethod().matches("new_agent|new_support_request")) {
                 if (!jsonRequest.hasArgument("address"))
