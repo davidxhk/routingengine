@@ -2,7 +2,6 @@ package com.routingengine.client;
 
 import static com.routingengine.Logger.log;
 import static com.routingengine.json.JsonConnectionHandler.EndConnectionException;
-import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ import com.routingengine.json.JsonResponse;
 
 
 public final class Client
-    implements Runnable, Closeable
+    implements Runnable
 {
     private Socket socket;
     private ClientConnectionHandler connectionHandler = null;
@@ -22,7 +21,7 @@ public final class Client
     {
         socket = new Socket(hostname, port);
         
-        // log("Client connected to " + socket.toString());
+        log("Client connected to " + socket.toString());
     }
     
     public final Client setConnectionHandler(ClientConnectionHandler clientConnectionHandler)
@@ -47,8 +46,6 @@ public final class Client
         else if (socket.isClosed())
             throw new IllegalStateException("socket closed");
         
-        //log("Client handling " + socket.toString());
-        
         try {            
             connectionHandler.runMainLoop();
         }
@@ -72,8 +69,7 @@ public final class Client
         }
     }
     
-    @Override
-    public final void close()
+    private final void close()
     {
         try {
             socket.close();
@@ -107,13 +103,15 @@ public final class Client
                 return;
         }
         
-        try (Client client = new Client(hostname, port)) {
+        try {
+            
+            Client client = new Client(hostname, port);
             
             client.setConnectionHandler(new ClientConnectionHandler()
             {
                 @Override
                 public final void runMainLoop()
-                    throws IOException, InterruptedException
+                    throws IOException, InterruptedException, EndConnectionException
                 {
                     List<String> supportRequestUUIDs = new ArrayList<>();
                     List<String> agentUUIDs = new ArrayList<>();
@@ -209,6 +207,8 @@ public final class Client
                     
                     response = getQueueStatus();
                     log(response.toString());
+                    
+                    exit();
                 }
             });
             
