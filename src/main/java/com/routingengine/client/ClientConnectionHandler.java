@@ -2,6 +2,7 @@ package com.routingengine.client;
 
 import static com.routingengine.json.JsonUtils.toJsonElement;
 import static com.routingengine.json.JsonProtocol.JsonProtocolException;
+import static com.routingengine.json.JsonProtocol.EXIT_COMMAND;
 import java.io.IOException;
 import java.util.Map;
 import com.routingengine.json.JsonConnectionHandler;
@@ -14,7 +15,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
     protected final void exit()
         throws IOException, EndConnectionException
     {
-        jsonWriter.writeString("exit");
+        jsonWriter.writeString(EXIT_COMMAND);
         jsonWriter.flush();
         
         throw new EndConnectionException();
