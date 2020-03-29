@@ -8,12 +8,12 @@ import java.net.Socket;
 import com.google.gson.JsonElement;
 import com.routingengine.MethodManager;
 import com.routingengine.RoutingEngine;
-import com.routingengine.client.ConnectionHandler;
+import com.routingengine.json.JsonConnectionHandler;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
 
 
-public final class ServerConnectionHandler extends ConnectionHandler
+public final class ServerConnectionHandler extends JsonConnectionHandler
     implements Runnable, Closeable
 {
     private final MethodManager methodManager;

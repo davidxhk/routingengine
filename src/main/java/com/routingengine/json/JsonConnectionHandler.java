@@ -1,12 +1,10 @@
-package com.routingengine.client;
+package com.routingengine.json;
 
 import java.io.IOException;
 import java.net.Socket;
-import com.routingengine.json.JsonReader;
-import com.routingengine.json.JsonWriter;
 
 
-public abstract class ConnectionHandler
+public abstract class JsonConnectionHandler
 {
     protected Socket socket = null;
     protected JsonReader jsonReader = null;

@@ -4,11 +4,12 @@ import static com.routingengine.json.JsonUtils.toJsonElement;
 import static com.routingengine.json.JsonProtocol.JsonProtocolException;
 import java.io.IOException;
 import java.util.Map;
+import com.routingengine.json.JsonConnectionHandler;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
 
 
-public abstract class ClientConnectionHandler extends ConnectionHandler
+public abstract class ClientConnectionHandler extends JsonConnectionHandler
 {
     protected final void exit()
         throws IOException, EndConnectionException

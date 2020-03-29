@@ -1,7 +1,7 @@
 package com.routingengine.client;
 
 import static com.routingengine.Logger.log;
-import static com.routingengine.client.ConnectionHandler.EndConnectionException;
+import static com.routingengine.json.JsonConnectionHandler.EndConnectionException;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;

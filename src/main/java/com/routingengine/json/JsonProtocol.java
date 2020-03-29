@@ -1,7 +1,7 @@
 package com.routingengine.json;
 
 import static com.routingengine.json.JsonUtils.getAsString;
-import static com.routingengine.client.ConnectionHandler.EndConnectionException;
+import static com.routingengine.json.JsonConnectionHandler.EndConnectionException;
 import java.io.IOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
