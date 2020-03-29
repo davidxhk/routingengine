@@ -12,9 +12,7 @@ To see a demonstration of the routing engine, run the following commands on your
 
 If you have a Windows machine and use [Git Bash][git_bash] (with Unix commands), you might need to [replace the last line with the following][forum_thread]
 
-<pre>
-java -cp bin<mark>\;</mark>lib/* com.routingengine.RoutingEngine 50000
-</pre>
+    java -cp bin\;lib/* com.routingengine.RoutingEngine 50000
 
 After the program terminates, you can examine the output again by opening `logfile.txt` in the project root folder.
 
@@ -161,6 +159,19 @@ Lastly, if the administrator would just like to have a summary of all the number
 [get_agent_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_agent_status_tests.md
 [get_queue_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_queue_status_tests.md
 [get_status_overview]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_status_overview_tests.md
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
