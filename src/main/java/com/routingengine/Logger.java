@@ -44,7 +44,7 @@ public class Logger
         LOGGER.addHandler(consoleHandler);
             
         try {
-            FileHandler fileHandler = new FileHandler(LOGFILE);
+            FileHandler fileHandler = new FileHandler(LOGFILE, true);
             fileHandler.setLevel(Level.INFO);
             fileHandler.setFormatter(formatter);
             LOGGER.addHandler(fileHandler);
