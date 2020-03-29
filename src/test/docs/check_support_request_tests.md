@@ -9,13 +9,13 @@ The following types of tests for `check_support_request` are provided in this te
 ## Test Suite
 | ID    | Title                      | Input                                                                                             |
 | :---: | -------------------------- | ------------------------------------------------------------------------------------------------- |
-| 1.1   | Valid uuid                 | `check_support_request {uuid:"<--valid support request uuid string -->"}`                         |
+| 1.1   | Valid uuid                 | `check_support_request {uuid:"<--valid support request uuid string-->"}`                          |
 | 2.1   | Missing uuid               | `check_support_request {}`                                                                        |
 | 2.2.1 | Invalid uuid case 1        | `check_support_request {uuid:[]}`                                                                 |
 | 2.2.2 | Invalid uuid case 2        | `check_support_request {uuid:{}}`                                                                 |
 | 2.2.3 | Invalid uuid case 3        | `check_support_request {uuid:"hahaha test test"}`                                                 |
 | 3.1   | Missing input              | `check_support_request {}`                                                                        |
-| 3.2   | Unexpected arguments       | `check_support_request {uuid:"<--valid support request uuid string -->", something:"something?"}` |
+| 3.2   | Unexpected arguments       | `check_support_request {uuid:"<--valid support request uuid string-->", something:"something?"}`  |
 | 3.3.1 | Malformed arguments case 1 | `check_support_request "testtest"`                                                                |
 | 3.3.2 | Malformed arguments case 2 | `check_support_request []`                                                                        |
 | 3.3.3 | Malformed arguments case 3 | `check_support_request ;!/`                                                                       |

@@ -9,13 +9,13 @@ The following types of tests for `remove_agent` are provided in this test suite.
 ## Test Suite
 | ID    | Title                      | Input                                                                                   |
 | :---: | -------------------------- | --------------------------------------------------------------------------------------- |
-| 1.1   | Valid uuid                 | `remove_agent {uuid:"<--valid agent uuid string -->"}`                                  |
+| 1.1   | Valid uuid                 | `remove_agent {uuid:"<--valid agent uuid string-->"}`                                   |
 | 2.1   | Missing uuid               | `remove_agent {}`                                                                       |
 | 2.2.1 | Invalid uuid case 1        | `remove_agent {uuid:[]}`                                                                |
 | 2.2.2 | Invalid uuid case 2        | `remove_agent {uuid:{}}`                                                                |
 | 2.2.3 | Invalid uuid case 3        | `remove_agent {uuid:"hahaha test test"}`                                                |
 | 3.1   | Missing input              | `remove_agent {}`                                                                       |
-| 3.2   | Unexpected arguments       | `remove_agent {uuid:"<--valid agent uuid string -->", something:"something?"}`          |
+| 3.2   | Unexpected arguments       | `remove_agent {uuid:"<--valid agent uuid string-->", something:"something?"}`           |
 | 3.3.1 | Malformed arguments case 1 | `remove_agent "testtest"`                                                               |
 | 3.3.2 | Malformed arguments case 2 | `remove_agent []`                                                                       |
 | 3.3.3 | Malformed arguments case 3 | `remove_agent ;!/`                                                                      |

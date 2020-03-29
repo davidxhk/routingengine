@@ -9,13 +9,13 @@ The following types of tests for `drop_support_request` are provided in this tes
 ## Test Suite
 | ID    | Title                      | Input                                                                                   |
 | :---: | -------------------------- | --------------------------------------------------------------------------------------- |
-| 1.1   | Valid uuid                 | `drop_support_request {uuid:"<--valid agent uuid string -->"}`                          |
+| 1.1   | Valid uuid                 | `drop_support_request {uuid:"<--valid agent uuid string-->"}`                           |
 | 2.1   | Missing uuid               | `drop_support_request {}`                                                               |
 | 2.2.1 | Invalid uuid case 1        | `drop_support_request {uuid:[]}`                                                        |
 | 2.2.2 | Invalid uuid case 2        | `drop_support_request {uuid:{}}`                                                        |
 | 2.2.3 | Invalid uuid case 3        | `drop_support_request {uuid:"hahaha test test"}`                                        |
 | 3.1   | Missing input              | `drop_support_request {}`                                                               |
-| 3.2   | Unexpected arguments       | `drop_support_request {uuid:"<--valid agent uuid string -->", something:"something?"}`  |
+| 3.2   | Unexpected arguments       | `drop_support_request {uuid:"<--valid agent uuid string-->", something:"something?"}`   |
 | 3.3.1 | Malformed arguments case 1 | `drop_support_request "testtest"`                                                       |
 | 3.3.2 | Malformed arguments case 2 | `drop_support_request []`                                                               |
 | 3.3.3 | Malformed arguments case 3 | `drop_support_request ;!/`                                                              |

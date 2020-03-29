@@ -7,7 +7,7 @@ The following types of tests for `ping` are provided in this test suite.
 
 ## Test Suite
 |   ID  | Title                      | Input                                                                               |
-|:-----:|----------------------------|-------------------------------------------------------------------------------------|
+| :---: | -------------------------- | ----------------------------------------------------------------------------------- |
 |  1.1  | Ping                       | `ping {}`                                                                           |
 |  2.1  | Unexpected arguments       | `ping {something:"something?"}`                                                     |
 | 2.2.1 | Malformed arguments case 1 | `ping "testtest"`                                                                   |
@@ -17,7 +17,7 @@ The following types of tests for `ping` are provided in this test suite.
 
 ## Expected Output
 |   ID  | Title                      |  Result | Payload                 | Comments                                        |
-|:-----:|----------------------------|:-------:|-------------------------|-------------------------------------------------|
+| :---: | -------------------------- | :-----: | ----------------------- | ----------------------------------------------- |
 |  1.1  | Ping                       | success | `"pong"`                |                                                 |
 |  2.1  | Unexpected arguments       | success | `"pong"`                | Unexpected arguments should be ignored silently |
 | 2.2.1 | Malformed arguments case 1 | failure | `"malformed arguments"` |                                                 |

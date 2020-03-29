@@ -9,13 +9,13 @@ The following types of tests for `check_agent` are provided in this test suite.
 ## Test Suite
 | ID    | Title                      | Input                                                                                   |
 | :---: | -------------------------- | --------------------------------------------------------------------------------------- |
-| 1.1   | Valid uuid                 | `check_agent {uuid:"<--valid agent uuid string -->"}`                                   |
+| 1.1   | Valid uuid                 | `check_agent {uuid:"<--valid agent uuid string-->"}`                                    |
 | 2.1   | Missing uuid               | `check_agent {}`                                                                        |
 | 2.2.1 | Invalid uuid case 1        | `check_agent {uuid:[]}`                                                                 |
 | 2.2.2 | Invalid uuid case 2        | `check_agent {uuid:{}}`                                                                 |
 | 2.2.3 | Invalid uuid case 3        | `check_agent {uuid:"hahaha test test"}`                                                 |
 | 3.1   | Missing input              | `check_agent {}`                                                                        |
-| 3.2   | Unexpected arguments       | `check_agent {uuid:"<--valid agent uuid string -->", something:"something?"}`           |
+| 3.2   | Unexpected arguments       | `check_agent {uuid:"<--valid agent uuid string-->", something:"something?"}`            |
 | 3.3.1 | Malformed arguments case 1 | `check_agent "testtest"`                                                                |
 | 3.3.2 | Malformed arguments case 2 | `check_agent []`                                                                        |
 | 3.3.3 | Malformed arguments case 3 | `check_agent ;!/`                                                                       |

@@ -9,13 +9,13 @@ The following types of tests for `wait_for_agent` are provided in this test suit
 ## Test Suite
 | ID    | Title                      | Input                                                                                             |
 | :---: | -------------------------- | ------------------------------------------------------------------------------------------------- |
-| 1.1   | Valid uuid                 | `wait_for_agent {uuid:"<--valid support request uuid string -->"}`                                |
+| 1.1   | Valid uuid                 | `wait_for_agent {uuid:"<--valid support request uuid string-->"}`                                 |
 | 2.1   | Missing uuid               | `wait_for_agent {}`                                                                               |
 | 2.2.1 | Invalid uuid case 1        | `wait_for_agent {uuid:[]}`                                                                        |
 | 2.2.2 | Invalid uuid case 2        | `wait_for_agent {uuid:{}}`                                                                        |
 | 2.2.3 | Invalid uuid case 3        | `wait_for_agent {uuid:"hahaha test test"}`                                                        |
 | 3.1   | Missing input              | `wait_for_agent {}`                                                                               |
-| 3.2   | Unexpected arguments       | `wait_for_agent {uuid:"<--valid support request uuid string -->", something:"something?"}`        |
+| 3.2   | Unexpected arguments       | `wait_for_agent {uuid:"<--valid support request uuid string-->", something:"something?"}`         |
 | 3.3.1 | Malformed arguments case 1 | `wait_for_agent "testtest"`                                                                       |
 | 3.3.2 | Malformed arguments case 2 | `wait_for_agent []`                                                                               |
 | 3.3.3 | Malformed arguments case 3 | `wait_for_agent ;!/`                                                                              |

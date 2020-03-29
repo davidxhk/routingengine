@@ -16,6 +16,9 @@ If you have a Windows machine and use [Git Bash][git_bash] (with Unix commands),
 
 After the program terminates, you can examine the output again by opening `logfile.txt` in the project root folder.
 
+[git_bash]: https://www.atlassian.com/git/tutorials/install-git#windows
+[forum_thread]: https://groups.google.com/forum/#!topic/msysgit/E16M9hCW2_4
+
 # Routing Engine
 
 This routing engine solution is a server application that adopts a custom-made JSON request-response protocol.
@@ -30,8 +33,6 @@ This protocol has a total of [19 methods][docs], which can be categorised by the
 
 The following sections detail how the routing engine protocol works by explaining the purpose of each method to their respective users.
 
-[git_bash]: https://www.atlassian.com/git/tutorials/install-git#windows
-[forum_thread]: https://groups.google.com/forum/#!topic/msysgit/E16M9hCW2_4
 [docs]: https://github.com/han-keong/routingengine/tree/master/src/test/docs
 
 ## Support Request Methods
@@ -159,6 +160,7 @@ Lastly, if the administrator would just like to have a summary of all the number
 [get_agent_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_agent_status_tests.md
 [get_queue_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_queue_status_tests.md
 [get_status_overview]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_status_overview_tests.md
+
 
 
 

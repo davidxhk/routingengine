@@ -7,7 +7,7 @@ The following types of tests for `get_support_request_status` are provided in th
 
 ## Test Suite
 |   ID  | Title                      | Input                                                                                                    |
-|:-----:|----------------------------|----------------------------------------------------------------------------------------------------------|
+| :---: | -------------------------- | -------------------------------------------------------------------------------------------------------- |
 |  1.1  | No arguments               | `get_support_request_status {}`                                                                          |
 |  2.1  | Unexpected arguments       | `get_support_request_status {something:"something?"}`                                                    |
 | 2.2.1 | Malformed arguments case 1 | `get_support_request_status "testtest"`                                                                  |
@@ -17,7 +17,7 @@ The following types of tests for `get_support_request_status` are provided in th
 
 ## Expected Output
 |   ID  | Title                      |  Result | Payload                                      | Comments                                        |
-|:-----:|----------------------------|:-------:|----------------------------------------------|-------------------------------------------------|
+| :---: | -------------------------- | :-----: | -------------------------------------------- | ----------------------------------------------- |
 |  1.1  | No arguments               | success | `{<--support request status json object-->}` |                                                 |
 |  2.1  | Unexpected arguments       | success | `{<--support request status json object-->}` | Unexpected arguments should be ignored silently |
 | 2.2.1 | Malformed arguments case 1 | failure | `"malformed arguments"`                      |                                                 |
