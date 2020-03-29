@@ -10,8 +10,8 @@ The following types of tests for `change_support_request_type` are provided in t
 ## Test Suite
 | ID    | Title                      | Input                                                                                                           |
 | :---: | -------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| 1.1   | Valid uuid and type index  | `change_support_request_type {uuid:"<--valid support request uuid string -->"}`                                 |
-| 1.1   | Valid uuid and type string | `change_support_request_type {uuid:"<--valid support request uuid string -->"}`                                 |
+| 1.1   | Valid uuid and type index  | `change_support_request_type {uuid:"<--valid support request uuid string -->", type:1}`                         |
+| 1.1   | Valid uuid and type string | `change_support_request_type {uuid:"<--valid support request uuid string -->", type:"GENERAL_ENQUIRY"}`         |
 | 2.1   | Missing uuid               | `change_support_request_type {type:1}`                                                                          |
 | 2.2.1 | Invalid uuid case 1        | `change_support_request_type {uuid:[], type:1}`                                                                 |
 | 2.2.2 | Invalid uuid case 2        | `change_support_request_type {uuid:{}, type:1}`                                                                 |
