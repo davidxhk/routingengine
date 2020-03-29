@@ -6,45 +6,26 @@ import static com.routingengine.json.JsonUtils.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.google.gson.JsonObject;
+import com.routingengine.MethodTestBase;
 import com.routingengine.SupportRequest;
-import com.routingengine.client.Client;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
 
 
-public class NewSupportRequestMethodTest
+public class NewSupportRequestMethodTest extends MethodTestBase
 {   
-    private static Client client;
-    private static final String hostname = "localhost";
-    private static final int port = 50000;
-    private static final String method = "new_support_request";
-    
-    @BeforeAll
-    static void setUpBeforeClass()
-        throws Exception
-    {
-        client = new Client(hostname, port);
-    }
-    
-    @AfterAll
-    static void tearDownAfterClass()
-        throws Exception
-    {
-        client.close();
-    }
+    protected static final String method = "new_support_request";
     
     @Test
     @DisplayName("Test 1.1 - Name, email, and type index")
     void test01()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -73,7 +54,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -81,7 +62,7 @@ public class NewSupportRequestMethodTest
     void test02()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -110,7 +91,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -118,7 +99,7 @@ public class NewSupportRequestMethodTest
     void test03()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -150,7 +131,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -158,7 +139,7 @@ public class NewSupportRequestMethodTest
     void test04()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -181,7 +162,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -189,7 +170,7 @@ public class NewSupportRequestMethodTest
     void test05()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -213,7 +194,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -221,7 +202,7 @@ public class NewSupportRequestMethodTest
     void test06()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -245,7 +226,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -253,7 +234,7 @@ public class NewSupportRequestMethodTest
     void test07()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -276,7 +257,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -284,7 +265,7 @@ public class NewSupportRequestMethodTest
     void test08()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -308,7 +289,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -316,7 +297,7 @@ public class NewSupportRequestMethodTest
     void test09()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -340,7 +321,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -348,7 +329,7 @@ public class NewSupportRequestMethodTest
     void test10()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -371,7 +352,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -379,7 +360,7 @@ public class NewSupportRequestMethodTest
     void test11()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -403,7 +384,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -411,7 +392,7 @@ public class NewSupportRequestMethodTest
     void test12()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -435,7 +416,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -443,7 +424,7 @@ public class NewSupportRequestMethodTest
     void test13()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -467,7 +448,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -475,7 +456,7 @@ public class NewSupportRequestMethodTest
     void test14()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -499,7 +480,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -507,7 +488,7 @@ public class NewSupportRequestMethodTest
     void test15()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -532,7 +513,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -540,7 +521,7 @@ public class NewSupportRequestMethodTest
     void test16()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -565,7 +546,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -573,7 +554,7 @@ public class NewSupportRequestMethodTest
     void test17()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -598,7 +579,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -606,7 +587,7 @@ public class NewSupportRequestMethodTest
     void test18()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -631,7 +612,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -639,7 +620,7 @@ public class NewSupportRequestMethodTest
     void test19()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -660,7 +641,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -668,7 +649,7 @@ public class NewSupportRequestMethodTest
     void test20()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -705,7 +686,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -713,7 +694,7 @@ public class NewSupportRequestMethodTest
     void test21()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -733,7 +714,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -741,7 +722,7 @@ public class NewSupportRequestMethodTest
     void test22()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -761,7 +742,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -769,7 +750,7 @@ public class NewSupportRequestMethodTest
     void test23()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -789,7 +770,7 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
@@ -797,7 +778,7 @@ public class NewSupportRequestMethodTest
     void test24()
         throws IOException
     {
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -817,6 +798,6 @@ public class NewSupportRequestMethodTest
             }
         });
         
-        client.run();
+        customer.run();
     }
 }
