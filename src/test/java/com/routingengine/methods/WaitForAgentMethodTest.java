@@ -5,6 +5,7 @@ import static com.routingengine.json.JsonUtils.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,9 +26,9 @@ public class WaitForAgentMethodTest extends MethodTestBase
     void test01()
         throws IOException, InterruptedException, ExecutionException
     {
-        final String supportRequestUUIDString = generateNewSupportRequest();
+        final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", 1);
         
-        final String agentUUIDString = generateNewAgent();
+        final String agentUUIDString = generateNewAgent(Map.of(1, true));
         
         agentTakesSupportRequest(agentUUIDString);
         
@@ -212,9 +213,9 @@ public class WaitForAgentMethodTest extends MethodTestBase
     void test07()
         throws IOException, InterruptedException, ExecutionException
     {
-        final String supportRequestUUIDString = generateNewSupportRequest();
+        final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", 1);
         
-        final String agentUUIDString = generateNewAgent();
+        final String agentUUIDString = generateNewAgent(Map.of(1, true));
         
         agentTakesSupportRequest(agentUUIDString);
         
