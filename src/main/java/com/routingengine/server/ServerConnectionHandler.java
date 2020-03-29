@@ -23,7 +23,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
     {
         connect(socket);
         
-        // log("Server connected to " + socket.toString());
+        log("Server connected to " + socket.toString());
         
         methodManager = new MethodManager(routingEngine);
     }
@@ -94,8 +94,6 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
     @Override
     public final void run()
     {
-        //log("Server handling " + socket.toString());
-        
         try {
             runMainLoop();
         }
