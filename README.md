@@ -1,14 +1,20 @@
 # Demonstration
 
-To see a demonstration of the routing engine, run the following commands:
+To see a demonstration of the routing engine, run the following commands on your Unix machine (e.g. MacOS)
 
     git clone https://github.com/han-keong/routingengine
     
     cd routingengine
     
-    javac -cp lib/* -d bin/main src/main/java/com/routingengine/*.java src/main/java/com/routingengine/*/*.java
+    javac -cp lib/* -d bin src/main/java/com/routingengine/*.java src/main/java/com/routingengine/*/*.java
     
-    java -cp bin/main:lib/* com.routingengine.RoutingEngine 50000
+    java -cp bin:lib/* com.routingengine.RoutingEngine 50000
+
+If you have a Windows machine and use [Git Bash][git_bash] (with Unix commands), you might need to [replace the last line with the following][forum_thread]
+
+<pre>
+java -cp bin<mark>\;</mark>lib/* com.routingengine.RoutingEngine 50000
+</pre>
 
 After the program terminates, you can examine the output again by opening `logfile.txt` in the project root folder.
 
@@ -26,6 +32,8 @@ This protocol has a total of [19 methods][docs], which can be categorised by the
 
 The following sections detail how the routing engine protocol works by explaining the purpose of each method to their respective users.
 
+[git_bash]: https://www.atlassian.com/git/tutorials/install-git#windows
+[forum_thread]: https://groups.google.com/forum/#!topic/msysgit/E16M9hCW2_4
 [docs]: https://github.com/han-keong/routingengine/tree/master/src/test/docs
 
 ## Support Request Methods
@@ -153,6 +161,19 @@ Lastly, if the administrator would just like to have a summary of all the number
 [get_agent_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_agent_status_tests.md
 [get_queue_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_queue_status_tests.md
 [get_status_overview]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_status_overview_tests.md
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
