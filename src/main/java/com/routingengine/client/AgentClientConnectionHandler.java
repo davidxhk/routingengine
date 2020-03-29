@@ -56,7 +56,8 @@ public class AgentClientConnectionHandler extends CustomerClientConnectionHandle
         exit();
     }
     
-    private final void log(String message)
+    @Override
+    protected void log(String message)
     {
         Logger.log("Agent " + clientId + " " + message);
     }
