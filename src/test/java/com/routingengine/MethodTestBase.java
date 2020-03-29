@@ -54,7 +54,7 @@ public abstract class MethodTestBase
         serverThread.join();
     }
     
-    protected static final String generateNewSupportRequest()
+    protected static final String generateNewSupportRequest(String name, String email, int type)
         throws IOException, InterruptedException, ExecutionException
     {
         String[] supportRequestUUIDString = new String[] {null};
@@ -65,7 +65,7 @@ public abstract class MethodTestBase
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = newSupportRequest("bob", "bob@abc.com", 1);
+                JsonResponse response = newSupportRequest(name, email, type);
                 JsonObject payload = castToJsonObject(response.getPayload());
                 supportRequestUUIDString[0] = getAsString(payload, "uuid");
             }
@@ -76,7 +76,7 @@ public abstract class MethodTestBase
         return supportRequestUUIDString[0];
     }
     
-    protected static final String generateNewAgent()
+    protected static final String generateNewAgent(@SuppressWarnings("rawtypes") Map skills)
         throws IOException, InterruptedException, ExecutionException
     {
         String[] agentUUIDString = new String[] {null};
@@ -87,7 +87,7 @@ public abstract class MethodTestBase
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = newAgent(Map.of(1, true));
+                JsonResponse response = newAgent(skills);
                 JsonObject payload = castToJsonObject(response.getPayload());
                 agentUUIDString[0] = getAsString(payload, "uuid");
                 
