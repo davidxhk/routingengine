@@ -1,14 +1,14 @@
 # Demonstration
 
-To see a demonstration of the routing engine, run the following commands: 
+To see a demonstration of the routing engine, run the following commands:
 
-`git clone https://github.com/han-keong/routingengine`
-
-`cd routingengine`
-
-`javac -cp lib/* -d bin/main src/main/java/com/routingengine/*.java src/main/java/com/routingengine/*/*.java`
-
-`java -cp bin/main:lib/* com.routingengine.RoutingEngine 50000`
+    git clone https://github.com/han-keong/routingengine
+    
+    cd routingengine
+    
+    javac -cp lib/* -d bin/main src/main/java/com/routingengine/*.java src/main/java/com/routingengine/*/*.java
+    
+    java -cp bin/main:lib/* com.routingengine.RoutingEngine 50000
 
 After the program terminates, you can examine the output again by opening `logfile.txt` in the project root folder.
 
@@ -20,11 +20,13 @@ The JSON protocol has been designed for three kinds of users:
 
   1. [*Support Requests*](#support-request-methods) (submitted by customers)
   2. [*Agents*](#agent-methods)
-  3. [*Admins*](#admin-methods) (administrators). 
+  3. [*Admins*](#admin-methods) (administrators)
 
-This protocol has a total of 19 methods, which can be categorised by their intended users.
+This protocol has a total of [19 methods][docs], which can be categorised by their intended users.
 
 The following sections detail how the routing engine protocol works by explaining the purpose of each method to their respective users.
+
+[docs]: https://github.com/han-keong/routingengine/tree/master/src/test/docs
 
 ## Support Request Methods
 
@@ -48,18 +50,20 @@ If the support request has been waiting for a certain period of time (30 seconds
 
 When an agent has finally been assigned, the customer's web client will be connected to the agent through **Rainbow Unified Communications Platform**.
 
-Sometimes, an *administrator* might want to [*check the status of a particular support request*][check_support_request].
-
 Rarely, the customer might want to [*change the type of his/her support request*][change_support_request_type].
 
 In any case, once the support request has been serviced successfully, the customer or agent can proceed to [*close the support request*][close_support_request].
 
+Sometimes, an *administrator* might want to [*check the status of a particular support request*][check_support_request].
+
+The administrator might also need to [*remove a support request*][remove_support_request] for some reason.
 
 [new_support_request]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/new_support_request_tests.md
 [wait_for_agent]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/wait_for_agent_tests.md
 [check_support_request]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/check_support_request_tests.md
 [change_support_request_type]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/change_support_request_type_tests.md
 [close_support_request]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/close_support_request_tests.md
+[remove_support_request]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/remove_support_request_tests.md
 
 ## Agent Methods
 
@@ -121,7 +125,7 @@ The total number and **UUIDs** of all support requests for each of the following
 | Assigned                     | No                                      | No                                       | Yes                                          |
 | Total                        | Yes/No                                  | Yes/No                                   | Yes/No                                       |
 
-The administrator may choose to [check the status of a particular support request][check_support_request] using its **UUID**.
+The administrator may choose to [check the status of][check_support_request], [close][close_support_request], or even [remove][remove_support_request] a particular support request using its **UUID**.
 
 Also, the administrator may want to oversee all agents by [*checking the status of all agents*][get_agent_status].
 
@@ -136,7 +140,7 @@ The total number and **UUIDs** of all agents for each of the following agent sta
 | Assigned           | No                                   | No                                   | No                                           | Yes                                            |
 | Total              | Yes/No                               | Yes/No                               | Yes/No                                       | Yes/No                                         |
 
-The administrator may choose to [check the status][check_agent] or [activate/inactivate][activate_agent] a particular agent using its **UUID**.
+The administrator may choose to [check the status of][check_agent], [activate/inactivate][activate_agent], or even [remove][remove_agent] a particular agent using its **UUID**.
 
 If the administrator would like to examine how many support requests are currently in queue, he may [*check the status of the queue*][get_queue_status] as well.
 
@@ -149,6 +153,15 @@ Lastly, if the administrator would just like to have a summary of all the number
 [get_agent_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_agent_status_tests.md
 [get_queue_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_queue_status_tests.md
 [get_status_overview]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_status_overview_tests.md
+
+
+
+
+
+
+
+
+
 
 
 
