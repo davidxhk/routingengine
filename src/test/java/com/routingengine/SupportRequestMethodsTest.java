@@ -8,12 +8,12 @@ import com.routingengine.methods.*;
 
 @RunWith(JUnitPlatform.class)
 @SelectClasses({
-    ChangeSupportRequestTypeMethodTest.class,
-    CheckSupportRequestMethodTest.class,
-    CloseSupportRequestMethodTest.class,
     NewSupportRequestMethodTest.class,
-    RemoveSupportRequestMethodTest.class,
-    WaitForAgentMethodTest.class
+    WaitForAgentMethodTest.class,
+    ChangeSupportRequestTypeMethodTest.class,
+    CloseSupportRequestMethodTest.class,
+    CheckSupportRequestMethodTest.class,
+    RemoveSupportRequestMethodTest.class
 })
 class SupportRequestMethodsTest
 {
