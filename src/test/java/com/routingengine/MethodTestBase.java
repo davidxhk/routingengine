@@ -76,6 +76,28 @@ public abstract class MethodTestBase
         return supportRequestUUIDString[0];
     }
     
+    protected static final String generateNewSupportRequest(String name, String email, String type)
+        throws IOException, InterruptedException, ExecutionException
+    {
+        String[] supportRequestUUIDString = new String[] {null};
+        
+        customer.setConnectionHandler(new ClientConnectionHandler()
+        {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException
+            {
+                JsonResponse response = newSupportRequest(name, email, type);
+                JsonObject payload = castToJsonObject(response.getPayload());
+                supportRequestUUIDString[0] = getAsString(payload, "uuid");
+            }
+        });
+        
+        executor.submit(customer).get();
+        
+        return supportRequestUUIDString[0];
+    }
+    
     protected static final String generateNewAgent(@SuppressWarnings("rawtypes") Map skills)
         throws IOException, InterruptedException, ExecutionException
     {
