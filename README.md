@@ -1,3 +1,15 @@
+# Demonstration
+
+To see a demonstration of the routing engine, run the following commands: 
+
+`git clone https://github.com/han-keong/routingengine`
+
+`cd routingengine`
+
+`javac -cp lib/* -d bin/main src/main/java/com/routingengine/*.java src/main/java/com/routingengine/*/*.java`
+
+`java -cp bin/main:lib/* com.routingengine.RoutingEngine 50000`
+
 # Routing Engine
 
 This routing engine solution is a server application that adopts a custom-made JSON request-response protocol.
@@ -135,5 +147,11 @@ Lastly, if the administrator would just like to have a summary of all the number
 [get_agent_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_agent_status_tests.md
 [get_queue_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_queue_status_tests.md
 [get_status_overview]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_status_overview_tests.md
+
+
+
+
+
+
 
 
