@@ -1,97 +1,166 @@
 package com.routingengine.methods;
 
-import static com.routingengine.Logger.log;
 import static org.junit.jupiter.api.Assertions.*;
 import static com.routingengine.json.JsonUtils.*;
 import java.io.IOException;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import java.util.concurrent.ExecutionException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.routingengine.client.Client;
+import com.routingengine.MethodTestBase;
 import com.routingengine.client.ClientConnectionHandler;
+import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
 
 
-public class UpdateAgentSkillsMethodTest
+public class UpdateAgentSkillsMethodTest extends MethodTestBase
 {   
-    private static Client client;
-    private static final String hostname = "localhost";
-    private static final int port = 50000;
-    
-    @BeforeAll
-    static void setUpBeforeClass()
-        throws Exception
-    {
-        client = new Client(hostname, port);
-    }
-    
-    @AfterAll
-    static void tearDownAfterClass()
-        throws Exception
-    {
-        client.close();
-    }
+    protected static final String method = "update_agent_skills";
     
     @Test
-    void test()
+    @DisplayName("Test ~.1 - Missing input")
+    void test90()
         throws IOException
     {
-        log("hello from test");
-        
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = ping();
-                log(response.toString());
+                new JsonRequest()
+                    .setMethod(method)
+                    .writeSafe(jsonWriter);
                 
-                assertEquals("pong", castToString(response.getPayload()));
-            }  
+                JsonResponse response = awaitResponse();
+                
+                assertEquals(method, response.getMethod());
+                
+                assertFalse(response.didSucceed());
+                
+                String error = castToString(response.getPayload());
+                
+                assertEquals("uuid missing", error);
+            }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
-    void test2()
+    @DisplayName("Test ~.2 - Unexpected arguments")
+    void test91()
+        throws IOException, InterruptedException, ExecutionException
+    {
+    }
+    
+    @Test
+    @DisplayName("Test ~.3.1 - Malformed arguments case 1")
+    void test92()
         throws IOException
     {
-        log("hello from test2");
-        
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = ping();
-                log(response.toString());
+                jsonWriter.writeString(method + " \"testtest\"");
+                jsonWriter.flush();
                 
-                assertEquals("pong", castToString(response.getPayload()));
-            }  
+                JsonResponse response = awaitResponse();
+                
+                assertEquals(method, response.getMethod());
+                
+                assertFalse(response.didSucceed());
+                
+                String error = castToString(response.getPayload());
+                
+                assertEquals("malformed arguments", error);
+            }
         });
         
-        client.run();
+        customer.run();
     }
     
     @Test
-    void test3()
+    @DisplayName("Test ~.3.2 - Malformed arguments case 2")
+    void test93()
         throws IOException
     {
-        log("hello from test3");
-        
-        client.setConnectionHandler(new ClientConnectionHandler() {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = ping();
-                log(response.toString());
+                jsonWriter.writeString(method + " []");
+                jsonWriter.flush();
                 
-                assertEquals("pong", castToString(response.getPayload()));
-            }  
+                JsonResponse response = awaitResponse();
+                
+                assertEquals(method, response.getMethod());
+                
+                assertFalse(response.didSucceed());
+                
+                String error = castToString(response.getPayload());
+                
+                assertEquals("malformed arguments", error);
+            }
         });
         
-        client.run();
+        customer.run();
+    }
+    
+    @Test
+    @DisplayName("Test ~.3.3 - Malformed arguments case 3")
+    void test94()
+        throws IOException
+    {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException
+            {
+                jsonWriter.writeString(method + " ;!/");
+                jsonWriter.flush();
+                
+                JsonResponse response = awaitResponse();
+                
+                assertEquals(method, response.getMethod());
+                
+                assertFalse(response.didSucceed());
+                
+                String error = castToString(response.getPayload());
+                
+                assertEquals("malformed arguments", error);
+            }
+        });
+        
+        customer.run();
+    }
+    
+    @Test
+    @DisplayName("Test ~.3.4 - Malformed arguments case 4")
+    void test95()
+        throws IOException
+    {
+        customer.setConnectionHandler(new ClientConnectionHandler() {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException
+            {
+                jsonWriter.writeString(method + " }}}}");
+                jsonWriter.flush();
+                
+                JsonResponse response = awaitResponse();
+                
+                assertEquals(method, response.getMethod());
+                
+                assertFalse(response.didSucceed());
+                
+                String error = castToString(response.getPayload());
+                
+                assertEquals("malformed arguments", error);
+            }
+        });
+        
+        customer.run();
     }
 }
