@@ -51,6 +51,8 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals(email, supportRequest.getUser().getEmail());
                 
                 assertEquals(Type.of(type), supportRequest.getType());
+                
+                removeSupportRequest(supportRequest.getUUID().toString());
             }
         });
         
@@ -88,6 +90,8 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals(email, supportRequest.getUser().getEmail());
                 
                 assertEquals(Type.of(type), supportRequest.getType());
+                
+                removeSupportRequest(supportRequest.getUUID().toString());
             }
         });
         
@@ -128,6 +132,8 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals(Type.of(type), supportRequest.getType());
                 
                 assertEquals(address, supportRequest.getAddress().getHostAddress().toString());
+                
+                removeSupportRequest(supportRequest.getUUID().toString());
             }
         });
         
