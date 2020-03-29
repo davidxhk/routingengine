@@ -12,6 +12,7 @@ import com.routingengine.methods.*;
     CheckSupportRequestMethodTest.class,
     CloseSupportRequestMethodTest.class,
     NewSupportRequestMethodTest.class,
+    RemoveSupportRequestMethodTest.class,
     WaitForAgentMethodTest.class
 })
 class SupportRequestMethodsTest
