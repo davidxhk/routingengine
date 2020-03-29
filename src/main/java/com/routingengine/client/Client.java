@@ -22,7 +22,7 @@ public final class Client
     {
         socket = new Socket(hostname, port);
         
-        log("Client connected to " + socket.toString());
+        // log("Client connected to " + socket.toString());
     }
     
     public final Client setConnectionHandler(ClientConnectionHandler clientConnectionHandler)
@@ -47,7 +47,7 @@ public final class Client
         else if (socket.isClosed())
             throw new IllegalStateException("socket closed");
         
-        log("Client handling connection with " + socket.toString());
+        //log("Client handling " + socket.toString());
         
         try {            
             connectionHandler.runMainLoop();
