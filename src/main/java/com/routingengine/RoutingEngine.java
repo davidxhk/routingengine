@@ -243,8 +243,8 @@ public class RoutingEngine
     {
         log("Start of Routing Engine Test");
         
-        final int DEFAULT_NUM_AGENTS = 60;
-        final int DEFAULT_NUM_CUSTOMERS = 300;
+        final int DEFAULT_NUM_AGENTS = 3;
+        final int DEFAULT_NUM_CUSTOMERS = 6;
         
         String hostname;
         int port;
@@ -271,6 +271,7 @@ public class RoutingEngine
                 port = Integer.valueOf(args[1]);
                 numberOfAgents = Integer.valueOf(args[2]);
                 numberOfCustomers = Integer.valueOf(args[3]);
+                break;
             
             default:
                 System.out.println("Usage: java com.routingengine.RoutingEngine [hostname] port [num_agents, num_customers]");
@@ -283,8 +284,15 @@ public class RoutingEngine
         Thread serverThread = new Thread(server);
         serverThread.start();
         
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        }
+        
+        catch (InterruptedException exception) { }
+        
         ExecutorService executorService = newFixedThreadPool(numberOfAgents + numberOfCustomers);
         
+        log("Number of agents: " + numberOfAgents);
         for (int i = 0; i < numberOfAgents; i++) {
             AgentClientConnectionHandler connectionHandler = new AgentClientConnectionHandler();
             connectionHandler.clientId = i + 1;
@@ -297,6 +305,7 @@ public class RoutingEngine
             executorService.execute(client);
         }
         
+        log("Number of customers: " + numberOfCustomers);
         for (int i = 0; i < numberOfCustomers; i++) {
             CustomerClientConnectionHandler connectionHandler = new CustomerClientConnectionHandler();
             connectionHandler.clientId = i + 1;
