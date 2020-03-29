@@ -1,7 +1,7 @@
 package com.routingengine;
 
 import static com.routingengine.json.JsonUtils.*;
-import static java.util.concurrent.Executors.newSingleThreadExecutor;
+import static java.util.concurrent.Executors.newFixedThreadPool;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -24,6 +24,7 @@ public abstract class MethodTestBase
     protected static Client customer, agent;
     protected static Thread serverThread;
     protected static ExecutorService executor;
+    private static final int THREAD_POOL_SIZE = 100;
     
     @BeforeAll
     protected static final void setUpBeforeClass()
@@ -34,7 +35,7 @@ public abstract class MethodTestBase
         
         TimeUnit.SECONDS.sleep(2);
         
-        executor = newSingleThreadExecutor();
+        executor = newFixedThreadPool(THREAD_POOL_SIZE);
         
         customer = new Client(hostname, port); 
         agent = new Client(hostname, port);
