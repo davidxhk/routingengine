@@ -1,0 +1,6 @@
+/bin/
+/lib/org**.jar
+.project
+.classpath
+/.settings
+/.vscode

@@ -23,123 +23,123 @@ public final class Server
     private final static int THREAD_POOL_SIZE = 1000;
     private final static int SOCKET_TIMEOUT = 1000;
     private final static int SHUTDOWN_TIMEOUT = 10000;
-    
+
     public Server(String hostname, int port)
     {
         address = new InetSocketAddress(hostname, port);
-        
+
         routingEngine = new RoutingEngine();
-        
+
         executorService = newFixedThreadPool(THREAD_POOL_SIZE);
     }
-    
+
     @Override
     public final void run()
     {
         try (ServerSocket listener = new ServerSocket()) {
-            
+
             listener.bind(address);
             
             log("Server bound to " + address);
-            
+
             listener.setSoTimeout(SOCKET_TIMEOUT);
-            
+
             log("Server listening to " + listener);
-            
+
             while (!Thread.interrupted()) {
                 try {
                     Socket socket = listener.accept();
-                    
+
                     ServerConnectionHandler connectionHandler =
                         new ServerConnectionHandler(socket, routingEngine);
-                    
+
                     executorService.execute(connectionHandler);
                 }
-                
+
                 catch (SocketTimeoutException exception) {
                     log(".");
                 }
-                
+
                 catch (InterruptedIOException exception) {
                     log("Server interrupted");
-                    
+
                     break;
                 }
             }
         }
-        
+
         catch (IOException exception) {
             // server crashed! what happened?
-            
+
             exception.printStackTrace();
         }
-        
+
         finally {
             close();
         }
     }
-    
+
     @Override
     public final void close()
     {
         if (executorService.isTerminated()) {
             log("Server has already been closed");
-            
+
             return;
         }
-        
+
         log("Shutting down executor service");
-        
+
         executorService.shutdown();
-        
+
         try {
             log("Waiting for executor service to terminate");
-            
+
             if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS)) {
                 log("Shutting down now");
                 executorService.shutdownNow();
-    
+
                 if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS)) {
                     log("Executor service did not terminate");
-                    
+
                     return;
                 }
             }
-            
+
             log("Server closed successfully");
         }
-        
+
         catch (InterruptedException exception) {
             log("Interrupted while shutting down executor service");
-            
+
             log("Shutting down now");
             executorService.shutdownNow();
-            
+
             Thread.currentThread().interrupt();
         }
     }
-    
+
     public static void main(String[] args)
     {
         String hostname;
         int port;
-        
+
         switch (args.length) {
             case 1:
                 hostname = "localhost";
                 port = Integer.valueOf(args[0]);
                 break;
-        
+
             case 2:
                 hostname = args[0];
                 port = Integer.valueOf(args[1]);
                 break;
-        
+
             default:
                 System.out.println("Usage: java com.routingengine.server.Server [hostname] port");
                 return;
         }
-        
+
         try (Server server = new Server(hostname, port)) {
             server.run();
         }
