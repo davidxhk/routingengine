@@ -54,6 +54,8 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
             }
             
             catch (JsonProtocolException exception) {
+                log("Server got bad request");
+                
                 JsonResponse
                     .failure(jsonRequest, exception)
                     .writeSafe(jsonWriter);
@@ -68,7 +70,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
                 throw exception;
             }
             
-            log("Server request –> " + jsonRequest.toString());
+            log("Server got request –> " + jsonRequest.toString());
             
             if (jsonRequest.getMethod().matches("new_agent|new_support_request")) {
                 if (!jsonRequest.hasArgument("address"))
