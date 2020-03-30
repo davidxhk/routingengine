@@ -2,13 +2,11 @@ package com.routingengine.methods;
 
 import static com.routingengine.SupportRequest.Type;
 import static org.junit.jupiter.api.Assertions.*;
-import static com.routingengine.json.JsonUtils.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.google.gson.JsonObject;
 import com.routingengine.MethodTestBase;
 import com.routingengine.SupportRequest;
 import com.routingengine.client.ClientConnectionHandler;
@@ -38,13 +36,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assertNotNull(payload);
-                
-                SupportRequest supportRequest = SupportRequest.fromJson(payload);
+                SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
                 
                 assertEquals(name, supportRequest.getUser().getName());
                 
@@ -75,13 +69,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assertNotNull(payload);
-                
-                SupportRequest supportRequest = SupportRequest.fromJson(payload);
+                SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
                 
                 assertEquals(name, supportRequest.getUser().getName());
                 
@@ -113,13 +103,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assertNotNull(payload);
-                
-                SupportRequest supportRequest = SupportRequest.fromJson(payload);
+                SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
                 
                 assertEquals(name, supportRequest.getUser().getName());
                 
@@ -154,11 +140,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("name missing", error);
+                assertResponseHasErrorPayload(response, "name missing");
             }
         });
     }
@@ -184,11 +168,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("name invalid", error);
+                assertResponseHasErrorPayload(response, "name invalid");
             }
         });
     }
@@ -214,11 +196,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("name invalid", error);
+                assertResponseHasErrorPayload(response, "name invalid");
             }
         });
     }
@@ -243,11 +223,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("email missing", error);
+                assertResponseHasErrorPayload(response, "email missing");
             }
         });
     }
@@ -273,11 +251,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("email invalid", error);
+                assertResponseHasErrorPayload(response, "email invalid");
             }
         });
     }
@@ -303,11 +279,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("email invalid", error);
+                assertResponseHasErrorPayload(response, "email invalid");
             }
         });
     }
@@ -332,11 +306,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("type missing", error);
+                assertResponseHasErrorPayload(response, "type missing");
             }
         });
     }
@@ -362,11 +334,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("type invalid", error);
+                assertResponseHasErrorPayload(response, "type invalid");
             }
         });
     }
@@ -392,11 +362,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("type invalid", error);
+                assertResponseHasErrorPayload(response, "type invalid");
             }
         });
     }
@@ -422,11 +390,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("type index out of bounds", error);
+                assertResponseHasErrorPayload(response, "type index out of bounds");
             }
         });
     }
@@ -452,11 +418,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("type string invalid", error);
+                assertResponseHasErrorPayload(response, "type string invalid");
             }
         });
     }
@@ -483,11 +447,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("address invalid", error);
+                assertResponseHasErrorPayload(response, "address invalid");
             }
         });
     }
@@ -514,11 +476,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("address invalid", error);
+                assertResponseHasErrorPayload(response, "address invalid");
             }
         });
     }
@@ -545,11 +505,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("address invalid", error);
+                assertResponseHasErrorPayload(response, "address invalid");
             }
         });
     }
@@ -576,11 +534,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("address invalid", error);
+                assertResponseHasErrorPayload(response, "address invalid");
             }
         });
     }
@@ -603,11 +559,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("name missing", error);
+                assertResponseHasErrorPayload(response, "name missing");
             }
         });
     }
@@ -638,13 +592,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assertNotNull(payload);
-                
-                SupportRequest supportRequest = SupportRequest.fromJson(payload);
+                SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
                 
                 assertEquals(name, supportRequest.getUser().getName());
                 
@@ -672,11 +622,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
@@ -698,11 +646,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
@@ -724,11 +670,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
@@ -750,11 +694,9 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }

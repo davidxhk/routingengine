@@ -1,14 +1,12 @@
 package com.routingengine.methods;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.routingengine.json.JsonUtils.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.google.gson.JsonObject;
 import com.routingengine.MethodTestBase;
 import com.routingengine.SupportRequest;
 import com.routingengine.client.ClientConnectionHandler;
@@ -36,13 +34,9 @@ public class RemoveSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assertNotNull(payload);
-                
-                SupportRequest supportRequest = SupportRequest.fromJson(payload);
+                SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
                 
                 assertFalse(supportRequest.isOpen());
                 
@@ -50,11 +44,9 @@ public class RemoveSupportRequestMethodTest extends MethodTestBase
                 
                 response = checkSupportRequest(supportRequestUUIDString);
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid not found", error);
+                assertResponseHasErrorPayload(response, "uuid not found");
             }
         });
     }
@@ -77,11 +69,9 @@ public class RemoveSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid missing", error);
+                assertResponseHasErrorPayload(response, "uuid missing");
             }
         });
     }
@@ -105,11 +95,9 @@ public class RemoveSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid invalid", error);
+                assertResponseHasErrorPayload(response, "uuid invalid");
             }
         });
     }
@@ -133,11 +121,9 @@ public class RemoveSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid invalid", error);
+                assertResponseHasErrorPayload(response, "uuid invalid");
             }
         });
     }
@@ -161,11 +147,9 @@ public class RemoveSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid invalid", error);
+                assertResponseHasErrorPayload(response, "uuid invalid");
             }
         });
     }
@@ -188,11 +172,9 @@ public class RemoveSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid missing", error);
+                assertResponseHasErrorPayload(response, "uuid missing");
             }
         });
     }
@@ -219,13 +201,9 @@ public class RemoveSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assertNotNull(payload);
-                
-                SupportRequest supportRequest = SupportRequest.fromJson(payload);
+                SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
                 
                 assertFalse(supportRequest.isOpen());
                 
@@ -233,11 +211,9 @@ public class RemoveSupportRequestMethodTest extends MethodTestBase
                 
                 response = checkSupportRequest(supportRequestUUIDString);
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid not found", error);
+                assertResponseHasErrorPayload(response, "uuid not found");
             }
         });
     }
@@ -259,11 +235,9 @@ public class RemoveSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
@@ -285,11 +259,9 @@ public class RemoveSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
@@ -311,11 +283,9 @@ public class RemoveSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
@@ -337,11 +307,9 @@ public class RemoveSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }

@@ -2,14 +2,12 @@ package com.routingengine.methods;
 
 import static com.routingengine.SupportRequest.Type;
 import static org.junit.jupiter.api.Assertions.*;
-import static com.routingengine.json.JsonUtils.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.google.gson.JsonObject;
 import com.routingengine.MethodTestBase;
 import com.routingengine.SupportRequest;
 import com.routingengine.client.ClientConnectionHandler;
@@ -39,13 +37,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assertNotNull(payload);
-                
-                SupportRequest supportRequest = SupportRequest.fromJson(payload);
+                SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
                 
                 assertEquals(Type.of(newType), supportRequest.getType());
             }
@@ -72,13 +66,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assertNotNull(payload);
-                
-                SupportRequest supportRequest = SupportRequest.fromJson(payload);
+                SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
                 
                 assertEquals(Type.of(newType), supportRequest.getType());
             }
@@ -106,11 +96,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid missing", error);
+                assertResponseHasErrorPayload(response, "uuid missing");
             }
         });
     }
@@ -135,11 +123,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid invalid", error);
+                assertResponseHasErrorPayload(response, "uuid invalid");
             }
         });
     }
@@ -164,11 +150,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid invalid", error);
+                assertResponseHasErrorPayload(response, "uuid invalid");
             }
         });
     }
@@ -193,11 +177,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid invalid", error);
+                assertResponseHasErrorPayload(response, "uuid invalid");
             }
         });
     }
@@ -223,11 +205,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("type missing", error);
+                assertResponseHasErrorPayload(response, "type missing");
             }
         });
         
@@ -256,11 +236,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("type invalid", error);
+                assertResponseHasErrorPayload(response, "type invalid");
             }
         });
         
@@ -289,11 +267,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("type invalid", error);
+                assertResponseHasErrorPayload(response, "type invalid");
             }
         });
         
@@ -322,11 +298,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("type index out of bounds", error);
+                assertResponseHasErrorPayload(response, "type index out of bounds");
             }
         });
         
@@ -355,11 +329,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("type string invalid", error);
+                assertResponseHasErrorPayload(response, "type string invalid");
             }
         });
         
@@ -385,11 +357,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid missing", error);
+                assertResponseHasErrorPayload(response, "uuid missing");
             }
         });
     }
@@ -419,13 +389,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assertNotNull(payload);
-                
-                SupportRequest supportRequest = SupportRequest.fromJson(payload);
+                SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
                 
                 assertEquals(Type.of(newType), supportRequest.getType());
             }
@@ -451,11 +417,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
@@ -477,11 +441,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
@@ -503,11 +465,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
@@ -529,11 +489,9 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
