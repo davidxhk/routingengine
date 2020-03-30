@@ -30,6 +30,8 @@ public class WaitForAgentMethodTest extends MethodTestBase
         
         final String agentUUIDString = generateNewAgent(Map.of(1, true));
         
+        agentUpdatesAvailability(agentUUIDString, true);
+        
         agentTakesSupportRequest(agentUUIDString);
         
         execute(new ClientConnectionHandler() {
@@ -204,6 +206,8 @@ public class WaitForAgentMethodTest extends MethodTestBase
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", 1);
         
         final String agentUUIDString = generateNewAgent(Map.of(1, true));
+        
+        agentUpdatesAvailability(agentUUIDString, true);
         
         agentTakesSupportRequest(agentUUIDString);
         
