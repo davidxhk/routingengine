@@ -113,8 +113,6 @@ public abstract class MethodTestBase
                 JsonResponse response = newAgent(skills);
                 JsonObject payload = castToJsonObject(response.getPayload());
                 agentUUIDString[0] = getAsString(payload, "uuid");
-                
-                updateAgentAvailability(agentUUIDString[0], true);
             }
         });
         
@@ -148,6 +146,7 @@ public abstract class MethodTestBase
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
+                updateAgentAvailability(agentUUIDString, true);
                 takeSupportRequest(agentUUIDString);
             }
         });
