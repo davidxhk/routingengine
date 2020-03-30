@@ -4,6 +4,7 @@ import static com.routingengine.json.JsonUtils.getAsString;
 import static com.routingengine.json.JsonUtils.getAsBoolean;
 import static com.routingengine.json.JsonUtils.getAsInt;
 import static com.routingengine.json.JsonUtils.getAsJsonObject;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 
@@ -239,8 +240,8 @@ public class SupportRequest extends InetEntity
             JsonObject agentJson = getAsJsonObject(jsonObject, "assigned_agent");
             
             if (agentJson != null) {
-                JsonObject skills = new JsonObject();
-                skills.addProperty(supportRequest.getType().toString(), true);
+                JsonArray skills = new JsonArray();
+                skills.add(supportRequest.getType().toString());
                 agentJson.add("skills", skills);
                 
                 supportRequest.assignedAgent = Agent.fromJson(agentJson);
