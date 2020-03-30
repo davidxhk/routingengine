@@ -52,12 +52,12 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
                 Agent agent = Agent.fromJson(payload);
                 
                 assertTrue(agent.hasAssignedSupportRequest());
-                
-                assertEquals(supportRequestUUIDString, agent.getAssignedSupportRequest().getUUID().toString());
             }
         });
         
         agent.run();
+        
+        assertTrue(agentDidTakeSupportRequest(agentUUIDString, supportRequestUUIDString));
         
         removeSupportRequest(supportRequestUUIDString);
         
@@ -249,12 +249,12 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
                 Agent agent = Agent.fromJson(payload);
                 
                 assertTrue(agent.hasAssignedSupportRequest());
-                
-                assertEquals(supportRequestUUIDString, agent.getAssignedSupportRequest().getUUID().toString());
             }
         });
         
         agent.run();
+        
+        assertTrue(agentDidTakeSupportRequest(agentUUIDString, supportRequestUUIDString));
         
         removeSupportRequest(supportRequestUUIDString);
         
