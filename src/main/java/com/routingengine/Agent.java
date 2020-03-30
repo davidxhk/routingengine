@@ -295,6 +295,9 @@ public class Agent extends InetEntity
     
     public static Agent fromJson(JsonObject jsonObject)
     {
+        if (jsonObject == null)
+            throw new IllegalArgumentException("json missing");
+        
         Map<String, Boolean> skills = new HashMap<>();
         for (String skill : getAsStringList(jsonObject, "skills"))
             skills.put(skill, true);

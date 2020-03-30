@@ -221,6 +221,9 @@ public class SupportRequest extends InetEntity
     
     public static SupportRequest fromJson(JsonObject jsonObject)
     {
+        if (jsonObject == null)
+            throw new IllegalArgumentException("json missing");
+        
         SupportRequest supportRequest = builder()
             .setUUID(getAsString(jsonObject, "uuid"))
             .setAddress(getAsString(jsonObject, "address"))
