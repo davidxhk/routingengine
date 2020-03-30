@@ -1,5 +1,6 @@
 package com.routingengine;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static com.routingengine.json.JsonUtils.*;
 import static java.util.concurrent.Executors.newFixedThreadPool;
@@ -95,7 +96,8 @@ public abstract class MethodTestBase
     
     protected static final void assumeResponseDidSucceed(JsonResponse response)
     {
-        assumeTrue(castToString(response.getPayload()), response.didSucceed());
+        if (!response.didSucceed())
+            assumeTrue(castToString(response.getPayload()), false);
     }
     
     protected static final void assertResponseDidSucceed(JsonResponse response)
@@ -144,6 +146,19 @@ public abstract class MethodTestBase
         assumeNotNull(supportRequest);
         
         return supportRequest;
+    }
+    
+    protected static final void assertResponseDidNotSucceed(JsonResponse response)
+    {
+        if (response.didSucceed())
+            fail("expected " + method + " to fail");
+    }
+    
+    protected static final void assertResponseHasErrorPayload(JsonResponse response, String error)
+    {
+        String payload = castToString(response.getPayload());
+                
+        assertEquals(error, payload);
     }
     
     protected static final String generateNewSupportRequest(String name, String email, int type)
