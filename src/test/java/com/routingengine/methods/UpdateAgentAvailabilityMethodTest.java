@@ -1,7 +1,6 @@
 package com.routingengine.methods;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.Assume.*;
 import static com.routingengine.json.JsonUtils.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,36 +28,26 @@ public class UpdateAgentAvailabilityMethodTest extends MethodTestBase
     {
         final String agentUUIDString = generateNewAgent(Map.of(1, true));
         
+        agentUpdatesAvailability(agentUUIDString, false);
+        
         agent.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = checkAgent(agentUUIDString);
-                
-                assumeTrue(response.didSucceed());
-                
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assumeNotNull(payload);
-                
-                Agent agent = Agent.fromJson(payload);
-                
-                assumeFalse(agent.isAvailable());
-                
-                response = updateAgentAvailability(agentUUIDString, true);
+                JsonResponse response = updateAgentAvailability(agentUUIDString, true);
                 
                 assertEquals(method, response.getMethod());
                 
                 assertTrue(response.didSucceed());
                 
-                payload = castToJsonObject(response.getPayload());
+                JsonObject payload = castToJsonObject(response.getPayload());
                 
                 assertNotNull(payload);
                 
-                agent = Agent.fromJson(payload);
+                Agent agent = Agent.fromJson(payload);
                 
-                assumeTrue(agent.isAvailable());
+                assertTrue(agent.isAvailable());
             }
         });
         
@@ -74,36 +63,26 @@ public class UpdateAgentAvailabilityMethodTest extends MethodTestBase
     {
         final String agentUUIDString = generateNewAgent(Map.of(1, true));
         
+        agentUpdatesAvailability(agentUUIDString, true);
+        
         agent.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = updateAgentAvailability(agentUUIDString, true);
-                
-                assumeTrue(response.didSucceed());
-                
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assumeNotNull(payload);
-                
-                Agent agent = Agent.fromJson(payload);
-                
-                assumeTrue(agent.isAvailable());
-                
-                response = updateAgentAvailability(agentUUIDString, false);
+                JsonResponse response = updateAgentAvailability(agentUUIDString, false);
                 
                 assertEquals(method, response.getMethod());
                 
                 assertTrue(response.didSucceed());
                 
-                payload = castToJsonObject(response.getPayload());
+                JsonObject payload = castToJsonObject(response.getPayload());
                 
                 assertNotNull(payload);
                 
-                agent = Agent.fromJson(payload);
+                Agent agent = Agent.fromJson(payload);
                 
-                assumeFalse(agent.isAvailable());
+                assertFalse(agent.isAvailable());
             }
         });
         
@@ -445,23 +424,13 @@ public class UpdateAgentAvailabilityMethodTest extends MethodTestBase
     {
         final String agentUUIDString = generateNewAgent(Map.of(1, true));
         
+        agentUpdatesAvailability(agentUUIDString, false);
+        
         agent.setConnectionHandler(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = checkAgent(agentUUIDString);
-                
-                assumeTrue(response.didSucceed());
-                
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assumeNotNull(payload);
-                
-                Agent agent = Agent.fromJson(payload);
-                
-                assumeFalse(agent.isAvailable());
-                
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", agentUUIDString)
@@ -469,19 +438,19 @@ public class UpdateAgentAvailabilityMethodTest extends MethodTestBase
                     .setArgument("something", "something?")
                     .writeSafe(jsonWriter);
                 
-                response = awaitResponse();
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
                 assertTrue(response.didSucceed());
                 
-                payload = castToJsonObject(response.getPayload());
+                JsonObject payload = castToJsonObject(response.getPayload());
                 
                 assertNotNull(payload);
                 
-                agent = Agent.fromJson(payload);
+                Agent agent = Agent.fromJson(payload);
                 
-                assumeTrue(agent.isAvailable());
+                assertTrue(agent.isAvailable());
             }
         });
         
