@@ -1,11 +1,10 @@
 package com.routingengine;
 
+import static org.junit.jupiter.api.Assertions.fail;
 import static com.routingengine.json.JsonUtils.*;
 import static java.util.concurrent.Executors.newFixedThreadPool;
-import static org.junit.Assume.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assume.assumeNotNull;
+import static org.junit.Assume.assumeTrue;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -13,7 +12,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import com.google.gson.JsonObject;
 import com.routingengine.client.Client;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonResponse;
@@ -22,41 +20,92 @@ import com.routingengine.server.Server;
 
 public abstract class MethodTestBase
 {
-    protected static final String hostname = "localhost";
-    protected static final int port = 50000;
-    protected static String method;
-    protected static Client customer, agent;
-    protected static Thread serverThread;
-    protected static ExecutorService executor;
+    private static final String hostname = "localhost";
+    private static final int port = 50000;
     private static final int THREAD_POOL_SIZE = 100;
+    protected static ExecutorService executor;
+    protected static Thread serverThread;
+    protected static Client client;
+    protected static String method;
     
     @BeforeAll
     protected static final void setUpBeforeClass()
         throws Exception
     {
+        executor = newFixedThreadPool(THREAD_POOL_SIZE);
+        
         serverThread = new Thread(new Server(hostname, port));
         serverThread.start();
         
         TimeUnit.SECONDS.sleep(2);
         
-        executor = newFixedThreadPool(THREAD_POOL_SIZE);
-        
-        customer = new Client(hostname, port); 
-        agent = new Client(hostname, port);
+        client = new Client(hostname, port); 
     }
     
     @AfterAll
     protected static final void tearDownAfterClass()
         throws Exception
     {
-        customerExits();
-        agentExits();
-        
         executor.shutdownNow();
         executor.awaitTermination(10, TimeUnit.SECONDS);
         
+        execute(new ClientConnectionHandler()
+        {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException, EndConnectionException
+            {
+                exit();
+            }
+        });
+        
         serverThread.interrupt();
         serverThread.join();
+    }
+    
+    protected static final void execute(ClientConnectionHandler connectionHandler)
+        throws IOException
+    {
+        client.setConnectionHandler(connectionHandler);
+        
+        client.run();
+    }
+    
+    private static final void executeInNewClient(ClientConnectionHandler connectionHandler)
+        throws IOException
+    {
+        Client client = new Client(hostname, port);
+        
+        client.setConnectionHandler(new ClientConnectionHandler ()
+        {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException, EndConnectionException
+            {
+                connectionHandler.connect(this.socket);
+                connectionHandler.runMainLoop();
+                exit();
+            }
+        });
+        
+        executor.execute(client);
+    }
+    
+    protected static final void assumptionFailed(String message)
+    {
+        assumeTrue(message, false);
+    }
+    
+    protected static final void assumeResponseDidSucceed(JsonResponse response)
+    {
+        if (!response.didSucceed())
+            assumptionFailed(castToString(response.getPayload()));
+    }
+    
+    protected static final void assertResponseDidSucceed(JsonResponse response)
+    {
+        if (!response.didSucceed())
+            fail(castToString(response.getPayload()));
     }
     
     protected static final String generateNewSupportRequest(String name, String email, int type)
@@ -64,7 +113,7 @@ public abstract class MethodTestBase
     {
         String[] supportRequestUUIDString = new String[] {null};
         
-        customer.setConnectionHandler(new ClientConnectionHandler()
+        execute(new ClientConnectionHandler()
         {
             @Override
             public void runMainLoop()
@@ -72,13 +121,13 @@ public abstract class MethodTestBase
             {
                 JsonResponse response = newSupportRequest(name, email, type);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
+                assumeResponseDidSucceed(response);
                 
-                supportRequestUUIDString[0] = getAsString(payload, "uuid");
+                SupportRequest supportRequest = SupportRequest.fromJson(castToJsonObject(response.getPayload()));
+                
+                supportRequestUUIDString[0] = supportRequest.getUUID().toString();
             }
         });
-        
-        executor.submit(customer).get();
         
         assumeNotNull(supportRequestUUIDString[0]);
         
@@ -90,7 +139,7 @@ public abstract class MethodTestBase
     {
         String[] supportRequestUUIDString = new String[] {null};
         
-        customer.setConnectionHandler(new ClientConnectionHandler()
+        execute(new ClientConnectionHandler()
         {
             @Override
             public void runMainLoop()
@@ -98,13 +147,13 @@ public abstract class MethodTestBase
             {
                 JsonResponse response = newSupportRequest(name, email, type);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
+                assumeResponseDidSucceed(response);
                 
-                supportRequestUUIDString[0] = getAsString(payload, "uuid");
+                SupportRequest supportRequest = SupportRequest.fromJson(castToJsonObject(response.getPayload()));
+                
+                supportRequestUUIDString[0] = supportRequest.getUUID().toString();
             }
         });
-        
-        executor.submit(customer).get();
         
         assumeNotNull(supportRequestUUIDString[0]);
         
@@ -116,7 +165,7 @@ public abstract class MethodTestBase
     {
         String[] agentUUIDString = new String[] {null};
         
-        agent.setConnectionHandler(new ClientConnectionHandler()
+        execute(new ClientConnectionHandler()
         {
             @Override
             public void runMainLoop()
@@ -124,13 +173,13 @@ public abstract class MethodTestBase
             {
                 JsonResponse response = newAgent(skills);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
+                assumeResponseDidSucceed(response);
                 
-                agentUUIDString[0] = getAsString(payload, "uuid");
+                Agent agent = Agent.fromJson(castToJsonObject(response.getPayload()));
+                
+                agentUUIDString[0] = agent.getUUID().toString();
             }
         });
-        
-        executor.submit(agent).get();
         
         assumeNotNull(agentUUIDString[0]);
         
@@ -140,9 +189,7 @@ public abstract class MethodTestBase
     protected static final void customerWaitsForAgent(String supportRequestUUIDString)
         throws IOException, InterruptedException, ExecutionException
     {
-        final boolean[] isOk = new boolean[] {false};
-        
-        customer.setConnectionHandler(new ClientConnectionHandler()
+        execute(new ClientConnectionHandler()
         {
             @Override
             public void runMainLoop()
@@ -150,28 +197,22 @@ public abstract class MethodTestBase
             {
                 JsonResponse response = checkSupportRequest(supportRequestUUIDString);
                 
-                if (!response.didSucceed())
-                    return;
+                assumeResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
+                SupportRequest supportRequest = SupportRequest.fromJson(castToJsonObject(response.getPayload()));
                 
-                if (payload == null)
-                    return;
+                if (supportRequest.hasAssignedAgent())
+                    assumptionFailed("support request already has assigned agent");
                 
-                SupportRequest supportRequest = SupportRequest.fromJson(payload);
+                if (!supportRequest.isOpen())
+                    assumptionFailed("support request is closed");
                 
-                if (!supportRequest.isOpen() || supportRequest.isWaiting() || supportRequest.hasAssignedAgent())
-                    return;
-                
-                isOk[0] = true;
+                if (supportRequest.isWaiting())
+                    assumptionFailed("support request already waiting");
             }
         });
         
-        executor.submit(customer).get();
-        
-        assumeTrue(isOk[0]);
-        
-        customer.setConnectionHandler(new ClientConnectionHandler()
+        executeInNewClient(new ClientConnectionHandler()
         {
             @Override
             public void runMainLoop()
@@ -180,16 +221,12 @@ public abstract class MethodTestBase
                 waitForAgent(supportRequestUUIDString);
             }
         });
-        
-        executor.execute(customer);
     }
     
     protected static final void agentUpdatesAvailability(String agentUUIDString, Boolean isAvailable)
         throws IOException, InterruptedException, ExecutionException
     {
-        final boolean[] didSucceed = new boolean[] {false};
-        
-        agent.setConnectionHandler(new ClientConnectionHandler()
+        execute(new ClientConnectionHandler()
         {
             @Override
             public void runMainLoop()
@@ -197,34 +234,19 @@ public abstract class MethodTestBase
             {
                 JsonResponse response = updateAgentAvailability(agentUUIDString, isAvailable);
                 
-                if (!response.didSucceed())
-                    return;
+                assumeResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
+                Agent agent = Agent.fromJson(castToJsonObject(response.getPayload()));
                 
-                if (payload == null)
-                    return;
-                
-                Agent agent = Agent.fromJson(payload);
-                
-                if (!isAvailable.equals(agent.isAvailable()))
-                    return;
-                
-                didSucceed[0] = true;
+                assumeTrue(isAvailable.equals(agent.isAvailable()));
             }
         });
-        
-        executor.submit(agent).get();
-        
-        assumeTrue(didSucceed[0]);
     }
     
     protected static final void agentTakesSupportRequest(String agentUUIDString)
         throws IOException, InterruptedException, ExecutionException
     {
-        final boolean[] isOk = new boolean[] {false};
-        
-        agent.setConnectionHandler(new ClientConnectionHandler()
+        execute(new ClientConnectionHandler()
         {
             @Override
             public void runMainLoop()
@@ -232,28 +254,25 @@ public abstract class MethodTestBase
             {
                 JsonResponse response = checkAgent(agentUUIDString);
                 
-                if (!response.didSucceed())
-                    return;
+                assumeResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
+                Agent agent = Agent.fromJson(castToJsonObject(response.getPayload()));
                 
-                if (payload == null)
-                    return;
+                if (agent.hasAssignedSupportRequest())
+                    assumptionFailed("agent already has assigned support request");
                 
-                Agent agent = Agent.fromJson(payload);
+                if (!agent.isActivated())
+                    assumptionFailed("agent not activated");
+                
+                if (agent.isWaiting())
+                    assumptionFailed("agent already waiting");
                 
                 if (!agent.isAvailable())
-                    return;
-                
-                isOk[0] = true;
+                    assumptionFailed("agent not available");
             }
         });
         
-        executor.submit(agent).get();
-        
-        assumeTrue(isOk[0]);
-        
-        agent.setConnectionHandler(new ClientConnectionHandler()
+        executeInNewClient(new ClientConnectionHandler()
         {
             @Override
             public void runMainLoop()
@@ -262,17 +281,14 @@ public abstract class MethodTestBase
                 takeSupportRequest(agentUUIDString);
             }
         });
-        
-        executor.execute(agent);
     }
     
     protected static final boolean agentDidTakeSupportRequest(String agentUUIDString, String supportRequestUUIDString)
         throws IOException, InterruptedException, ExecutionException
     {
-        boolean[] isOk = new boolean[] {false};
         boolean[] didTake = new boolean[] {false};
         
-        agent.setConnectionHandler(new ClientConnectionHandler()
+        execute(new ClientConnectionHandler()
         {
             @Override
             public void runMainLoop()
@@ -280,44 +296,42 @@ public abstract class MethodTestBase
             {
                 JsonResponse response = checkAgent(agentUUIDString);
                 
-                if (!response.didSucceed())
-                    return;
+                assumeResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
+                Agent agent = Agent.fromJson(castToJsonObject(response.getPayload()));
                 
-                if (payload == null)
-                    return;
+                if (!agent.isActivated())
+                    assumptionFailed("agent not activated");
                 
-                Agent agent = Agent.fromJson(payload);
+                if (agent.isWaiting())
+                    assumptionFailed("agent is waiting");
                 
-                if (!agent.isActivated() || agent.isWaiting() || agent.isAvailable())
-                    return;
+                if (agent.isAvailable())
+                    assumptionFailed("agent has not been assigned a support request");
+                
+                if (!agent.hasAssignedSupportRequest())
+                    assumptionFailed("agent is not available");
                 
                 response = checkSupportRequest(supportRequestUUIDString);
                 
-                if (!response.didSucceed())
-                    return;
+                assumeResponseDidSucceed(response);
                 
-                payload = castToJsonObject(response.getPayload());
+                SupportRequest supportRequest = SupportRequest.fromJson(castToJsonObject(response.getPayload()));
                 
-                if (payload == null)
-                    return;
+                if (!supportRequest.isOpen())
+                    assumptionFailed("support request is closed");
                 
-                SupportRequest supportRequest = SupportRequest.fromJson(payload);
+                if (supportRequest.isWaiting())
+                    assumptionFailed("support request is waiting");
                 
-                if (!supportRequest.isOpen() || supportRequest.isWaiting())
-                    return;
+                if (!supportRequest.hasAssignedAgent())
+                    assumptionFailed("support request has not been assigned an agent");
                 
-                if (!(agent.hasAssignedSupportRequest() && supportRequest.hasAssignedAgent()))
-                    return;
+                String assignedSupportRequestUUIDString = agent.getAssignedSupportRequest().getUUID().toString();
                 
-                didTake[0] = (agent.getAssignedSupportRequest() == supportRequest);
+                didTake[0] = (supportRequestUUIDString.equals(assignedSupportRequestUUIDString));
             }
         });
-        
-        executor.submit(agent).get();
-        
-        assumeTrue(isOk[0]);
         
         return didTake[0];
     }
@@ -325,64 +339,32 @@ public abstract class MethodTestBase
     protected static final void removeSupportRequest(String supportRequestUUIDString)
         throws IOException, InterruptedException, ExecutionException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler()
+        execute(new ClientConnectionHandler()
         {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                removeSupportRequest(supportRequestUUIDString);
+                JsonResponse response = removeSupportRequest(supportRequestUUIDString);
+                
+                assumeResponseDidSucceed(response);
             }
         });
-        
-        executor.submit(customer).get();
     }
     
     protected static final void removeAgent(String agentUUIDString)
         throws IOException, InterruptedException, ExecutionException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler()
+        execute(new ClientConnectionHandler()
         {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                removeAgent(agentUUIDString);
+                JsonResponse response = removeAgent(agentUUIDString);
+                
+                assertResponseDidSucceed(response);
             }
         });
-        
-        executor.submit(agent).get();
-    }
-    
-    private static final void customerExits()
-        throws IOException, InterruptedException, ExecutionException
-    {
-        customer.setConnectionHandler(new ClientConnectionHandler()
-        {
-            @Override
-            public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
-            {
-                exit();
-            }
-        });
-        
-        executor.submit(customer).get();
-    }
-    
-    private static final void agentExits()
-        throws IOException, InterruptedException, ExecutionException
-    {
-        agent.setConnectionHandler(new ClientConnectionHandler()
-        {
-            @Override
-            public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
-            {
-                exit();
-            }
-        });
-        
-        executor.submit(agent).get();
     }
 }
