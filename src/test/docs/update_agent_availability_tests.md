@@ -38,8 +38,8 @@ The following types of tests for `update_agent_availability` are provided in thi
 | 2.2.2 | Invalid uuid case 2                   | failure | `"uuid invalid"`                                 |                                                 |
 | 2.2.3 | Invalid uuid case 3                   | failure | `"uuid invalid"`                                 |                                                 |
 | 3.1   | Missing available                     | failure | `"available missing"`                            |                                                 |
-| 3.2.1 | Invalid available case 1              | failure | `"available must be true or false"`              |                                                 |
-| 3.2.2 | Invalid available case 2              | failure | `"available must be true or false"`              |                                                 |
+| 3.2.1 | Invalid available case 1              | failure | `"available invalid"`                            |                                                 |
+| 3.2.2 | Invalid available case 2              | failure | `"available invalid"`                            |                                                 |
 | 3.2.3 | Invalid available case 3              | failure | `"available must be true or false"`              |                                                 |
 | 3.2.4 | Invalid available case 4              | failure | `"available must be true or false"`              |                                                 |
 | 4.1   | Missing input                         | failure | `"uuid missing"`                                 |                                                 |
