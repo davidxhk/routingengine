@@ -30,7 +30,7 @@ public class NewAgentMethodTest extends MethodTestBase
     {
         Map<Integer, Boolean> skills = Map.of(1, true, 2, true);
         
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -54,8 +54,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 removeAgent(agent.getUUID().toString());
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -65,7 +63,7 @@ public class NewAgentMethodTest extends MethodTestBase
     {
         final Map<String, Boolean> skills = Map.of("GENERAL_ENQUIRY", true, "CHECK_BILL", true);
         
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -89,8 +87,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 removeAgent(agent.getUUID().toString());
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -101,7 +97,7 @@ public class NewAgentMethodTest extends MethodTestBase
         final Map<String, Boolean> skills = Map.of("GENERAL_ENQUIRY", true, "CHECK_BILL", true);
         final String address = "127.0.0.1";
         
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -127,8 +123,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 removeAgent(agent.getUUID().toString());
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -136,7 +130,7 @@ public class NewAgentMethodTest extends MethodTestBase
     void test04()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -156,8 +150,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("skills missing", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -167,7 +159,7 @@ public class NewAgentMethodTest extends MethodTestBase
     {
         final Map<Integer, Boolean> skills = Map.of(999, true, -1, true);
         
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -183,8 +175,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("skill missing", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -194,7 +184,7 @@ public class NewAgentMethodTest extends MethodTestBase
     {
         final Map<String, Boolean> skills = Map.of("TEST", true, "hmmm", true);
         
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -210,8 +200,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("skill missing", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -221,7 +209,7 @@ public class NewAgentMethodTest extends MethodTestBase
     {
         final Map<Integer, Boolean> skills = Map.of(0, false, 1, false, 2, false);
         
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -237,8 +225,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("skill missing", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -248,7 +234,7 @@ public class NewAgentMethodTest extends MethodTestBase
     {
         final Map<Integer, String> skills = Map.of(1, "haha");
         
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -264,8 +250,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("skills 1 must be true or false", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -275,7 +259,7 @@ public class NewAgentMethodTest extends MethodTestBase
     {
         final Map<String, String> skills = Map.of("GENERAL_ENQUIRY", "no");
         
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -291,8 +275,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("skills GENERAL_ENQUIRY must be true or false", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -300,7 +282,7 @@ public class NewAgentMethodTest extends MethodTestBase
     void test10()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -321,8 +303,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("skills invalid", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -330,7 +310,7 @@ public class NewAgentMethodTest extends MethodTestBase
     void test11()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -351,8 +331,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("skills invalid", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -360,7 +338,7 @@ public class NewAgentMethodTest extends MethodTestBase
     void test12()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -381,8 +359,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("skills invalid", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -390,7 +366,7 @@ public class NewAgentMethodTest extends MethodTestBase
     void test13()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -412,8 +388,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("address invalid", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -421,7 +395,7 @@ public class NewAgentMethodTest extends MethodTestBase
     void test14()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -443,8 +417,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("address invalid", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -452,7 +424,7 @@ public class NewAgentMethodTest extends MethodTestBase
     void test15()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -474,8 +446,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("address invalid", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -483,7 +453,7 @@ public class NewAgentMethodTest extends MethodTestBase
     void test16()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -505,8 +475,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("address invalid", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -514,7 +482,7 @@ public class NewAgentMethodTest extends MethodTestBase
     void test17()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -534,8 +502,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("skills missing", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -545,7 +511,7 @@ public class NewAgentMethodTest extends MethodTestBase
     {
         Map<Integer, Boolean> skills = Map.of(1, true, 2, true);
         
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -575,8 +541,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 removeAgent(agent.getUUID().toString());
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -584,7 +548,7 @@ public class NewAgentMethodTest extends MethodTestBase
     void test19()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -603,8 +567,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -612,7 +574,7 @@ public class NewAgentMethodTest extends MethodTestBase
     void test20()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -631,8 +593,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -640,7 +600,7 @@ public class NewAgentMethodTest extends MethodTestBase
     void test21()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -659,8 +619,6 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -668,7 +626,7 @@ public class NewAgentMethodTest extends MethodTestBase
     void test22()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -687,7 +645,5 @@ public class NewAgentMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        agent.run();
     }
 }

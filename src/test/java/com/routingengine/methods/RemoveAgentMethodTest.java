@@ -21,7 +21,7 @@ public class RemoveAgentMethodTest extends MethodTestBase
     void test90()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -41,8 +41,6 @@ public class RemoveAgentMethodTest extends MethodTestBase
                 assertEquals("uuid missing", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -57,7 +55,7 @@ public class RemoveAgentMethodTest extends MethodTestBase
     void test92()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -76,8 +74,6 @@ public class RemoveAgentMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -85,7 +81,7 @@ public class RemoveAgentMethodTest extends MethodTestBase
     void test93()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -104,8 +100,6 @@ public class RemoveAgentMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -113,7 +107,7 @@ public class RemoveAgentMethodTest extends MethodTestBase
     void test94()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -132,8 +126,6 @@ public class RemoveAgentMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -141,7 +133,7 @@ public class RemoveAgentMethodTest extends MethodTestBase
     void test95()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -160,7 +152,5 @@ public class RemoveAgentMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        customer.run();
     }
 }

@@ -25,7 +25,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test01()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -55,8 +55,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 removeSupportRequest(supportRequest.getUUID().toString());
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -64,7 +62,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test02()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -94,8 +92,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 removeSupportRequest(supportRequest.getUUID().toString());
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -103,7 +99,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test03()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -136,8 +132,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 removeSupportRequest(supportRequest.getUUID().toString());
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -145,7 +139,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test04()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -167,8 +161,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("name missing", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -176,7 +168,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test05()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -199,8 +191,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("name invalid", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -208,7 +198,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test06()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -231,8 +221,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("name invalid", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -240,7 +228,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test07()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -262,8 +250,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("email missing", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -271,7 +257,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test08()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -294,8 +280,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("email invalid", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -303,7 +287,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test09()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -326,8 +310,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("email invalid", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -335,7 +317,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test10()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -357,8 +339,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("type missing", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -366,7 +346,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test11()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -389,8 +369,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("type invalid", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -398,7 +376,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test12()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -421,8 +399,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("type invalid", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -430,7 +406,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test13()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -453,8 +429,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("type index out of bounds", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -462,7 +436,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test14()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -485,8 +459,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("type string invalid", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -494,7 +466,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test15()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -518,8 +490,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("address invalid", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -527,7 +497,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test16()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -551,8 +521,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("address invalid", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -560,7 +528,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test17()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -584,8 +552,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("address invalid", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -593,7 +559,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test18()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -617,8 +583,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("address invalid", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -626,7 +590,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test19()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -646,8 +610,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("name missing", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -655,7 +617,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test20()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -691,8 +653,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals(Type.of(type), supportRequest.getType());
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -700,7 +660,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test21()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -719,8 +679,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -728,7 +686,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test22()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -747,8 +705,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -756,7 +712,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test23()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -775,8 +731,6 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -784,7 +738,7 @@ public class NewSupportRequestMethodTest extends MethodTestBase
     void test24()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -803,7 +757,5 @@ public class NewSupportRequestMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        customer.run();
     }
 }

@@ -30,7 +30,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
         final int newType = 1;
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", oldType);
         
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -50,8 +50,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 assertEquals(Type.of(newType), supportRequest.getType());
             }
         });
-        
-        customer.run();
         
         removeSupportRequest(supportRequestUUIDString);
     }
@@ -65,7 +63,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
         final String newType = "GENERAL_ENQUIRY";
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", oldType);
         
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -86,8 +84,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
             }
         });
         
-        customer.run();
-        
         removeSupportRequest(supportRequestUUIDString);
     }
     
@@ -96,7 +92,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
     void test03()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -117,8 +113,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 assertEquals("uuid missing", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -126,7 +120,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
     void test04()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -148,8 +142,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 assertEquals("uuid invalid", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -157,7 +149,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
     void test05()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -179,8 +171,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 assertEquals("uuid invalid", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -188,7 +178,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
     void test06()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -210,8 +200,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 assertEquals("uuid invalid", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -221,7 +209,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
     {
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", 1);
         
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -243,8 +231,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
             }
         });
         
-        customer.run();
-        
         removeSupportRequest(supportRequestUUIDString);
     }
     
@@ -255,7 +241,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
     {
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", 1);
         
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -278,8 +264,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
             }
         });
         
-        customer.run();
-        
         removeSupportRequest(supportRequestUUIDString);
     }
     
@@ -290,7 +274,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
     {
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", 1);
         
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -313,8 +297,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
             }
         });
         
-        customer.run();
-        
         removeSupportRequest(supportRequestUUIDString);
     }
     
@@ -325,7 +307,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
     {
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", 1);
         
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -348,8 +330,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
             }
         });
         
-        customer.run();
-        
         removeSupportRequest(supportRequestUUIDString);
     }
     
@@ -360,7 +340,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
     {
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", 1);
         
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -383,8 +363,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
             }
         });
         
-        customer.run();
-        
         removeSupportRequest(supportRequestUUIDString);
     }
     
@@ -394,7 +372,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
     void test12()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -414,8 +392,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 assertEquals("uuid missing", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -427,7 +403,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
         final int newType = 1;
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", oldType);
         
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -455,8 +431,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
             }
         });
         
-        customer.run();
-        
         removeSupportRequest(supportRequestUUIDString);
     }
     
@@ -465,7 +439,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
     void test14()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -484,8 +458,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -493,7 +465,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
     void test15()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -512,8 +484,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -521,7 +491,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
     void test16()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -540,8 +510,6 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        customer.run();
     }
     
     @Test
@@ -549,7 +517,7 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
     void test17()
         throws IOException
     {
-        customer.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -568,7 +536,5 @@ public class ChangeSupportRequestTypeMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        customer.run();
     }
 }
