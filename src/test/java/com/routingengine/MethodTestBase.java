@@ -2,6 +2,7 @@ package com.routingengine;
 
 import static com.routingengine.json.JsonUtils.*;
 import static java.util.concurrent.Executors.newFixedThreadPool;
+import static org.junit.Assume.*;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -67,12 +68,16 @@ public abstract class MethodTestBase
                 throws IOException, InterruptedException
             {
                 JsonResponse response = newSupportRequest(name, email, type);
+                
                 JsonObject payload = castToJsonObject(response.getPayload());
+                
                 supportRequestUUIDString[0] = getAsString(payload, "uuid");
             }
         });
         
         executor.submit(customer).get();
+        
+        assumeNotNull(supportRequestUUIDString[0]);
         
         return supportRequestUUIDString[0];
     }
@@ -89,12 +94,16 @@ public abstract class MethodTestBase
                 throws IOException, InterruptedException
             {
                 JsonResponse response = newSupportRequest(name, email, type);
+                
                 JsonObject payload = castToJsonObject(response.getPayload());
+                
                 supportRequestUUIDString[0] = getAsString(payload, "uuid");
             }
         });
         
         executor.submit(customer).get();
+        
+        assumeNotNull(supportRequestUUIDString[0]);
         
         return supportRequestUUIDString[0];
     }
@@ -111,12 +120,16 @@ public abstract class MethodTestBase
                 throws IOException, InterruptedException
             {
                 JsonResponse response = newAgent(skills);
+                
                 JsonObject payload = castToJsonObject(response.getPayload());
+                
                 agentUUIDString[0] = getAsString(payload, "uuid");
             }
         });
         
         executor.submit(agent).get();
+        
+        assumeNotNull(agentUUIDString[0]);
         
         return agentUUIDString[0];
     }
@@ -124,6 +137,37 @@ public abstract class MethodTestBase
     protected static final void customerWaitsForAgent(String supportRequestUUIDString)
         throws IOException, InterruptedException, ExecutionException
     {
+        final boolean[] isOk = new boolean[] {false};
+        
+        customer.setConnectionHandler(new ClientConnectionHandler()
+        {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException
+            {
+                JsonResponse response = checkSupportRequest(supportRequestUUIDString);
+                
+                if (!response.didSucceed())
+                    return;
+                
+                JsonObject payload = castToJsonObject(response.getPayload());
+                
+                if (payload == null)
+                    return;
+                
+                SupportRequest supportRequest = SupportRequest.fromJson(payload);
+                
+                if (!supportRequest.isOpen() || supportRequest.isWaiting() || supportRequest.hasAssignedAgent())
+                    return;
+                
+                isOk[0] = true;
+            }
+        });
+        
+        executor.submit(customer).get();
+        
+        assumeTrue(isOk[0]);
+        
         customer.setConnectionHandler(new ClientConnectionHandler()
         {
             @Override
@@ -137,16 +181,81 @@ public abstract class MethodTestBase
         executor.execute(customer);
     }
     
-    protected static final void agentTakesSupportRequest(String agentUUIDString)
+    protected static final void agentUpdatesAvailability(String agentUUIDString, Boolean isAvailable)
         throws IOException, InterruptedException, ExecutionException
     {
+        final boolean[] didSucceed = new boolean[] {false};
+        
         agent.setConnectionHandler(new ClientConnectionHandler()
         {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                updateAgentAvailability(agentUUIDString, true);
+                JsonResponse response = updateAgentAvailability(agentUUIDString, isAvailable);
+                
+                if (!response.didSucceed())
+                    return;
+                
+                JsonObject payload = castToJsonObject(response.getPayload());
+                
+                if (payload == null)
+                    return;
+                
+                Agent agent = Agent.fromJson(payload);
+                
+                if (!isAvailable.equals(agent.isAvailable()))
+                    return;
+                
+                didSucceed[0] = true;
+            }
+        });
+        
+        executor.submit(agent).get();
+        
+        assumeTrue(didSucceed[0]);
+    }
+    
+    protected static final void agentTakesSupportRequest(String agentUUIDString)
+        throws IOException, InterruptedException, ExecutionException
+    {
+        final boolean[] isOk = new boolean[] {false};
+        
+        agent.setConnectionHandler(new ClientConnectionHandler()
+        {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException
+            {
+                JsonResponse response = checkAgent(agentUUIDString);
+                
+                if (!response.didSucceed())
+                    return;
+                
+                JsonObject payload = castToJsonObject(response.getPayload());
+                
+                if (payload == null)
+                    return;
+                
+                Agent agent = Agent.fromJson(payload);
+                
+                if (!agent.isAvailable())
+                    return;
+                
+                isOk[0] = true;
+            }
+        });
+        
+        executor.submit(agent).get();
+        
+        assumeTrue(isOk[0]);
+        
+        agent.setConnectionHandler(new ClientConnectionHandler()
+        {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException
+            {
                 takeSupportRequest(agentUUIDString);
             }
         });
