@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import com.google.gson.JsonObject;
 import com.routingengine.client.Client;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonResponse;
@@ -101,6 +102,48 @@ public abstract class MethodTestBase
     {
         if (!response.didSucceed())
             fail(castToString(response.getPayload()));
+    }
+    
+    protected static final Agent assertResponseHasAgentPayload(JsonResponse response)
+    {
+        assumeResponseDidSucceed(response);
+        
+        Agent agent = null;
+        
+        try {
+            JsonObject payload = castToJsonObject(response.getPayload());
+                
+            agent = Agent.fromJson(payload);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            fail(exception);
+        }
+        
+        assumeNotNull(agent);
+        
+        return agent;
+    }
+    
+    protected static final SupportRequest assertResponseHasSupportRequestPayload(JsonResponse response)
+    {
+        assumeResponseDidSucceed(response);
+        
+        SupportRequest supportRequest = null;
+        
+        try {
+            JsonObject payload = castToJsonObject(response.getPayload());
+                
+            supportRequest = SupportRequest.fromJson(payload);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            fail(exception);
+        }
+        
+        assumeNotNull(supportRequest);
+        
+        return supportRequest;
     }
     
     protected static final String generateNewSupportRequest(String name, String email, int type)
