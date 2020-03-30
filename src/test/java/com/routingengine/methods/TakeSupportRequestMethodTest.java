@@ -34,7 +34,7 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
         
         agentUpdatesAvailability(agentUUIDString, true);
         
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -43,7 +43,7 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
                 JsonObject payload = castToJsonObject(response.getPayload());
                 
@@ -54,8 +54,6 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
                 assertTrue(agent.hasAssignedSupportRequest());
             }
         });
-        
-        agent.run();
         
         assertTrue(agentDidTakeSupportRequest(agentUUIDString, supportRequestUUIDString));
         
@@ -69,7 +67,7 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
     void test02()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -89,8 +87,6 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
                 assertEquals("uuid missing", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -98,7 +94,7 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
     void test03()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -119,8 +115,6 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
                 assertEquals("uuid invalid", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -128,7 +122,7 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
     void test04()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -149,8 +143,6 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
                 assertEquals("uuid invalid", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -158,7 +150,7 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
     void test05()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -179,8 +171,6 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
                 assertEquals("uuid invalid", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -188,7 +178,7 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
     void test06()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -208,8 +198,6 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
                 assertEquals("uuid missing", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -225,7 +213,7 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
         
         agentUpdatesAvailability(agentUUIDString, true);
         
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -252,8 +240,6 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
             }
         });
         
-        agent.run();
-        
         assertTrue(agentDidTakeSupportRequest(agentUUIDString, supportRequestUUIDString));
         
         removeSupportRequest(supportRequestUUIDString);
@@ -266,7 +252,7 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
     void test08()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -285,8 +271,6 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -294,7 +278,7 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
     void test09()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -313,8 +297,6 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -322,7 +304,7 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
     void test10()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -341,8 +323,6 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        agent.run();
     }
     
     @Test
@@ -350,7 +330,7 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
     void test11()
         throws IOException
     {
-        agent.setConnectionHandler(new ClientConnectionHandler() {
+        execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
@@ -369,7 +349,5 @@ public class TakeSupportRequestMethodTest extends MethodTestBase
                 assertEquals("malformed arguments", error);
             }
         });
-        
-        agent.run();
     }
 }
