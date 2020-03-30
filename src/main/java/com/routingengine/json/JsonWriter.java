@@ -10,12 +10,14 @@ import com.google.gson.JsonObject;
 
 public class JsonWriter
 {
-    private final OutputStreamWriter outputStreamWriter;
+    private final OutputStream outputStream;
+    private OutputStreamWriter outputStreamWriter;
     private final Gson gson;
     
     public JsonWriter(OutputStream outputStream)
-    {    
-        outputStreamWriter = new OutputStreamWriter(outputStream);
+    {
+        this.outputStream = outputStream;
+        pipeOutputStream();
         
         gson = new GsonBuilder()
             .setPrettyPrinting()
@@ -23,20 +25,25 @@ public class JsonWriter
             .create();
     }
     
-    public final void writeString(String string)
+    public final void pipeOutputStream()
+    {
+        outputStreamWriter = new OutputStreamWriter(outputStream);
+    }
+    
+    public void writeString(String string)
         throws IOException
     {
         outputStreamWriter.write(string);
     }
     
-    public final void writeLine(String line)
+    public void writeLine(String line)
         throws IOException
     {
         outputStreamWriter.write(line);
         outputStreamWriter.append("\n");
     }
     
-    public final void writeJsonObject(JsonObject jsonObject)
+    public void writeJsonObject(JsonObject jsonObject)
         throws IOException
     {
         gson.toJson(jsonObject, outputStreamWriter);

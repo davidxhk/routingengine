@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 
 public class JsonReader
 {
-    private InputStream inputStream;
+    private final InputStream inputStream;
     private InputStreamReader inputStreamReader;
     private com.google.gson.stream.JsonReader jsonReader;
     
@@ -35,13 +35,13 @@ public class JsonReader
         jsonReader.setLenient(true);
     }
     
-    public final String readString()
+    public String readString()
         throws IOException
     {
         return jsonReader.nextString();
     }
     
-    public final JsonObject parseJsonObject()
+    public JsonObject parseJsonObject()
     {
         JsonElement jsonElement = parseReader(jsonReader);
         
