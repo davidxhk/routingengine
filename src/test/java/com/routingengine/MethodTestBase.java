@@ -3,6 +3,9 @@ package com.routingengine;
 import static com.routingengine.json.JsonUtils.*;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static org.junit.Assume.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -261,6 +264,62 @@ public abstract class MethodTestBase
         });
         
         executor.execute(agent);
+    }
+    
+    protected static final boolean agentDidTakeSupportRequest(String agentUUIDString, String supportRequestUUIDString)
+        throws IOException, InterruptedException, ExecutionException
+    {
+        boolean[] isOk = new boolean[] {false};
+        boolean[] didTake = new boolean[] {false};
+        
+        agent.setConnectionHandler(new ClientConnectionHandler()
+        {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException
+            {
+                JsonResponse response = checkAgent(agentUUIDString);
+                
+                if (!response.didSucceed())
+                    return;
+                
+                JsonObject payload = castToJsonObject(response.getPayload());
+                
+                if (payload == null)
+                    return;
+                
+                Agent agent = Agent.fromJson(payload);
+                
+                if (!agent.isActivated() || agent.isWaiting() || agent.isAvailable())
+                    return;
+                
+                response = checkSupportRequest(supportRequestUUIDString);
+                
+                if (!response.didSucceed())
+                    return;
+                
+                payload = castToJsonObject(response.getPayload());
+                
+                if (payload == null)
+                    return;
+                
+                SupportRequest supportRequest = SupportRequest.fromJson(payload);
+                
+                if (!supportRequest.isOpen() || supportRequest.isWaiting())
+                    return;
+                
+                if (!(agent.hasAssignedSupportRequest() && supportRequest.hasAssignedAgent()))
+                    return;
+                
+                didTake[0] = (agent.getAssignedSupportRequest() == supportRequest);
+            }
+        });
+        
+        executor.submit(agent).get();
+        
+        assumeTrue(isOk[0]);
+        
+        return didTake[0];
     }
     
     protected static final void removeSupportRequest(String supportRequestUUIDString)
