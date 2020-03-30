@@ -2,14 +2,12 @@ package com.routingengine.server;
 
 import static com.routingengine.Logger.log;
 import static com.routingengine.json.JsonProtocol.JsonProtocolException;
-import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.security.MessageDigest;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -22,7 +20,11 @@ import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
 
 
+<<<<<<< HEAD
 public final class ServerConnectionHandler extends JsonConnectionHandler
+=======
+public final class ServerConnectionHandler extends WebSocketConnectionHandler
+>>>>>>> Added InputStreamDecoder
     implements Runnable, Closeable
 {
     private final MethodManager methodManager;
@@ -60,7 +62,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
         
 =======
 
-        // log("Server connected to " + socket.toString());
+        log("Server connected to " + socket.toString());
 
 >>>>>>> Websocket Handshake
         methodManager = new MethodManager(routingEngine);
@@ -88,35 +90,9 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
             JsonRequest jsonRequest = new JsonRequest();
 
             try {
-                System.out.println("START");
-                long bytesToRead;
-                boolean isWholeMessage;
-                InputStream is = socket.getInputStream();
-                isWholeMessage = (is.read() & 0xff) == 129;
-                bytesToRead = (is.read() & 0xff) - 128;
-                if (bytesToRead == 126) {
-                    bytesToRead = ((is.read() & 0xff) << 8) | (is.read() & 0xff);
-                }
-                else if (bytesToRead == 127) {
-                    bytesToRead = ((is.read() & 0xff) << 56) |
-                                  ((is.read() & 0xff) << 48) |
-                                  ((is.read() & 0xff) << 40) |
-                                  ((is.read() & 0xff) << 32) |
-                                  ((is.read() & 0xff) << 24) |
-                                  ((is.read() & 0xff) << 16) |
-                                  ((is.read() & 0xff) << 8)  |
-                                  ((is.read() & 0xff) << 0);
-                }
-                int[] keys = new int[4];
-                for (int i = 0; i < 4; i++) {
-                    keys[i] = (is.read() & 0xff);
-                }
-                byte[] decoded = new byte[(int)bytesToRead]; // Downcasting long to int
-                for (int i = 0; i < bytesToRead; i++) {
-                    decoded[i] = (byte) ((is.read() & 0xff) ^ keys[i & 0x3]);
-                }
-                System.out.println(new String(decoded));
+                System.out.println("NEW INPUT");
                 jsonRequest.read(jsonReader);
+                System.out.println(jsonRequest.toString());
             }
 
             catch (JsonProtocolException exception) {
