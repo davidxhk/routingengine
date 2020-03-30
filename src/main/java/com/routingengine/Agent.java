@@ -270,6 +270,8 @@ public class Agent extends InetEntity
         
         agentJsonObject.addProperty("available", available);
         
+        agentJsonObject.addProperty("waiting", waiting);
+        
         JsonObject assignedSupportRequestJsonObject = null;
         
         if (hasAssignedSupportRequest()) {
