@@ -5,6 +5,7 @@ import static com.routingengine.json.JsonUtils.*;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeTrue;
+import static org.junit.Assume.assumeFalse;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -91,15 +92,9 @@ public abstract class MethodTestBase
         executor.execute(client);
     }
     
-    protected static final void assumptionFailed(String message)
-    {
-        assumeTrue(message, false);
-    }
-    
     protected static final void assumeResponseDidSucceed(JsonResponse response)
     {
-        if (!response.didSucceed())
-            assumptionFailed(castToString(response.getPayload()));
+        assumeTrue(castToString(response.getPayload()), response.didSucceed());
     }
     
     protected static final void assertResponseDidSucceed(JsonResponse response)
@@ -201,14 +196,11 @@ public abstract class MethodTestBase
                 
                 SupportRequest supportRequest = SupportRequest.fromJson(castToJsonObject(response.getPayload()));
                 
-                if (supportRequest.hasAssignedAgent())
-                    assumptionFailed("support request already has assigned agent");
+                assumeFalse("support request already has assigned agent", supportRequest.hasAssignedAgent());
                 
-                if (!supportRequest.isOpen())
-                    assumptionFailed("support request is closed");
+                assumeTrue("support request is closed", supportRequest.isOpen());
                 
-                if (supportRequest.isWaiting())
-                    assumptionFailed("support request already waiting");
+                assumeFalse("support request already waiting", supportRequest.isWaiting());
             }
         });
         
@@ -258,17 +250,13 @@ public abstract class MethodTestBase
                 
                 Agent agent = Agent.fromJson(castToJsonObject(response.getPayload()));
                 
-                if (agent.hasAssignedSupportRequest())
-                    assumptionFailed("agent already has assigned support request");
+                assumeFalse("agent already has assigned support request", agent.hasAssignedSupportRequest());
                 
-                if (!agent.isActivated())
-                    assumptionFailed("agent not activated");
+                assumeTrue("agent not activated", agent.isActivated());
                 
-                if (agent.isWaiting())
-                    assumptionFailed("agent already waiting");
+                assumeFalse("agent already waiting", agent.isWaiting());
                 
-                if (!agent.isAvailable())
-                    assumptionFailed("agent not available");
+                assumeTrue("agent not available", agent.isAvailable());
             }
         });
         
@@ -300,17 +288,13 @@ public abstract class MethodTestBase
                 
                 Agent agent = Agent.fromJson(castToJsonObject(response.getPayload()));
                 
-                if (!agent.isActivated())
-                    assumptionFailed("agent not activated");
+                assumeTrue("agent not activated", agent.isActivated());
                 
-                if (agent.isWaiting())
-                    assumptionFailed("agent is waiting");
+                assumeFalse("agent is waiting", agent.isWaiting());
                 
-                if (agent.isAvailable())
-                    assumptionFailed("agent has not been assigned a support request");
+                assumeFalse("agent has not been assigned a support request", agent.isAvailable());
                 
-                if (!agent.hasAssignedSupportRequest())
-                    assumptionFailed("agent is not available");
+                assumeTrue("agent is not available", agent.hasAssignedSupportRequest());
                 
                 response = checkSupportRequest(supportRequestUUIDString);
                 
@@ -318,14 +302,11 @@ public abstract class MethodTestBase
                 
                 SupportRequest supportRequest = SupportRequest.fromJson(castToJsonObject(response.getPayload()));
                 
-                if (!supportRequest.isOpen())
-                    assumptionFailed("support request is closed");
+                assumeTrue("support request is closed", supportRequest.isOpen());
                 
-                if (supportRequest.isWaiting())
-                    assumptionFailed("support request is waiting");
+                assumeFalse("support request is waiting", supportRequest.isWaiting());
                 
-                if (!supportRequest.hasAssignedAgent())
-                    assumptionFailed("support request has not been assigned an agent");
+                assumeTrue("support request has not been assigned an agent", supportRequest.hasAssignedAgent());
                 
                 String assignedSupportRequestUUIDString = agent.getAssignedSupportRequest().getUUID().toString();
                 
