@@ -16,47 +16,51 @@ public class JsonWriter
     private BufferedWriter bufferedWriter;
     private final Gson gson;
     private static final int BUFFER_SIZE = 8192;
-    
+
     public JsonWriter(OutputStream outputStream)
     {
         this.outputStream = outputStream;
         reinitialize();
-        
+
         gson = new GsonBuilder()
             .setPrettyPrinting()
             .serializeNulls()
             .create();
     }
-    
+
     public final void reinitialize()
     {
         outputStreamWriter = new OutputStreamWriter(outputStream);
         bufferedWriter = new BufferedWriter(outputStreamWriter, BUFFER_SIZE);
     }
-    
+
     public void writeString(String string)
         throws IOException
     {
         bufferedWriter.write(string);
     }
-    
+
     public void writeLine(String line)
         throws IOException
     {
         bufferedWriter.write(line);
         bufferedWriter.newLine();
     }
-    
+
     public void writeJsonObject(JsonObject jsonObject)
         throws IOException
     {
         gson.toJson(jsonObject, bufferedWriter);
         bufferedWriter.newLine();
     }
-    
-    public final void flush()
+
+    public void flush()
         throws IOException
     {
         bufferedWriter.flush();
+    }
+
+    protected Gson getGson() {
+        return gson;
     }
 }

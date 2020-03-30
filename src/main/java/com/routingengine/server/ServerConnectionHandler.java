@@ -15,16 +15,11 @@ import java.util.regex.Pattern;
 import com.google.gson.JsonElement;
 import com.routingengine.MethodManager;
 import com.routingengine.RoutingEngine;
-import com.routingengine.json.JsonConnectionHandler;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
 
 
-<<<<<<< HEAD
-public final class ServerConnectionHandler extends JsonConnectionHandler
-=======
 public final class ServerConnectionHandler extends WebSocketConnectionHandler
->>>>>>> Added InputStreamDecoder
     implements Runnable, Closeable
 {
     private final MethodManager methodManager;
@@ -56,15 +51,9 @@ public final class ServerConnectionHandler extends WebSocketConnectionHandler
         //     s.close();
         // }
         connect(socket);
-<<<<<<< HEAD
-        
-        log("Server connected to " + socket.toString());
-        
-=======
 
         log("Server connected to " + socket.toString());
 
->>>>>>> Websocket Handshake
         methodManager = new MethodManager(routingEngine);
     }
 
@@ -90,18 +79,13 @@ public final class ServerConnectionHandler extends WebSocketConnectionHandler
             JsonRequest jsonRequest = new JsonRequest();
 
             try {
-                System.out.println("NEW INPUT");
                 jsonRequest.read(jsonReader);
                 System.out.println(jsonRequest.toString());
             }
 
             catch (JsonProtocolException exception) {
-<<<<<<< HEAD
                 log("Server got bad request");
-                
-=======
-                System.out.println(exception.getMessage());
->>>>>>> Websocket Handshake
+
                 JsonResponse
                     .failure(jsonRequest, exception)
                     .writeSafe(jsonWriter);
@@ -115,13 +99,9 @@ public final class ServerConnectionHandler extends WebSocketConnectionHandler
 
                 throw exception;
             }
-<<<<<<< HEAD
-            
-            log("Server got request –> " + jsonRequest.toString());
-            
-=======
 
->>>>>>> Websocket Handshake
+            log("Server got request –> " + jsonRequest.toString());
+
             if (jsonRequest.getMethod().matches("new_agent|new_support_request")) {
                 if (!jsonRequest.hasArgument("address"))
                     jsonRequest.setArgument("address", getAddress());
@@ -148,11 +128,6 @@ public final class ServerConnectionHandler extends WebSocketConnectionHandler
     @Override
     public final void run()
     {
-<<<<<<< HEAD
-=======
-        //log("Server handling " + socket.toString());
-
->>>>>>> Websocket Handshake
         try {
             runMainLoop();
         }

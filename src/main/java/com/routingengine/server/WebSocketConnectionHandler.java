@@ -2,11 +2,11 @@ package com.routingengine.server;
 
 import java.io.IOException;
 import java.net.Socket;
-import com.routingengine.client.ConnectionHandler;
+import com.routingengine.json.JsonConnectionHandler;
 import com.routingengine.json.JsonReader;
 import com.routingengine.json.JsonWriter;
 
-public abstract class WebSocketConnectionHandler extends ConnectionHandler {
+public abstract class WebSocketConnectionHandler extends JsonConnectionHandler {
 
 
     @Override
@@ -14,7 +14,7 @@ public abstract class WebSocketConnectionHandler extends ConnectionHandler {
         throws IOException
     {
         this.socket = socket;
-        jsonReader = new JsonReader( new InputStreamDecoder(socket.getInputStream()));
-        jsonWriter = new JsonWriter(socket.getOutputStream());
+        jsonReader = new JsonReaderDecoded(socket.getInputStream());
+        jsonWriter = new JsonWriterEncoded(socket.getOutputStream());
     }
 }

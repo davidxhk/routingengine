@@ -14,14 +14,14 @@ public class JsonReader
     private final InputStream inputStream;
     private InputStreamReader inputStreamReader;
     private com.google.gson.stream.JsonReader jsonReader;
-    
+
     public JsonReader(InputStream inputStream)
-    {        
+    {
         this.inputStream = inputStream;
         reinitialize();
     }
-    
-    public final boolean ready()
+
+    public boolean ready()
         throws IOException
     {
         return inputStreamReader.ready();
@@ -30,30 +30,42 @@ public class JsonReader
     public final void reinitialize()
     {
         inputStreamReader = new InputStreamReader(inputStream);
-        
+
         jsonReader = new com.google.gson.stream.JsonReader(inputStreamReader);
         jsonReader.setLenient(true);
     }
-    
+
     public String readString()
         throws IOException
     {
         return jsonReader.nextString();
     }
-    
+
     public JsonObject parseJsonObject()
     {
         JsonElement jsonElement = parseReader(jsonReader);
-        
+
         return castToJsonObject(jsonElement);
     }
-    
-    public final void clearInputStream()
+
+    public void clearInputStream()
         throws IOException
     {
         while (inputStreamReader.ready() && inputStreamReader.skip(1) != 1)
             ;
-        
+
         reinitialize();
+    }
+
+    protected void setJsonReader(com.google.gson.stream.JsonReader jsonReader) {
+        this.jsonReader = jsonReader;
+    }
+
+    protected com.google.gson.stream.JsonReader getJsonReader() {
+        return jsonReader;
+    }
+
+    protected InputStream getInputStream() {
+        return inputStream;
     }
 }
