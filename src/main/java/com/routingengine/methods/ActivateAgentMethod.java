@@ -15,6 +15,9 @@ public class ActivateAgentMethod extends CheckAgentMethod
         
         Boolean doActivate = getAsBoolean(arguments, "activate");
         
+        if (doActivate == null)
+            throw new IllegalArgumentException("activate missing");
+        
         if (doActivate)
             agent.activate();
         
