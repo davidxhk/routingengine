@@ -2,7 +2,7 @@ package com.routingengine;
 
 import static com.routingengine.json.JsonUtils.getAsString;
 import static com.routingengine.json.JsonUtils.getAsBoolean;
-import static com.routingengine.json.JsonUtils.getAsBooleanMap;
+import static com.routingengine.json.JsonUtils.getAsStringList;
 import static com.routingengine.json.JsonUtils.getAsJsonObject;
 import static com.routingengine.SupportRequest.Type;
 import java.util.HashMap;
@@ -293,10 +293,14 @@ public class Agent extends InetEntity
     
     public static Agent fromJson(JsonObject jsonObject)
     {
+        Map<String, Boolean> skills = new HashMap<>();
+        for (String skill : getAsStringList(jsonObject, "skills"))
+            skills.put(skill, true);
+        
         Agent agent = builder()
             .setUUID(getAsString(jsonObject, "uuid"))
             .setAddress(getAsString(jsonObject, "address"))
-            .setSkills(getAsBooleanMap(jsonObject, "skills"))
+            .setSkills(skills)
             .build();
         
         if (jsonObject.has("activated"))
