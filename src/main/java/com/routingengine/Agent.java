@@ -66,47 +66,62 @@ public class Agent extends InetEntity
                 .toArray(Type[]::new);
     }
     
-    public synchronized void setSkill(int requestTypeIndex, Boolean ableToService)
-    {
-        setSkill(Type.of(requestTypeIndex), ableToService);
-    }
-    
-    public synchronized void setSkill(String requestTypeString, Boolean ableToService)
-    {
-        setSkill(Type.of(requestTypeString), ableToService);
-    }
-    
-    public synchronized void setSkill(Type requestType, Boolean ableToService)
-    {
-        if (requestType == null)
-            throw new IllegalArgumentException("skill missing");
-        
-        if (ableToService == null)
-            throw new IllegalArgumentException("skill ability missing");
-        
-        skills.put(requestType, ableToService);
-    }
-    
     public synchronized void setSkills(Map<String, Boolean> skills)
     {
         if (skills == null)
             throw new IllegalArgumentException("skills missing");
         
-        skills.entrySet().stream()
-            .filter(entry -> Type.is(entry.getKey()))
-            .forEach(entry -> setSkill(entry.getKey(), entry.getValue()));
+        if (!ensureAtLeastOneValidSkill(skills))
+            throw new IllegalArgumentException("valid skill missing");
         
-        ensureAtLeastOneSkill();
-    }
-    
-    private synchronized void ensureAtLeastOneSkill()
-    {
-        for (boolean ableToService : skills.values()) {
-            if (ableToService)
-                return;
+        Map<Type, Boolean> newSkills = new HashMap<>();
+        newSkills.putAll(this.skills);
+        
+        for (Map.Entry<String, Boolean> entry : skills.entrySet()) {
+            String typeString = entry.getKey();
+            
+            if (typeString == null)
+                throw new IllegalArgumentException("skill missing");
+            
+            if (Type.is(typeString)) {
+                
+                Boolean ableToService = entry.getValue();
+                
+                if (ableToService == null)
+                    throw new IllegalArgumentException("skill ability missing");
+                
+                newSkills.put(Type.of(typeString), ableToService);
+            }
         }
         
-        throw new IllegalArgumentException("skill missing");
+        if (!ensureAtLeastOneSkillAbility(newSkills))
+            throw new IllegalArgumentException("new skills invalid");
+        
+        this.skills.putAll(newSkills);
+    }
+    
+    private static boolean ensureAtLeastOneValidSkill(Map<String, Boolean> skills)
+    {
+        for (Map.Entry<String, Boolean> entry : skills.entrySet()) {
+            String typeString = entry.getKey();
+            
+            if (Type.is(typeString))
+                return true;
+        }
+        
+        return false;
+    }
+    
+    private static boolean ensureAtLeastOneSkillAbility(Map<Type, Boolean> skills)
+    {
+        for (Map.Entry<Type, Boolean> entry : skills.entrySet()) {
+            Boolean ableToService = entry.getValue();
+            
+            if (ableToService)
+                return true;
+        }
+        
+        return false;
     }
     
     public synchronized boolean isActivated()

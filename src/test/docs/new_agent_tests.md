@@ -16,12 +16,12 @@ The following types of tests for `new_agent` are provided in this test suite.
 | 2.1.1 | Missing skill case 1       | `new_agent {}`                                                                                                                |
 | 2.1.2 | Missing skill case 2       | `new_agent {skills:{999:true,-1:true}}`                                                                                       |
 | 2.1.3 | Missing skill case 3       | `new_agent {skills:{TEST:true,hmmmm:true}}`                                                                                   |
-| 2.1.4 | Missing skill case 4       | `new_agent {skills:{0:false,1:false,2:false}}`                                                                                |
 | 2.2.1 | Invalid skills case 1      | `new_agent {skills:{1:"haha"}}`                                                                                               |
 | 2.2.2 | Invalid skills case 2      | `new_agent {skills:{GENERAL_ENQUIRY:"no"}}`                                                                                   |
-| 2.2.3 | Invalid skills case 3      | `new_agent {skills:2}`                                                                                                        |
-| 2.2.4 | Invalid skills case 4      | `new_agent {skills:"zz"}`                                                                                                     |
-| 2.2.5 | Invalid skills case 5      | `new_agent {skills:[1,2,3,4]}`                                                                                                |
+| 2.2.3 | Invalid skills case 3      | `new_agent {skills:{0:false,1:false,2:false}}`                                                                                |
+| 2.2.4 | Invalid skills case 4      | `new_agent {skills:2}`                                                                                                        |
+| 2.2.5 | Invalid skills case 5      | `new_agent {skills:"zz"}`                                                                                                     |
+| 2.2.6 | Invalid skills case 6      | `new_agent {skills:[1,2,3,4]}`                                                                                                |
 | 3.1.1 | Invalid address case 1     | `new_agent {skills:{1:true, 2:true}, address:[]}`                                                                             |
 | 3.1.2 | Invalid address case 2     | `new_agent {skills:{1:true, 2:true}, address={}}`                                                                             |
 | 3.1.3 | Invalid address case 3     | `new_agent {skills:{1:true, 2:true}, address="adsflasdfmlsdf"}`                                                               |
@@ -40,14 +40,14 @@ The following types of tests for `new_agent` are provided in this test suite.
 | 1.2   | Skill with type string     | success | `{<--agent json object-->}`                      |                                                                  |
 | 1.3   | Skill and address          | success | `{<--agent json object-->}`                      | Address field is optional, defaults to the socket's host address |
 | 2.1.1 | Missing skill case 1       | failure | `"skills missing"`                               |                                                                  |
-| 2.1.2 | Missing skill case 2       | failure | `"skill missing"`                                | Invalid skill type index should be ignored silently              |
-| 2.1.3 | Missing skill case 3       | failure | `"skill missing"`                                | Invalid skill type string should be ignored silently             |
-| 2.1.4 | Missing skill case 4       | failure | `"skill missing"`                                | At least one out of all skills must be set to true               |
+| 2.1.2 | Missing skill case 2       | failure | `"valid skill missing"`                          | Invalid skill type index should be ignored silently              |
+| 2.1.3 | Missing skill case 3       | failure | `"valid skill missing"`                          | Invalid skill type string should be ignored silently             |
 | 2.2.1 | Invalid skills case 1      | failure | `"skills 1 must be true or false"`               |                                                                  |
 | 2.2.2 | Invalid skills case 2      | failure | `"skills GENERAL_ENQUIRY must be true or false"` |                                                                  |
-| 2.2.3 | Invalid skills case 3      | failure | `"skills invalid"`                               |                                                                  |
+| 2.2.3 | Invalid skills case 3      | failure | `"new skills invalid"`                           | The new skills should have at least one ability                  |
 | 2.2.4 | Invalid skills case 4      | failure | `"skills invalid"`                               |                                                                  |
 | 2.2.5 | Invalid skills case 5      | failure | `"skills invalid"`                               |                                                                  |
+| 2.2.6 | Invalid skills case 6      | failure | `"skills invalid"`                               |                                                                  |
 | 3.1.1 | Invalid address case 1     | failure | `"address invalid"`                              |                                                                  |
 | 3.1.2 | Invalid address case 2     | failure | `"address invalid"`                              |                                                                  |
 | 3.1.3 | Invalid address case 3     | failure | `"address invalid"`                              |                                                                  |
