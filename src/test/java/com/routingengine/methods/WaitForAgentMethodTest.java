@@ -8,14 +8,14 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.routingengine.MethodTestBase;
+import com.routingengine.AbstractMethodTest;
 import com.routingengine.SupportRequest;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
 
 
-public class WaitForAgentMethodTest extends MethodTestBase
+public class WaitForAgentMethodTest extends AbstractMethodTest
 {   
     protected static final String method = "wait_for_agent";
     

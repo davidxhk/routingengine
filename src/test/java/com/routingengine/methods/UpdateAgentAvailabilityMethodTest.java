@@ -9,13 +9,13 @@ import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.routingengine.Agent;
-import com.routingengine.MethodTestBase;
+import com.routingengine.AbstractMethodTest;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
 
 
-public class UpdateAgentAvailabilityMethodTest extends MethodTestBase
+public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
 {   
     protected static final String method = "update_agent_availability";
     

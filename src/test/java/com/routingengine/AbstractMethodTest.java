@@ -18,7 +18,7 @@ import com.routingengine.json.JsonResponse;
 import com.routingengine.server.Server;
 
 
-public abstract class MethodTestBase
+public abstract class AbstractMethodTest
 {
     private static final String hostname = "localhost";
     private static final int port = 50000;

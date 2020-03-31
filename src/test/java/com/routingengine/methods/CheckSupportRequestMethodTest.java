@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.routingengine.MethodTestBase;
+import com.routingengine.AbstractMethodTest;
 import com.routingengine.SupportRequest;
 import com.routingengine.SupportRequest.Type;
 import com.routingengine.client.ClientConnectionHandler;
@@ -15,7 +15,7 @@ import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
 
 
-public class CheckSupportRequestMethodTest extends MethodTestBase
+public class CheckSupportRequestMethodTest extends AbstractMethodTest
 {   
     protected static final String method = "check_support_request";
     

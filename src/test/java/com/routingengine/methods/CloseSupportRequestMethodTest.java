@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.routingengine.MethodTestBase;
+import com.routingengine.AbstractMethodTest;
 import com.routingengine.SupportRequest;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
 
 
-public class CloseSupportRequestMethodTest extends MethodTestBase
+public class CloseSupportRequestMethodTest extends AbstractMethodTest
 {   
     protected static final String method = "close_support_request";
     

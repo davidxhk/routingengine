@@ -10,13 +10,13 @@ import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.routingengine.Agent;
-import com.routingengine.MethodTestBase;
+import com.routingengine.AbstractMethodTest;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
 
 
-public class CheckAgentMethodTest extends MethodTestBase
+public class CheckAgentMethodTest extends AbstractMethodTest
 {   
     protected static final String method = "check_agent";
     

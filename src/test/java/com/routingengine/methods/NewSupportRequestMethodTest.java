@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.routingengine.MethodTestBase;
+import com.routingengine.AbstractMethodTest;
 import com.routingengine.SupportRequest;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
 
 
-public class NewSupportRequestMethodTest extends MethodTestBase
+public class NewSupportRequestMethodTest extends AbstractMethodTest
 {   
     protected static final String method = "new_support_request";
     

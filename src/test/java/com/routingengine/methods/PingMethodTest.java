@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.routingengine.MethodTestBase;
+import com.routingengine.AbstractMethodTest;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
 
 
-public class PingMethodTest extends MethodTestBase
+public class PingMethodTest extends AbstractMethodTest
 {   
     protected static final String method = "ping";
     
