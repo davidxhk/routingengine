@@ -2,17 +2,17 @@ package com.routingengine.methods;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.Assume.assumeTrue;
-import static com.routingengine.json.JsonUtils.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.google.gson.JsonObject;
 import com.routingengine.Agent;
 import com.routingengine.MethodTestBase;
+import com.routingengine.SupportRequest;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
@@ -37,6 +37,8 @@ public class DropSupportRequestMethodTest extends MethodTestBase
         
         agentTakesSupportRequest(agentUUIDString);
         
+        TimeUnit.MILLISECONDS.sleep(10);
+        
         assumeTrue(agentDidTakeSupportRequest(agentUUIDString, supportRequestUUIDString));
         
         execute(new ClientConnectionHandler() {
@@ -44,19 +46,27 @@ public class DropSupportRequestMethodTest extends MethodTestBase
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = takeSupportRequest(agentUUIDString);
+                JsonResponse response = dropSupportRequest(agentUUIDString);
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
+                Agent agent = assertResponseHasAgentPayload(response);
                 
-                assertNotNull(payload);
+                assertTrue(agent.isAvailable());
                 
-                Agent agent = Agent.fromJson(payload);
+                assertFalse(agent.hasAssignedSupportRequest());
                 
-                assertTrue(agent.hasAssignedSupportRequest());
+                response = checkSupportRequest(supportRequestUUIDString);
+                
+                assumeResponseDidSucceed(response);
+                
+                SupportRequest supportRequest = assumeResponseHasSupportRequestPayload(response);
+                
+                assertTrue(supportRequest.isOpen());
+                
+                assertFalse(supportRequest.hasAssignedAgent());
             }
         });
         
@@ -83,11 +93,9 @@ public class DropSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid missing", error);
+                assertResponseHasErrorPayload(response, "uuid missing");
             }
         });
     }
@@ -111,11 +119,9 @@ public class DropSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid invalid", error);
+                assertResponseHasErrorPayload(response, "uuid invalid");
             }
         });
     }
@@ -139,11 +145,9 @@ public class DropSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid invalid", error);
+                assertResponseHasErrorPayload(response, "uuid invalid");
             }
         });
     }
@@ -167,11 +171,9 @@ public class DropSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid invalid", error);
+                assertResponseHasErrorPayload(response, "uuid invalid");
             }
         });
     }
@@ -194,11 +196,9 @@ public class DropSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("uuid missing", error);
+                assertResponseHasErrorPayload(response, "uuid missing");
             }
         });
     }
@@ -216,6 +216,12 @@ public class DropSupportRequestMethodTest extends MethodTestBase
         
         agentUpdatesAvailability(agentUUIDString, true);
         
+        agentTakesSupportRequest(agentUUIDString);
+        
+        TimeUnit.MILLISECONDS.sleep(10);
+        
+        assumeTrue(agentDidTakeSupportRequest(agentUUIDString, supportRequestUUIDString));
+        
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
@@ -231,15 +237,23 @@ public class DropSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
+                Agent agent = assertResponseHasAgentPayload(response);
                 
-                assertNotNull(payload);
+                assertTrue(agent.isAvailable());
                 
-                Agent agent = Agent.fromJson(payload);
+                assertFalse(agent.hasAssignedSupportRequest());
                 
-                assertTrue(agent.hasAssignedSupportRequest());
+                response = checkSupportRequest(supportRequestUUIDString);
+                
+                assumeResponseDidSucceed(response);
+                
+                SupportRequest supportRequest = assumeResponseHasSupportRequestPayload(response);
+                
+                assertTrue(supportRequest.isOpen());
+                
+                assertFalse(supportRequest.hasAssignedAgent());
             }
         });
         
@@ -265,11 +279,9 @@ public class DropSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
@@ -291,11 +303,9 @@ public class DropSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
@@ -317,11 +327,9 @@ public class DropSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
@@ -343,11 +351,9 @@ public class DropSupportRequestMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }

@@ -1,4 +1,4 @@
-package com.routingengine;
+vpackage com.routingengine;
 
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.platform.suite.api.SelectClasses;
@@ -8,14 +8,14 @@ import com.routingengine.methods.*;
 
 @RunWith(JUnitPlatform.class)
 @SelectClasses({
+    NewAgentMethodTest.class,
+    UpdateAgentAvailabilityMethodTest.class,
+    TakeSupportRequestMethodTest.class,
+    DropSupportRequestMethodTest.class,
     ActivateAgentMethodTest.class,
     CheckAgentMethodTest.class,
-    DropSupportRequestMethodTest.class,
-    NewAgentMethodTest.class,
-    RemoveAgentMethodTest.class,
-    TakeSupportRequestMethodTest.class,
-    UpdateAgentAvailabilityMethodTest.class,
-    UpdateAgentSkillsMethodTest.class
+    UpdateAgentSkillsMethodTest.class,
+    RemoveAgentMethodTest.class
 })
 class AgentMethodsTest
 {

@@ -1,7 +1,6 @@
 package com.routingengine.methods;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.routingengine.json.JsonUtils.*;
 import static com.routingengine.SupportRequest.Type;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.google.gson.JsonObject;
 import com.routingengine.Agent;
 import com.routingengine.MethodTestBase;
 import com.routingengine.client.ClientConnectionHandler;
@@ -39,13 +37,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assertNotNull(payload);
-                
-                Agent agent = Agent.fromJson(payload);
+                Agent agent = assertResponseHasAgentPayload(response);
                 
                 for (Map.Entry<Integer, Boolean> entry : skills.entrySet())
                     assertEquals(entry.getValue(), 
@@ -72,13 +66,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assertNotNull(payload);
-                
-                Agent agent = Agent.fromJson(payload);
+                Agent agent = assertResponseHasAgentPayload(response);
                 
                 for (Map.Entry<String, Boolean> entry : skills.entrySet())
                     assertEquals(entry.getValue(), 
@@ -106,13 +96,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assertNotNull(payload);
-                
-                Agent agent = Agent.fromJson(payload);
+                Agent agent = assertResponseHasAgentPayload(response);
                 
                 for (Map.Entry<String, Boolean> entry : skills.entrySet())
                     assertEquals(entry.getValue(), 
@@ -143,11 +129,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("skills missing", error);
+                assertResponseHasErrorPayload(response, "skills missing");
             }
         });
     }
@@ -168,11 +152,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("skill missing", error);
+                assertResponseHasErrorPayload(response, "valid skill missing");
             }
         });
     }
@@ -193,43 +175,16 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("skill missing", error);
-            }
-        });
-    }
-    
-    @Test
-    @DisplayName("Test 2.1.4 - Missing skill case 4")
-    void test07()
-        throws IOException
-    {
-        final Map<Integer, Boolean> skills = Map.of(0, false, 1, false, 2, false);
-        
-        execute(new ClientConnectionHandler() {
-            @Override
-            public void runMainLoop()
-                throws IOException, InterruptedException
-            {
-                JsonResponse response = newAgent(skills);
-                
-                assertEquals(method, response.getMethod());
-                
-                assertFalse(response.didSucceed());
-                
-                String error = castToString(response.getPayload());
-                
-                assertEquals("skill missing", error);
+                assertResponseHasErrorPayload(response, "valid skill missing");
             }
         });
     }
     
     @Test
     @DisplayName("Test 2.2.1 - Invalid skills case 1")
-    void test08()
+    void test07()
         throws IOException
     {
         final Map<Integer, String> skills = Map.of(1, "haha");
@@ -243,18 +198,16 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("skills 1 must be true or false", error);
+                assertResponseHasErrorPayload(response, "skills 1 must be true or false");
             }
         });
     }
     
     @Test
     @DisplayName("Test 2.2.2 - Invalid skills case 2")
-    void test09()
+    void test08()
         throws IOException
     {
         final Map<String, String> skills = Map.of("GENERAL_ENQUIRY", "no");
@@ -268,17 +221,38 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("skills GENERAL_ENQUIRY must be true or false", error);
+                assertResponseHasErrorPayload(response, "skills GENERAL_ENQUIRY must be true or false");
             }
         });
     }
     
     @Test
     @DisplayName("Test 2.2.3 - Invalid skills case 3")
+    void test09()
+        throws IOException
+    {
+        final Map<Integer, Boolean> skills = Map.of(0, false, 1, false, 2, false);
+        
+        execute(new ClientConnectionHandler() {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException
+            {
+                JsonResponse response = newAgent(skills);
+                
+                assertEquals(method, response.getMethod());
+                
+                assertResponseDidNotSucceed(response);
+                
+                assertResponseHasErrorPayload(response, "new skills invalid");
+            }
+        });
+    }
+    
+    @Test
+    @DisplayName("Test 2.2.4 - Invalid skills case 4")
     void test10()
         throws IOException
     {
@@ -296,17 +270,15 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("skills invalid", error);
+                assertResponseHasErrorPayload(response, "skills invalid");
             }
         });
     }
     
     @Test
-    @DisplayName("Test 2.2.4 - Invalid skills case 4")
+    @DisplayName("Test 2.2.5 - Invalid skills case 5")
     void test11()
         throws IOException
     {
@@ -324,17 +296,15 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("skills invalid", error);
+                assertResponseHasErrorPayload(response, "skills invalid");
             }
         });
     }
     
     @Test
-    @DisplayName("Test 2.2.5 - Invalid skills case 5")
+    @DisplayName("Test 2.2.6 - Invalid skills case 6")
     void test12()
         throws IOException
     {
@@ -352,11 +322,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("skills invalid", error);
+                assertResponseHasErrorPayload(response, "skills invalid");
             }
         });
     }
@@ -381,11 +349,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("address invalid", error);
+                assertResponseHasErrorPayload(response, "address invalid");
             }
         });
     }
@@ -410,11 +376,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("address invalid", error);
+                assertResponseHasErrorPayload(response, "address invalid");
             }
         });
     }
@@ -439,11 +403,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("address invalid", error);
+                assertResponseHasErrorPayload(response, "address invalid");
             }
         });
     }
@@ -468,11 +430,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("address invalid", error);
+                assertResponseHasErrorPayload(response, "address invalid");
             }
         });
     }
@@ -495,11 +455,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("skills missing", error);
+                assertResponseHasErrorPayload(response, "skills missing");
             }
         });
     }
@@ -526,13 +484,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertTrue(response.didSucceed());
+                assertResponseDidSucceed(response);
                 
-                JsonObject payload = castToJsonObject(response.getPayload());
-                
-                assertNotNull(payload);
-                
-                Agent agent = Agent.fromJson(payload);
+                Agent agent = assertResponseHasAgentPayload(response);
                 
                 for (Map.Entry<Integer, Boolean> entry : skills.entrySet())
                     assertEquals(entry.getValue(), 
@@ -560,11 +514,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
@@ -586,11 +538,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
@@ -612,11 +562,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
@@ -638,11 +586,9 @@ public class NewAgentMethodTest extends MethodTestBase
                 
                 assertEquals(method, response.getMethod());
                 
-                assertFalse(response.didSucceed());
+                assertResponseDidNotSucceed(response);
                 
-                String error = castToString(response.getPayload());
-                
-                assertEquals("malformed arguments", error);
+                assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
