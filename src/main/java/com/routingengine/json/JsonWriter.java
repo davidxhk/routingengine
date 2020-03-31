@@ -1,5 +1,6 @@
 package com.routingengine.json;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -12,7 +13,9 @@ public class JsonWriter
 {
     private final OutputStream outputStream;
     private OutputStreamWriter outputStreamWriter;
+    private BufferedWriter bufferedWriter;
     private final Gson gson;
+    private static final int BUFFER_SIZE = 8192;
     
     public JsonWriter(OutputStream outputStream)
     {
@@ -28,31 +31,32 @@ public class JsonWriter
     public final void pipeOutputStream()
     {
         outputStreamWriter = new OutputStreamWriter(outputStream);
+        bufferedWriter = new BufferedWriter(outputStreamWriter, BUFFER_SIZE);
     }
     
     public void writeString(String string)
         throws IOException
     {
-        outputStreamWriter.write(string);
+        bufferedWriter.write(string);
     }
     
     public void writeLine(String line)
         throws IOException
     {
-        outputStreamWriter.write(line);
-        outputStreamWriter.append("\n");
+        bufferedWriter.write(line);
+        bufferedWriter.newLine();
     }
     
     public void writeJsonObject(JsonObject jsonObject)
         throws IOException
     {
-        gson.toJson(jsonObject, outputStreamWriter);
-        outputStreamWriter.append("\n");
+        gson.toJson(jsonObject, bufferedWriter);
+        bufferedWriter.append("\n");
     }
     
     public final void flush()
         throws IOException
     {
-        outputStreamWriter.flush();
+        bufferedWriter.flush();
     }
 }
