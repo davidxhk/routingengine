@@ -45,11 +45,11 @@ public class WebSocketStreamReader extends Reader {
 
   @Override
   public int read(char[] cbuf, int off, int len) throws IOException {
+    if (off > bytesToRead)
+      return -1;
     for (int i = 0; i < off; i++) {
       read();
     }
-    if (off > bytesToRead)
-      return -1;
     int iterations = len > bytesToRead ? (int) bytesToRead : len;
     iterations -= byteCount;
     for (int i = 0; i < iterations; i++) {
