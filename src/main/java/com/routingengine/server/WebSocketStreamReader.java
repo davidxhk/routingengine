@@ -15,12 +15,14 @@ public class WebSocketStreamReader extends Reader {
   private int[] mask = new int[4];
   private int maskCounter;
   private boolean headerParsed;
+  private boolean open;
 
   public WebSocketStreamReader(InputStream in) {
     super(in);
     this.in = in;
     inputStreamReader = new InputStreamReader(in);
     resetState();
+    open = true;
   }
 
   private void resetState() {
@@ -32,8 +34,14 @@ public class WebSocketStreamReader extends Reader {
     headerParsed = false;
   }
 
+  private void ensureOpen() throws IOException {
+    if (!open)
+      throw new IOException("Stream Closed");
+  }
+
   @Override
   public int read() throws IOException {
+    ensureOpen();
     if (!headerParsed)
       parseHeader();
     byte decodedByte = (byte) ((in.read() & 0xff) ^ (mask[maskCounter++ & 0x3]));
@@ -45,8 +53,10 @@ public class WebSocketStreamReader extends Reader {
 
   @Override
   public int read(char[] cbuf, int off, int len) throws IOException {
-    if (off > bytesToRead)
-      return -1;
+    ensureOpen();
+    if (!headerParsed)
+      parseHeader();
+    if (off > bytesToRead) return -1;
     for (int i = 0; i < off; i++) {
       read();
     }
@@ -61,7 +71,12 @@ public class WebSocketStreamReader extends Reader {
   private void parseHeader() throws IOException {
     if (headerParsed)
       return;
-    isWholeMessage = (in.read() & 0xff) == 129;
+    int firstByte = (in.read() & 0xff);
+    if (firstByte == 136) {
+      close();
+      return;
+    }
+    isWholeMessage = firstByte == 129;
     bytesToRead = (in.read() & 0xff) - 128;
     if (bytesToRead == 126) {
       bytesToRead = ((in.read() & 0xff) << 8) | (in.read() & 0xff);
@@ -83,12 +98,14 @@ public class WebSocketStreamReader extends Reader {
 
   @Override
   public boolean ready() throws IOException {
+    if (!open) return false;
     return inputStreamReader.ready();
   }
 
   @Override
   public void close() throws IOException {
     inputStreamReader.close();
+    open = false;
   }
 
 }

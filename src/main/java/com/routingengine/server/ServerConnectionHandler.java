@@ -70,6 +70,11 @@ public final class ServerConnectionHandler extends WebSocketConnectionHandler
                 throw exception;
             }
 
+            catch (IOException exception) {
+                log(exception.getMessage());
+                continue;
+            }
+
             log("Server got request –> " + jsonRequest.toString());
 
             if (jsonRequest.getMethod().matches("new_agent|new_support_request")) {
