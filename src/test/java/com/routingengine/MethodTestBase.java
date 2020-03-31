@@ -1,12 +1,9 @@
 package com.routingengine;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static com.routingengine.json.JsonUtils.*;
+import static org.junit.Assume.*;
 import static java.util.concurrent.Executors.newFixedThreadPool;
-import static org.junit.Assume.assumeNotNull;
-import static org.junit.Assume.assumeTrue;
-import static org.junit.Assume.assumeFalse;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -40,7 +37,7 @@ public abstract class MethodTestBase
         serverThread = new Thread(new Server(hostname, port));
         serverThread.start();
         
-        TimeUnit.SECONDS.sleep(2);
+        TimeUnit.MILLISECONDS.sleep(10);
         
         client = new Client(hostname, port); 
     }
@@ -97,13 +94,55 @@ public abstract class MethodTestBase
     protected static final void assumeResponseDidSucceed(JsonResponse response)
     {
         if (!response.didSucceed())
-            assumeTrue(castToString(response.getPayload()), false);
+            assumeTrue("assumed " + response.getMethod() + " would succeed, instead got " + response.getPayload(), false);
+    }
+    
+    protected static final Agent assumeResponseHasAgentPayload(JsonResponse response)
+    {
+        assumeResponseDidSucceed(response);
+        
+        Agent agent = null;
+        
+        try {
+            JsonObject payload = castToJsonObject(response.getPayload());
+                
+            agent = Agent.fromJson(payload);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            assumeNoException(exception);
+        }
+        
+        assumeNotNull(agent);
+        
+        return agent;
+    }
+    
+    protected static final SupportRequest assumeResponseHasSupportRequestPayload(JsonResponse response)
+    {
+        assumeResponseDidSucceed(response);
+        
+        SupportRequest supportRequest = null;
+        
+        try {
+            JsonObject payload = castToJsonObject(response.getPayload());
+                
+            supportRequest = SupportRequest.fromJson(payload);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            assumeNoException(exception);
+        }
+        
+        assumeNotNull(supportRequest);
+        
+        return supportRequest;
     }
     
     protected static final void assertResponseDidSucceed(JsonResponse response)
     {
         if (!response.didSucceed())
-            fail(castToString(response.getPayload()));
+            fail("expected " + response.getMethod() + " to fail, instead got " + response.getPayload());
     }
     
     protected static final Agent assertResponseHasAgentPayload(JsonResponse response)
@@ -151,7 +190,7 @@ public abstract class MethodTestBase
     protected static final void assertResponseDidNotSucceed(JsonResponse response)
     {
         if (response.didSucceed())
-            fail("expected " + method + " to fail");
+            fail("expected " + response.getMethod() + " to fail, instead got " + response.getPayload());
     }
     
     protected static final void assertResponseHasErrorPayload(JsonResponse response, String error)
@@ -269,6 +308,26 @@ public abstract class MethodTestBase
                 throws IOException, InterruptedException
             {
                 waitForAgent(supportRequestUUIDString);
+            }
+        });
+    }
+    
+    protected static final void agentGetsActivated(String agentUUIDString, Boolean isActivated)
+        throws IOException, InterruptedException, ExecutionException
+    {
+        execute(new ClientConnectionHandler()
+        {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException
+            {
+                JsonResponse response = activateAgent(agentUUIDString, isActivated);
+                
+                assumeResponseDidSucceed(response);
+                
+                Agent agent = Agent.fromJson(castToJsonObject(response.getPayload()));
+                
+                assumeTrue(isActivated.equals(agent.isActivated()));
             }
         });
     }
