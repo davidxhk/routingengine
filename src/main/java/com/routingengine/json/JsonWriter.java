@@ -20,7 +20,7 @@ public class JsonWriter
     public JsonWriter(OutputStream outputStream)
     {
         this.outputStream = outputStream;
-        pipeOutputStream();
+        reinitialize();
         
         gson = new GsonBuilder()
             .setPrettyPrinting()
@@ -28,7 +28,7 @@ public class JsonWriter
             .create();
     }
     
-    public final void pipeOutputStream()
+    public final void reinitialize()
     {
         outputStreamWriter = new OutputStreamWriter(outputStream);
         bufferedWriter = new BufferedWriter(outputStreamWriter, BUFFER_SIZE);
@@ -51,7 +51,7 @@ public class JsonWriter
         throws IOException
     {
         gson.toJson(jsonObject, bufferedWriter);
-        bufferedWriter.append("\n");
+        bufferedWriter.newLine();
     }
     
     public final void flush()

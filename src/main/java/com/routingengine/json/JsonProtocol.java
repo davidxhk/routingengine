@@ -102,7 +102,7 @@ public class JsonProtocol
     {
         jsonRequest.ensureWellFormed();
         
-        jsonWriter.pipeOutputStream();
+        jsonWriter.reinitialize();
         
         String method = jsonRequest.getMethod();
         
@@ -120,7 +120,7 @@ public class JsonProtocol
     {
         jsonResponse.ensureWellFormed();
         
-        jsonWriter.pipeOutputStream();
+        jsonWriter.reinitialize();
         
         JsonObject response = jsonResponse.toJson();
         

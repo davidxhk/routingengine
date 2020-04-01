@@ -18,7 +18,7 @@ public class JsonReader
     public JsonReader(InputStream inputStream)
     {        
         this.inputStream = inputStream;
-        pipeInputStream();
+        reinitialize();
     }
     
     public final boolean ready()
@@ -27,7 +27,7 @@ public class JsonReader
         return inputStreamReader.ready();
     }
 
-    public final void pipeInputStream()
+    public final void reinitialize()
     {
         inputStreamReader = new InputStreamReader(inputStream);
         
@@ -54,6 +54,6 @@ public class JsonReader
         while (inputStreamReader.ready() && inputStreamReader.skip(1) != 1)
             ;
         
-        pipeInputStream();
+        reinitialize();
     }
 }

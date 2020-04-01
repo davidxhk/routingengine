@@ -15,6 +15,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
     protected final void exit()
         throws IOException, EndConnectionException
     {
+        jsonWriter.pipeOutputStream();
         jsonWriter.writeString(EXIT_COMMAND);
         jsonWriter.flush();
         
