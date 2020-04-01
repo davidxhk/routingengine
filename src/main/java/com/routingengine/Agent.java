@@ -329,6 +329,9 @@ public class Agent extends InetEntity
         if (jsonObject.has("available"))
             agent.available = getAsBoolean(jsonObject, "available");
         
+        if (jsonObject.has("waiting"))
+            agent.waiting = getAsBoolean(jsonObject, "waiting");
+        
         if (jsonObject.has("assigned_support_request")) {
             JsonObject supportRequestJson = getAsJsonObject(jsonObject, "assigned_support_request");
             
