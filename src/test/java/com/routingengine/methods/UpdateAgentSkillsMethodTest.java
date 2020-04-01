@@ -10,7 +10,6 @@ import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.routingengine.Agent;
-import com.routingengine.AbstractMethodTest;
 import com.routingengine.SupportRequest.Type;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonRequest;
@@ -33,7 +32,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = updateAgentSkills(agentUUIDString, skills);
                 
@@ -64,7 +63,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = updateAgentSkills(agentUUIDString, skills);
                 
@@ -91,7 +90,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -117,7 +116,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -144,7 +143,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -171,7 +170,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -200,7 +199,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -230,7 +229,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = updateAgentSkills(agentUUIDString, Map.of(999, true, -1, true));
                 
@@ -255,7 +254,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = updateAgentSkills(agentUUIDString, Map.of("TEST", true, "hmmm", true));
                 
@@ -280,7 +279,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = updateAgentSkills(agentUUIDString, Map.of(1, "haha"));
                 
@@ -305,7 +304,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = updateAgentSkills(agentUUIDString, Map.of("GENERAL_ENQUIRY", "no"));
                 
@@ -330,7 +329,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = updateAgentSkills(agentUUIDString, Map.of(0, false, 1, false, 2, false));
                 
@@ -355,7 +354,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -386,7 +385,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -417,7 +416,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -446,7 +445,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -475,7 +474,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -509,7 +508,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 jsonWriter.writeString(method + " \"testtest\"");
                 jsonWriter.flush();
@@ -533,7 +532,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 jsonWriter.writeString(method + " []");
                 jsonWriter.flush();
@@ -557,7 +556,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 jsonWriter.writeString(method + " ;!/");
                 jsonWriter.flush();
@@ -581,7 +580,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 jsonWriter.writeString(method + " }}}}");
                 jsonWriter.flush();

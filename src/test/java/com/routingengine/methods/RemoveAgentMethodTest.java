@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.routingengine.Agent;
-import com.routingengine.AbstractMethodTest;
 import com.routingengine.SupportRequest;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonRequest;
@@ -44,7 +43,7 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = removeAgent(agentUUIDString);
                 
@@ -85,7 +84,7 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -110,7 +109,7 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -136,7 +135,7 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -162,7 +161,7 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -188,7 +187,7 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -227,7 +226,7 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -274,7 +273,7 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 jsonWriter.writeString(method + " \"testtest\"");
                 jsonWriter.flush();
@@ -298,7 +297,7 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 jsonWriter.writeString(method + " []");
                 jsonWriter.flush();
@@ -322,7 +321,7 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 jsonWriter.writeString(method + " ;!/");
                 jsonWriter.flush();
@@ -346,7 +345,7 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 jsonWriter.writeString(method + " }}}}");
                 jsonWriter.flush();

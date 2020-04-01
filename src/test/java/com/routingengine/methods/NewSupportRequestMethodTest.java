@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import com.routingengine.AbstractMethodTest;
 import com.routingengine.SupportRequest;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonRequest;
@@ -26,7 +25,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 String name = "bob";
                 String email = "bob@abc.com";
@@ -59,7 +58,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 String name = "bob";
                 String email = "bob@abc.com";
@@ -92,7 +91,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 String name = "bob";
                 String email = "bob@abc.com";
@@ -128,7 +127,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -155,7 +154,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -183,7 +182,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -211,7 +210,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -238,7 +237,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -266,7 +265,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -294,7 +293,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -321,7 +320,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -349,7 +348,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -377,7 +376,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -405,7 +404,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -433,7 +432,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -462,7 +461,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -491,7 +490,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -520,7 +519,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -549,7 +548,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 new JsonRequest()
                     .setMethod(method)
@@ -574,7 +573,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 String name = "bob";
                 String email = "bob@abc.com";
@@ -613,7 +612,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 jsonWriter.writeString(method + " \"testtest\"");
                 jsonWriter.flush();
@@ -637,7 +636,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 jsonWriter.writeString(method + " []");
                 jsonWriter.flush();
@@ -661,7 +660,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 jsonWriter.writeString(method + " ;!/");
                 jsonWriter.flush();
@@ -685,7 +684,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 jsonWriter.writeString(method + " }}}}");
                 jsonWriter.flush();
