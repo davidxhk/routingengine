@@ -32,7 +32,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
     public final void runMainLoop()
         throws IOException, InterruptedException, EndConnectionException
     {
-        while (socket.isConnected()) {
+        while (!socket.isClosed()) {
             try {
                 waitForInput();
             }
