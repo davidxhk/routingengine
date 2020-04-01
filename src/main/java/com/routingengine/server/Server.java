@@ -39,6 +39,7 @@ public final class Server
         try (ServerSocket listener = new ServerSocket()) {
             
             listener.bind(address);
+            
             log("Server bound to " + address);
             
             listener.setSoTimeout(SOCKET_TIMEOUT);
