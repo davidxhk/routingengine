@@ -1,4 +1,4 @@
-package com.routingengine;
+package com.routingengine.methods;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static com.routingengine.json.JsonUtils.*;
@@ -12,6 +12,8 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import com.google.gson.JsonObject;
+import com.routingengine.Agent;
+import com.routingengine.SupportRequest;
 import com.routingengine.client.Client;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonResponse;
@@ -37,7 +39,7 @@ public abstract class AbstractMethodTest
         serverThread = new Thread(new Server(hostname, port));
         serverThread.start();
         
-        TimeUnit.MILLISECONDS.sleep(10);
+        TimeUnit.MILLISECONDS.sleep(50);
         
         client = new Client(hostname, port); 
     }
@@ -46,7 +48,7 @@ public abstract class AbstractMethodTest
     protected static final void tearDownAfterClass()
         throws Exception
     {
-        executor.shutdownNow();
+        executor.shutdown();
         executor.awaitTermination(10, TimeUnit.SECONDS);
         
         execute(new ClientConnectionHandler()
@@ -83,8 +85,14 @@ public abstract class AbstractMethodTest
                 throws IOException, InterruptedException, EndConnectionException
             {
                 connectionHandler.connect(this.socket);
-                connectionHandler.runMainLoop();
-                exit();
+                
+                try {
+                    connectionHandler.runMainLoop();
+                }
+                
+                finally {
+                    exit();
+                }
             }
         });
         
@@ -209,7 +217,7 @@ public abstract class AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = newSupportRequest(name, email, type);
                 
@@ -235,7 +243,7 @@ public abstract class AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = newSupportRequest(name, email, type);
                 
@@ -261,7 +269,7 @@ public abstract class AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = newAgent(skills);
                 
@@ -285,7 +293,7 @@ public abstract class AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = checkSupportRequest(supportRequestUUIDString);
                 
@@ -305,7 +313,7 @@ public abstract class AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 waitForAgent(supportRequestUUIDString);
             }
@@ -319,7 +327,7 @@ public abstract class AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = activateAgent(agentUUIDString, isActivated);
                 
@@ -339,7 +347,7 @@ public abstract class AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = updateAgentAvailability(agentUUIDString, isAvailable);
                 
@@ -359,7 +367,7 @@ public abstract class AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = checkAgent(agentUUIDString);
                 
@@ -381,7 +389,7 @@ public abstract class AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 takeSupportRequest(agentUUIDString);
             }
@@ -397,7 +405,7 @@ public abstract class AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = checkAgent(agentUUIDString);
                 
@@ -441,7 +449,7 @@ public abstract class AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = removeSupportRequest(supportRequestUUIDString);
                 
@@ -457,7 +465,7 @@ public abstract class AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException
+                throws IOException, InterruptedException, EndConnectionException
             {
                 JsonResponse response = removeAgent(agentUUIDString);
                 
