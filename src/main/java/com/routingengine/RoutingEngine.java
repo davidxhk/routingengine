@@ -3,6 +3,7 @@ package com.routingengine;
 import static com.routingengine.Logger.log;
 import static com.routingengine.RequestQueueManager.RequestQueue;
 import static java.util.concurrent.Executors.newFixedThreadPool;
+import static com.routingengine.json.JsonConnectionHandler.SLEEP_MILLIS;
 import java.io.IOException;
 import java.util.Random;
 import java.util.UUID;
@@ -158,7 +159,7 @@ public class RoutingEngine
         
         while (!supportRequest.hasAssignedAgent()) {
             try {
-                TimeUnit.MILLISECONDS.sleep(1);
+                TimeUnit.MILLISECONDS.sleep(SLEEP_MILLIS);
             }
             
             catch (InterruptedException exception) {
@@ -191,7 +192,7 @@ public class RoutingEngine
         long start = System.currentTimeMillis();
         
         while (assignedSupportRequest == null) {
-            TimeUnit.MILLISECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(SLEEP_MILLIS);
             
             if (System.currentTimeMillis() - start >= TIMEOUT_MILLIS)
                 throw new TimeoutException();
