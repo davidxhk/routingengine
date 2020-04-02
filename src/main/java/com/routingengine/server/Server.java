@@ -31,6 +31,10 @@ public final class Server
         routingEngine = new RoutingEngine();
 
         executorService = newFixedThreadPool(THREAD_POOL_SIZE);
+
+        for (Runnable runnable : routingEngine.getWorkers()) {
+            executorService.execute(runnable);
+        }
     }
 
     @Override
@@ -39,7 +43,7 @@ public final class Server
         try (ServerSocket listener = new ServerSocket()) {
 
             listener.bind(address);
-            
+
             log("Server bound to " + address);
 
             listener.setSoTimeout(SOCKET_TIMEOUT);

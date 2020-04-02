@@ -16,8 +16,10 @@ public class JsonWriterEncoded extends JsonWriter{
   final static String OPCODE_PING = "1001";
   final static String OPCODE_PONG = "1010";
   final static String MASKBIT = "0";
+  final static byte[] EMPTY_FRAME = {};
 
   private OutputStream out;
+
   public JsonWriterEncoded(OutputStream outputStream) {
     super(outputStream);
     this.out = outputStream;
@@ -61,12 +63,13 @@ public class JsonWriterEncoded extends JsonWriter{
       System.out.println("Unable to convert message to frame format");
       System.out.println("Returning Empty Frame..");
     }
-    return new byte[1];
+    return EMPTY_FRAME;
   }
 
   @Override
   public void writeString(String string) throws IOException {
     byte[] frameFormat = getFrameFormat(string);
+    if (frameFormat.equals(EMPTY_FRAME)) return;
     out.write(frameFormat);
   }
 
@@ -74,6 +77,7 @@ public class JsonWriterEncoded extends JsonWriter{
   public void writeLine(String line) throws IOException {
     String newLine = line + "\n";
     byte[] frameFormat = getFrameFormat(newLine);
+    if (frameFormat.equals(EMPTY_FRAME)) return;
     out.write(frameFormat);
   }
 
@@ -82,6 +86,7 @@ public class JsonWriterEncoded extends JsonWriter{
     Gson gson = getGson();
     String json = gson.toJson(jsonObject) + "\n";
     byte[] frameFormat = getFrameFormat(json);
+    if (frameFormat.equals(EMPTY_FRAME)) return;
     out.write(frameFormat);
   }
 

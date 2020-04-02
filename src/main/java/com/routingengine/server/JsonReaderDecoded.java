@@ -14,6 +14,7 @@ public class JsonReaderDecoded extends JsonReader {
 
   public JsonReaderDecoded(InputStream inputStream) {
     super(inputStream);
+    pipeInputStream();
   }
 
   @Override
@@ -21,7 +22,6 @@ public class JsonReaderDecoded extends JsonReader {
     return wSocketStreamReader.ready();
   }
 
-  @Override
   public void pipeInputStream() {
     wSocketStreamReader = new WebSocketStreamReader(getInputStream());
 
