@@ -12,11 +12,13 @@ public class UpdateAgentAvailabilityMethod extends CheckAgentMethod
     public JsonElement handle(JsonObject arguments)
     {
         Agent agent = getAgent(arguments);
-        
+
         Boolean isAvailable = getAsBoolean(arguments, "available");
-        
+
         agent.setAvailability(isAvailable);
-        
+
+        routingEngine.updateAvailableAgents(agent);
+
         return agent.toJson();
     }
 }

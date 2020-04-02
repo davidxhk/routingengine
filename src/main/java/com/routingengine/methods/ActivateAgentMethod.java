@@ -12,18 +12,20 @@ public class ActivateAgentMethod extends CheckAgentMethod
     public JsonElement handle(JsonObject arguments)
     {
         Agent agent = getAgent(arguments);
-        
+
         Boolean doActivate = getAsBoolean(arguments, "activate");
-        
+
         if (doActivate == null)
             throw new IllegalArgumentException("activate missing");
-        
+
         if (doActivate)
             agent.activate();
-        
+
         else
             agent.deactivate();
-        
+
+        routingEngine.updateAvailableAgents(agent);
+
         return agent.toJson();
     }
 }

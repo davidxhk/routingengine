@@ -18,7 +18,8 @@ public class RoutingEngineWorker implements Runnable {
   Type type;
   TakeSupportRequestMethod takeSupportRequestMethod;
 
-  RoutingEngineWorker(ReentrantLock lock, Condition condition ,RequestQueue requestQueue, Map<Type, List<Agent>> availableAgents, Type type, RoutingEngine routingEngine) {
+  RoutingEngineWorker(ReentrantLock lock, Condition condition, RequestQueue requestQueue,
+      Map<Type, List<Agent>> availableAgents, Type type, RoutingEngine routingEngine) {
     this.lock = lock;
     this.requestQueue = requestQueue;
     this.availableAgents = availableAgents;
@@ -35,8 +36,10 @@ public class RoutingEngineWorker implements Runnable {
     while (true) {
       try {
         lock.lock();
-        while(requestQueue.getCount() == 0 || availableAgentList.size() == 0) {
-          log(String.format("Request queue of type - %s has %d in queue", type.toString(), requestQueue.getCount()));
+        while (requestQueue.getCount() == 0 || availableAgentList.size() == 0) {
+          log(String.format(
+              "%s Request queue currently has %d support request(s) in queue and %d available agents",
+              type.toString(), requestQueue.getCount(), availableAgentList.size()));
           condition.await();
         }
         clearQueue();
@@ -49,7 +52,7 @@ public class RoutingEngineWorker implements Runnable {
   }
 
   private void clearQueue() {
-    log(String.format("Worker of type - %s clearing queue", type.toString()));
+    log(String.format("%s Worker of type now clearing queue", type.toString()));
     Agent agent = availableAgentList.remove(0);
     removeAgentFromMap(agent);
     takeSupportRequestMethod.takeSupportRequest(agent);

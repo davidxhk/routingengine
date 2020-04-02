@@ -11,9 +11,11 @@ public class DropSupportRequestMethod extends CheckAgentMethod
     public JsonElement handle(JsonObject arguments)
     {
         Agent agent = getAgent(arguments);
-        
+
         agent.dropAssignedSupportRequest();
-        
+
+        routingEngine.updateAvailableAgents(agent);
+
         return agent.toJson();
     }
 }

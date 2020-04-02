@@ -173,9 +173,12 @@ public class RoutingEngine
         throws InterruptedException, TimeoutException
     {
         selectQueue(supportRequest).put(supportRequest);
-        lock.lock();
-        condition.signalAll();
-        lock.unlock();
+        try {
+            lock.lock();
+            condition.signalAll();
+        } finally {
+            lock.unlock();
+        }
         long start = System.currentTimeMillis();
 
         while (!supportRequest.hasAssignedAgent()) {
@@ -284,6 +287,19 @@ public class RoutingEngine
             runnables[i] = new RoutingEngineWorker(lock, condition, requestQueue, availableAgents, type, this);
         }
         return runnables;
+    }
+
+    public void updateAvailableAgents(Agent agent) {
+        if (!agent.isAvailable()) return;
+        try {
+            lock.lock();
+            for (Type type : agent.getSkills()) {
+                availableAgents.get(type).add(agent);
+            }
+            condition.signalAll();
+        } finally {
+            lock.unlock();
+        }
     }
 
     public static void main(String[] args)

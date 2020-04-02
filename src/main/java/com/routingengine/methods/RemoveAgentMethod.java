@@ -13,19 +13,21 @@ public class RemoveAgentMethod extends Method
     public JsonElement handle(JsonObject arguments)
     {
         Agent agent = removeAgent(arguments);
-        
+
+        routingEngine.updateAvailableAgents(agent);
+
         return agent.toJson();
     }
-    
+
     public Agent removeAgent(JsonObject arguments)
     {
         String agentUUIDString = getAsString(arguments, "uuid");
-        
+
         Agent agent = routingEngine.removeAgent(agentUUIDString);
-        
+
         if (agent.isActivated())
             agent.deactivate();
-        
+
         return agent;
     }
 }
