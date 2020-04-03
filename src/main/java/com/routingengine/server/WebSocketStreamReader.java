@@ -17,6 +17,9 @@ public class WebSocketStreamReader extends Reader {
   private boolean headerParsed;
   private boolean open;
 
+  /**
+   * @param in InputStream to read from
+   */
   public WebSocketStreamReader(InputStream in) {
     super(in);
     this.in = in;
@@ -25,6 +28,9 @@ public class WebSocketStreamReader extends Reader {
     open = true;
   }
 
+  /**
+   * Reset state - to use when whole frame is processed
+   */
   private void resetState() {
     byteCount = 0;
     bytesToRead = 0;
@@ -34,11 +40,22 @@ public class WebSocketStreamReader extends Reader {
     headerParsed = false;
   }
 
+
+  /**
+   * @throws IOException
+   */
   private void ensureOpen() throws IOException {
     if (!open)
       throw new IOException("Stream Closed");
   }
 
+
+  /**
+   * Reads a byte from the stream and unmask it with the relevant key
+   * with the XOR operation
+   * @return int
+   * @throws IOException
+   */
   @Override
   public int read() throws IOException {
     ensureOpen();
@@ -51,6 +68,16 @@ public class WebSocketStreamReader extends Reader {
     return ((int) decodedByte);
   }
 
+
+  /**
+   * Reads a specified number of characters into the array and
+   * returns the number of characters read
+   * @param cbuf
+   * @param off
+   * @param len
+   * @return int
+   * @throws IOException
+   */
   @Override
   public int read(char[] cbuf, int off, int len) throws IOException {
     ensureOpen();
@@ -68,6 +95,12 @@ public class WebSocketStreamReader extends Reader {
     return iterations;
   }
 
+
+  /**
+   * Parses the data frame to obtain the length of the message and
+   * the mask for the message
+   * @throws IOException
+   */
   private void parseHeader() throws IOException {
     if (headerParsed)
       return;
@@ -96,12 +129,21 @@ public class WebSocketStreamReader extends Reader {
     headerParsed = true;
   }
 
+
+  /**
+   * @return boolean
+   * @throws IOException
+   */
   @Override
   public boolean ready() throws IOException {
     if (!open) return false;
     return inputStreamReader.ready();
   }
 
+
+  /**
+   * @throws IOException
+   */
   @Override
   public void close() throws IOException {
     inputStreamReader.close();

@@ -20,11 +20,21 @@ public class JsonWriterEncoded extends JsonWriter{
 
   private OutputStream out;
 
+  /**
+   * @param outputStream Outputstream to be wrapped and processed
+   */
   public JsonWriterEncoded(OutputStream outputStream) {
     super(outputStream);
     this.out = outputStream;
   }
 
+
+  /**
+   * Formats the string into a byte array that is compliant with
+   * the Websocket Base Framing Protocol
+   * @param string
+   * @return byte[]
+   */
   public byte[] getFrameFormat(String string) {
     try {
       byte[] payloadData = string.getBytes();
@@ -66,6 +76,11 @@ public class JsonWriterEncoded extends JsonWriter{
     return EMPTY_FRAME;
   }
 
+
+  /**
+   * @param string
+   * @throws IOException
+   */
   @Override
   public void writeString(String string) throws IOException {
     byte[] frameFormat = getFrameFormat(string);
@@ -73,6 +88,11 @@ public class JsonWriterEncoded extends JsonWriter{
     out.write(frameFormat);
   }
 
+
+  /**
+   * @param line
+   * @throws IOException
+   */
   @Override
   public void writeLine(String line) throws IOException {
     String newLine = line + "\n";
@@ -81,6 +101,11 @@ public class JsonWriterEncoded extends JsonWriter{
     out.write(frameFormat);
   }
 
+
+  /**
+   * @param jsonObject
+   * @throws IOException
+   */
   @Override
   public void writeJsonObject(JsonObject jsonObject) throws IOException{
     Gson gson = getGson();

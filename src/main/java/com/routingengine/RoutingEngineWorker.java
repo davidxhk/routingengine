@@ -14,10 +14,22 @@ public class RoutingEngineWorker implements Runnable {
   Condition condition;
   RequestQueue requestQueue;
   Map<Type, List<Agent>> availableAgents;
-  List<Agent> availableAgentList;
   Type type;
   TakeSupportRequestMethod takeSupportRequestMethod;
 
+  /**
+   * Worker thread specifically to look at the support request queue of a chosen type. It will
+   * act on behalf of the agents to take the support request.
+   *
+   * @param lock            Lock object must be the same for other RoutingEngineWorker. Lock must
+   *                        also be held by the routingEngine
+   * @param condition       Condition to signal when there is a new support request or when there is
+   *                        a newly available agent
+   * @param requestQueue    The request queue object the thread is tasked to monitor
+   * @param availableAgents Map of available agents - shared resource
+   * @param type            The particular type of request queue the thread is tasked to monitor
+   * @param routingEngine
+   */
   RoutingEngineWorker(ReentrantLock lock, Condition condition, RequestQueue requestQueue,
       Map<Type, List<Agent>> availableAgents, Type type, RoutingEngine routingEngine) {
     this.lock = lock;
@@ -25,21 +37,23 @@ public class RoutingEngineWorker implements Runnable {
     this.availableAgents = availableAgents;
     this.type = type;
     this.condition = condition;
-    this.availableAgentList = availableAgents.get(type);
     takeSupportRequestMethod = new TakeSupportRequestMethod();
     takeSupportRequestMethod.routingEngine = routingEngine;
   }
 
+  /**
+   * Main loop
+   */
   @Override
   public void run() {
     log("Worker is running");
     while (true) {
       try {
         lock.lock();
-        while (requestQueue.getCount() == 0 || availableAgentList.size() == 0) {
+        while (requestQueue.getCount() == 0 || availableAgents.get(type).size() == 0) {
           log(String.format(
-              "%s Request queue currently has %d support request(s) in queue and %d available agents",
-              type.toString(), requestQueue.getCount(), availableAgentList.size()));
+              "%s Request Queue currently has %d support request(s) in queue and %d available agents",
+              type.toString(), requestQueue.getCount(), availableAgents.get(type).size()));
           condition.await();
         }
         clearQueue();
@@ -51,13 +65,24 @@ public class RoutingEngineWorker implements Runnable {
     }
   }
 
+
+  /**
+   * Pops the first element off the list of available agents and invokes the takeSupportRequest
+   * method with the agent that is popped as the argument.
+   */
   private void clearQueue() {
-    log(String.format("%s Worker of type now clearing queue", type.toString()));
-    Agent agent = availableAgentList.remove(0);
+    log(String.format("%s Queue Worker now clearing queue", type.toString()));
+    Agent agent = availableAgents.get(type).remove(0);
     removeAgentFromMap(agent);
     takeSupportRequestMethod.takeSupportRequest(agent);
   }
 
+
+  /**
+   * Removes the specified agent from the Map containing listing all currently available agents
+   *
+   * @param agent The agent to be removed from the available list
+   */
   private void removeAgentFromMap(Agent agent) {
     if (agent.getSkills().length > 1) {
       for (Type type : agent.getSkills()) {

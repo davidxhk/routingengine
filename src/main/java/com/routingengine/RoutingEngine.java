@@ -41,8 +41,12 @@ public class RoutingEngine
         supportRequests = new ConcurrentHashMap<>();
         agents = new ConcurrentHashMap<>();
         requestQueueManager = new RequestQueueManager();
-        for (int i = 0 ; i < 4 ; i++) {
-            Agent agent = Agent.builder().setSkill(Type.CHECK_BILL, true).setSkill(Type.CHECK_SUBSCRIPTION, true).build();
+        // Initialise all Agents on start up
+        for (AgentCredentials agentCredentials : AgentCredentials.values()) {
+            Agent agent = Agent.builder()
+                               .setSkills(agentCredentials.getSkillSet())
+                               .setRainbowID(agentCredentials.getRainbowID())
+                               .build();
             agent.setAvailability(true);
             addAgent(agent);
         }
