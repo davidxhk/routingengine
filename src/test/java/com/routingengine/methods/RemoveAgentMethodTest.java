@@ -36,7 +36,7 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
         
         customerWaitsForAgent(supportRequestUUIDString);
         
-        TimeUnit.MILLISECONDS.sleep(10);
+        TimeUnit.MILLISECONDS.sleep(50);
         
         assumeTrue(agentDidTakeSupportRequest(agentUUIDString, supportRequestUUIDString));
         
@@ -219,7 +219,7 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
         
         customerWaitsForAgent(supportRequestUUIDString);
         
-        TimeUnit.MILLISECONDS.sleep(10);
+        TimeUnit.MILLISECONDS.sleep(50);
         
         assumeTrue(agentDidTakeSupportRequest(agentUUIDString, supportRequestUUIDString));
         
