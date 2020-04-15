@@ -5,6 +5,7 @@ import static com.routingengine.json.JsonUtils.castToJsonObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -12,36 +13,43 @@ import com.google.gson.JsonObject;
 public class JsonReader
 {
     private final InputStream inputStream;
-    private InputStreamReader inputStreamReader;
+    protected Reader reader;
     private com.google.gson.stream.JsonReader jsonReader;
     
     public JsonReader(InputStream inputStream)
-    {        
+    {
         this.inputStream = inputStream;
-        reinitialize();
+        
+        initializeReader();
+    }
+    
+    protected Reader getReader(InputStream inputStream)
+    {
+        return new InputStreamReader(inputStream);
+    }
+    
+    public final void initializeReader()
+    {
+        reader = getReader(inputStream);
+        
+        jsonReader = new com.google.gson.stream.JsonReader(reader);
+        
+        jsonReader.setLenient(true);
     }
     
     public final boolean ready()
         throws IOException
     {
-        return inputStreamReader.ready();
-    }
-
-    public final void reinitialize()
-    {
-        inputStreamReader = new InputStreamReader(inputStream);
-        
-        jsonReader = new com.google.gson.stream.JsonReader(inputStreamReader);
-        jsonReader.setLenient(true);
+        return reader.ready();
     }
     
-    public String readString()
+    public final String readString()
         throws IOException
     {
         return jsonReader.nextString();
     }
     
-    public JsonObject parseJsonObject()
+    public final JsonObject parseJsonObject()
     {
         JsonElement jsonElement = parseReader(jsonReader);
         
@@ -51,9 +59,9 @@ public class JsonReader
     public final void clearInputStream()
         throws IOException
     {
-        while (inputStreamReader.ready() && inputStreamReader.skip(1) != 1)
+        while (reader.ready() && reader.skip(1) != 1)
             ;
         
-        reinitialize();
+        initializeReader();
     }
 }

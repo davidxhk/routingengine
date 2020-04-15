@@ -189,7 +189,7 @@ public class JsonRequest
             throw new JsonProtocolException("missing arguments");
     }
     
-    public void read(JsonReader jsonReader)
+    public void readFrom(JsonReader jsonReader)
         throws IOException, JsonProtocolException, EndConnectionException
     {
         readJsonRequest(jsonReader, this);
@@ -200,22 +200,16 @@ public class JsonRequest
     {
         JsonRequest jsonRequest = new JsonRequest();
         
-        jsonRequest.read(jsonReader);
+        jsonRequest.readFrom(jsonReader);
         
         return jsonRequest;
     }
     
-    public void write(JsonWriter jsonWriter)
-        throws IOException, JsonProtocolException
-    {
-        writeJsonRequest(this, jsonWriter);
-    }
-    
-    public boolean writeSafe(JsonWriter jsonWriter)
+    public boolean writeTo(JsonWriter jsonWriter)
         throws IOException
     {
         try {
-            write(jsonWriter);
+            writeJsonRequest(this, jsonWriter);
             
             return true;
         }

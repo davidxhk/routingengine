@@ -1,9 +1,7 @@
 package com.routingengine.json;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -12,51 +10,61 @@ import com.google.gson.JsonObject;
 public class JsonWriter
 {
     private final OutputStream outputStream;
-    private OutputStreamWriter outputStreamWriter;
-    private BufferedWriter bufferedWriter;
     private final Gson gson;
-    private static final int BUFFER_SIZE = 8192;
+    private StringBuilder buffer;
     
     public JsonWriter(OutputStream outputStream)
     {
         this.outputStream = outputStream;
-        reinitialize();
         
         gson = new GsonBuilder()
             .setPrettyPrinting()
             .serializeNulls()
             .create();
+        
+        initializeBuffer();
     }
     
-    public final void reinitialize()
+    public final void initializeBuffer()
     {
-        outputStreamWriter = new OutputStreamWriter(outputStream);
-        bufferedWriter = new BufferedWriter(outputStreamWriter, BUFFER_SIZE);
+        buffer = new StringBuilder();
+    }
+    
+    public void write(byte[] bytes)
+        throws IOException
+    {
+        outputStream.write(bytes);
     }
     
     public void writeString(String string)
         throws IOException
     {
-        bufferedWriter.write(string);
+        buffer.append(string);
     }
     
     public void writeLine(String line)
         throws IOException
     {
-        bufferedWriter.write(line);
-        bufferedWriter.newLine();
+        writeString(line + "\n");
     }
     
     public void writeJsonObject(JsonObject jsonObject)
         throws IOException
     {
-        gson.toJson(jsonObject, bufferedWriter);
-        bufferedWriter.newLine();
+        writeLine(gson.toJson(jsonObject));
     }
     
     public final void flush()
         throws IOException
     {
-        bufferedWriter.flush();
+        final String CHARSET = "UTF-8";
+        
+        String message = buffer.toString();
+        
+        write(message.getBytes(CHARSET));
+        
+        outputStream.flush();
+        
+        initializeBuffer();
     }
 }

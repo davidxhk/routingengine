@@ -80,7 +80,7 @@ public class JsonResponse
     
     public JsonResponse setPayload(String payload)
     {
-        setPayload(toJsonElement(payload));
+        setPayload(JsonUtils.toJsonElement(payload));
         
         return this;
     }
@@ -185,7 +185,7 @@ public class JsonResponse
             throw new JsonProtocolException("missing payload");
     }
     
-    public void read(JsonReader jsonReader)
+    public void readFrom(JsonReader jsonReader)
         throws IOException, JsonProtocolException
     {
         readJsonResponse(jsonReader, this);
@@ -196,22 +196,16 @@ public class JsonResponse
     {
         JsonResponse jsonResponse = new JsonResponse();
         
-        jsonResponse.read(jsonReader);
+        jsonResponse.readFrom(jsonReader);
         
         return jsonResponse;
     }
     
-    public void write(JsonWriter jsonWriter)
-        throws IOException, JsonProtocolException
-    {
-        writeJsonResponse(this, jsonWriter);
-    }
-    
-    public boolean writeSafe(JsonWriter jsonWriter)
+    public boolean writeTo(JsonWriter jsonWriter)
         throws IOException
     {
         try {
-            write(jsonWriter);
+            writeJsonResponse(this, jsonWriter);
             
             return true;
         }

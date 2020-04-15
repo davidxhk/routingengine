@@ -102,8 +102,6 @@ public class JsonProtocol
     {
         jsonRequest.ensureWellFormed();
         
-        jsonWriter.reinitialize();
-        
         String method = jsonRequest.getMethod();
         
         jsonWriter.writeString(method + " ");
@@ -119,8 +117,6 @@ public class JsonProtocol
         throws IOException, JsonProtocolException
     {
         jsonResponse.ensureWellFormed();
-        
-        jsonWriter.reinitialize();
         
         JsonObject response = jsonResponse.toJson();
         
