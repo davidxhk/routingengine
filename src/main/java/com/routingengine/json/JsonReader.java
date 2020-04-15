@@ -13,7 +13,7 @@ import com.google.gson.JsonObject;
 public class JsonReader
 {
     private final InputStream inputStream;
-    protected Reader reader;
+    private Reader reader;
     private com.google.gson.stream.JsonReader jsonReader;
     
     public JsonReader(InputStream inputStream)
