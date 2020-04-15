@@ -65,6 +65,18 @@ Sometimes, an *administrator* might want to [*check the status of a particular s
 
 The administrator might also need to [*remove a support request*][remove_support_request] for some reason.
 
+### Summary of Support Request Methods
+
+| Method                 | Command                                                                                                |
+| ---------------------- | ------------------------------------------------------------------------------------------------------ |
+| New Support Request    | `new_support_request {name:"bob", email:"bob@abc.com", type:1}`                                        |
+| New Support Request    | `new_support_request {name:"bob", email:"bob@abc.com", type:"GENERAL_ENQUIRY"}`                        |
+| New Support Request    | `new_support_request {name:"bob", email:"bob@abc.com", type:1, address:127.0.0.1}`                     |
+| Wait For Agent         | `wait_for_agent {uuid:"<--valid support request uuid string-->"}`                                      |
+| Change Support Request | `change_support_request_type {uuid:"<--valid support request uuid string-->", type:1}`                 |
+| Change Support Request | `change_support_request_type {uuid:"<--valid support request uuid string-->", type:"GENERAL_ENQUIRY"}` |
+| Close Support Request  | `close_support_request {uuid:"<--valid support request uuid string-->"}`                               |
+
 [new_support_request]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/new_support_request_tests.md
 [wait_for_agent]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/wait_for_agent_tests.md
 [check_support_request]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/check_support_request_tests.md
@@ -103,6 +115,18 @@ At any time, an administrator might also want to [*check the current status of a
 Occasionally, an agent might have received training in other skills, so an administrator might want to [*update the skillset of that agent*][update_agent_skills].
 
 In the event that an agent is no longer working at the contact center, the administrator may [*remove the agent from the routing engine system*][remove_agent].
+
+### Summary of Agent Methods
+
+| Method                    | Command                                                                             |
+| ------------------------- | ----------------------------------------------------------------------------------- |
+| New Agent                 | `new_agent {skills:{1:true, 2:true}}`                                               |
+| New Agent                 | `new_agent {skills:{"GENERAL_ENQUIRY":true, "CHECK_BILL":true}}`                    |
+| New Agent                 | `new_agent {skills:{"GENERAL_ENQUIRY":true}, address:127.0.0.1}`                    |
+| Update Agent Availability | `update_agent_availability {uuid:"<--valid agent uuid string-->", available:true}`  |
+| Update Agent Availability | `update_agent_availability {uuid:"<--valid agent uuid string-->", available:false}` |
+| Take Support Request      | `take_support_request {uuid:"<--valid agent uuid string-->"}`                       |
+| Drop Support Request      | `drop_support_request {uuid:"<--valid agent uuid string-->"}`                       |
 
 [new_agent]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/new_agent_tests.md
 [update_agent_availability]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/update_agent_availability_tests.md
@@ -155,56 +179,28 @@ The total number and **UUIDs** of all support requests in each queue will be lis
 
 Lastly, if the administrator would just like to have a summary of all the numbers for each of the above, then he may simply [*get a status overview*][get_status_overview].
 
+### Summary of Admin Methods
+
+| Method                          | Command                                                                   |
+| ------------------------------- | ------------------------------------------------------------------------- |
+| Ping                            | `ping {}`                                                                 |
+| Get All Support Requests Status | `get_support_request_status {}`                                           |
+| Check Support Request Status    | `check_support_request {uuid:"<--valid support request uuid string-->"}`  |
+| Close Support Request           | `close_support_request {uuid:"<--valid support request uuid string-->"}`  |
+| Remove Support Request          | `remove_support_request {uuid:"<--valid support request uuid string-->"}` |
+| Get All Agent Status            | `get_agent_status {}`                                                     |
+| Check Agent Status              | `check_agent {uuid:"<--valid agent uuid string-->"}`                      |
+| Activate Agent                  | `activate_agent {uuid:"<--valid agent uuid string-->", activate:true}`    |
+| Activate Agent                  | `activate_agent {uuid:"<--valid agent uuid string-->", activate:false}`   |
+| Remove Agent                    | `remove_agent {uuid:"<--valid agent uuid string-->"}`                     |
+| Get Queue Status                | `get_queue_status {}`                                                     |
+| Get Status Overview             | `get_status_overview {}`                                                  |
+
 [ping]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/ping_tests.md
 [get_support_request_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_support_request_status_tests.md
 [get_agent_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_agent_status_tests.md
 [get_queue_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_queue_status_tests.md
 [get_status_overview]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_status_overview_tests.md
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
