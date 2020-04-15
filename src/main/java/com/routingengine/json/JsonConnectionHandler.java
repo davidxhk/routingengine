@@ -38,7 +38,7 @@ public abstract class JsonConnectionHandler
         return socket.getInetAddress().getHostAddress();
     }
     
-    public final void waitForInput()
+    protected final void waitForInput()
         throws IOException, InterruptedException
     {
         while (!jsonReader.ready())
