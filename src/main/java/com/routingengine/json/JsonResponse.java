@@ -80,7 +80,7 @@ public class JsonResponse
     
     public JsonResponse setPayload(String payload)
     {
-        setPayload(JsonUtils.toJsonElement(payload));
+        setPayload(toJsonElement(payload));
         
         return this;
     }
