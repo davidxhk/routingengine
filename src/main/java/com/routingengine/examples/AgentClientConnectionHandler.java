@@ -1,4 +1,4 @@
-package com.routingengine.client.examples;
+package com.routingengine.examples;
 
 import static com.routingengine.json.JsonUtils.getAsJsonObject;
 import java.io.IOException;

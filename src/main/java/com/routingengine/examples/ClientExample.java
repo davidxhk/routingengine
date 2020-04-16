@@ -1,4 +1,4 @@
-package com.routingengine.client.examples;
+package com.routingengine.examples;
 
 import static com.routingengine.Logger.log;
 import java.io.IOException;
