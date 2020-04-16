@@ -8,18 +8,18 @@ import java.net.Socket;
 import com.google.gson.JsonElement;
 import com.routingengine.MethodManager;
 import com.routingengine.RoutingEngine;
-import com.routingengine.json.JsonConnectionHandler;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
+import com.routingengine.websocket.WebSocketConnectionHandler;
 
 
-public final class ServerConnectionHandler extends JsonConnectionHandler
+public final class ServerConnectionHandler extends WebSocketConnectionHandler
     implements Runnable, Closeable
 {
     private final MethodManager methodManager;
     
     ServerConnectionHandler(Socket socket, RoutingEngine routingEngine)
-        throws IOException
+        throws IOException, ConnectionException
     {
         connect(socket);
         
@@ -40,7 +40,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
             catch (InterruptedException exception) {
                 JsonResponse
                     .failure("server connection interrupted")
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 Thread.currentThread().interrupt();
                 
@@ -50,7 +50,9 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
             JsonRequest jsonRequest = new JsonRequest();
             
             try {
-                jsonRequest.read(jsonReader);
+                jsonRequest.readFrom(jsonReader);
+                
+                System.out.println(jsonRequest.toString());
             }
             
             catch (JsonProtocolException exception) {
@@ -58,13 +60,14 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
                 
                 JsonResponse
                     .failure(jsonRequest, exception)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 continue;
             }
             
             catch (EndConnectionException exception) {
                 jsonWriter.writeLine("Goodbye!");
+                
                 jsonWriter.flush();
                 
                 throw exception;
@@ -73,6 +76,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
             log("Server got request –> " + jsonRequest.toString());
             
             if (jsonRequest.getMethod().matches("new_agent|new_support_request")) {
+                
                 if (!jsonRequest.hasArgument("address"))
                     jsonRequest.setArgument("address", getAddress());
             }
@@ -84,17 +88,17 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
                 
                 JsonResponse
                     .success(jsonRequest, payload)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
             }
             
             catch (IllegalArgumentException | IllegalStateException exception) {
                 JsonResponse
                     .failure(jsonRequest, exception)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
             }
         }
     }
-
+    
     @Override
     public final void run()
     {
@@ -105,7 +109,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
         catch (IOException exception) {
             log("I/O error in " + socket.toString());
             
-            exception.printStackTrace();    
+            exception.printStackTrace();
         }
         
         catch (InterruptedException exception) {

@@ -12,6 +12,7 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import com.routingengine.RoutingEngine;
+import com.routingengine.json.JsonConnectionHandler.ConnectionException;
 
 
 public final class Server
@@ -31,6 +32,10 @@ public final class Server
         routingEngine = new RoutingEngine();
         
         executorService = newFixedThreadPool(THREAD_POOL_SIZE);
+        
+        for (Runnable runnable : routingEngine.getWorkers()) {
+            executorService.execute(runnable);
+        }
     }
     
     @Override
@@ -46,9 +51,12 @@ public final class Server
             
             log("Server listening to " + listener);
             
+            Socket socket = null;
+            
             while (!Thread.interrupted()) {
+                
                 try {
-                    Socket socket = listener.accept();
+                    socket = listener.accept();
                     
                     ServerConnectionHandler connectionHandler =
                         new ServerConnectionHandler(socket, routingEngine);
@@ -65,10 +73,18 @@ public final class Server
                     
                     break;
                 }
+                
+                catch (IOException exception) {
+                    log("Unable to connect to: " + socket);
+                }
+                
+                catch (ConnectionException exception) {
+                    log("Connection issue: " + exception.getMessage());
+                }
             }
         }
         
-        catch (IOException exception) {
+        catch (Exception exception) {
             // server crashed! what happened?
             
             exception.printStackTrace();
@@ -98,7 +114,7 @@ public final class Server
             if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS)) {
                 log("Shutting down now");
                 executorService.shutdownNow();
-    
+                
                 if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS)) {
                     log("Executor service did not terminate");
                     
@@ -129,12 +145,12 @@ public final class Server
                 hostname = "localhost";
                 port = Integer.valueOf(args[0]);
                 break;
-        
+            
             case 2:
                 hostname = args[0];
                 port = Integer.valueOf(args[1]);
                 break;
-        
+            
             default:
                 System.out.println("Usage: java com.routingengine.server.Server [hostname] port");
                 return;
