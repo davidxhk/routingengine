@@ -25,7 +25,7 @@ public abstract class JsonConnectionHandler
     }
     
     public void connect(Socket socket)
-        throws IOException, ConnectionException
+        throws IOException
     {
         this.socket = socket;
         
@@ -46,31 +46,5 @@ public abstract class JsonConnectionHandler
     }
     
     public abstract void runMainLoop()
-        throws IOException, InterruptedException, EndConnectionException;
-    
-    public static class ConnectionException extends Exception
-    {
-        public ConnectionException()
-        {
-            super();
-        }
-        
-        public ConnectionException(String message)
-        {
-            super(message);
-        }
-    }
-    
-    public static class EndConnectionException extends ConnectionException
-    {
-        public EndConnectionException()
-        {
-            super();
-        }
-        
-        public EndConnectionException(String message)
-        {
-            super(message);
-        }
-    }
+        throws IOException, InterruptedException;
 }

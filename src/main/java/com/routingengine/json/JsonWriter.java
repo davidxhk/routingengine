@@ -2,6 +2,8 @@ package com.routingengine.json;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -11,6 +13,7 @@ public class JsonWriter
 {
     private final OutputStream outputStream;
     private final Gson gson;
+    private final Charset charset = StandardCharsets.UTF_8;
     private StringBuilder buffer;
     
     public JsonWriter(OutputStream outputStream)
@@ -57,11 +60,9 @@ public class JsonWriter
     public final void flush()
         throws IOException
     {
-        final String CHARSET = "UTF-8";
-        
         String message = buffer.toString();
         
-        write(message.getBytes(CHARSET));
+        write(message.getBytes(charset));
         
         outputStream.flush();
         

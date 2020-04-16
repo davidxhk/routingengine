@@ -2,35 +2,64 @@ package com.routingengine.server;
 
 import static com.routingengine.Logger.log;
 import static com.routingengine.json.JsonProtocol.JsonProtocolException;
+import static com.routingengine.websocket.WebSocketProtocol.doClosingHandshake;
+import static com.routingengine.websocket.WebSocketProtocol.WebSocketProtocolException;
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import com.google.gson.JsonElement;
 import com.routingengine.MethodManager;
 import com.routingengine.RoutingEngine;
+import com.routingengine.json.JsonConnectionHandler;
+import com.routingengine.json.JsonReader;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
-import com.routingengine.websocket.WebSocketConnectionHandler;
+import com.routingengine.json.JsonWriter;
+import com.routingengine.json.JsonProtocol.ExitConnectionException;
+import com.routingengine.websocket.WebSocketJsonReader;
+import com.routingengine.websocket.WebSocketJsonWriter;
 
 
-public final class ServerConnectionHandler extends WebSocketConnectionHandler
+public final class ServerConnectionHandler extends JsonConnectionHandler
     implements Runnable, Closeable
 {
     private final MethodManager methodManager;
     
     ServerConnectionHandler(Socket socket, RoutingEngine routingEngine)
-        throws IOException, ConnectionException
+        throws IOException
     {
         connect(socket);
-        
+            
         log("Server connected to " + socket.toString());
         
         methodManager = new MethodManager(routingEngine);
     }
     
     @Override
+    protected JsonReader getJsonReader(InputStream inputStream)
+    {
+        WebSocketJsonReader webSocketJsonReader = new WebSocketJsonReader(inputStream);
+        
+        webSocketJsonReader.setMasked(true);
+        
+        return (JsonReader) webSocketJsonReader;
+    }
+    
+    @Override
+    protected JsonWriter getJsonWriter(OutputStream outputStream)
+    {
+        WebSocketJsonWriter webSocketJsonWriter = new WebSocketJsonWriter(outputStream);
+        
+        webSocketJsonWriter.setMasked(false);
+        
+        return (JsonWriter) webSocketJsonWriter;
+    }
+    
+    @Override
     public final void runMainLoop()
-        throws IOException, InterruptedException, EndConnectionException
+        throws IOException, InterruptedException
     {
         while (!socket.isClosed()) {
             try {
@@ -51,8 +80,6 @@ public final class ServerConnectionHandler extends WebSocketConnectionHandler
             
             try {
                 jsonRequest.readFrom(jsonReader);
-                
-                System.out.println(jsonRequest.toString());
             }
             
             catch (JsonProtocolException exception) {
@@ -63,14 +90,6 @@ public final class ServerConnectionHandler extends WebSocketConnectionHandler
                     .writeTo(jsonWriter);
                 
                 continue;
-            }
-            
-            catch (EndConnectionException exception) {
-                jsonWriter.writeLine("Goodbye!");
-                
-                jsonWriter.flush();
-                
-                throw exception;
             }
             
             log("Server got request –> " + jsonRequest.toString());
@@ -103,21 +122,29 @@ public final class ServerConnectionHandler extends WebSocketConnectionHandler
     public final void run()
     {
         try {
-            runMainLoop();
-        }
-        
-        catch (IOException exception) {
-            log("I/O error in " + socket.toString());
+            try {
+                doClosingHandshake(socket);
+            }
             
-            exception.printStackTrace();
+            catch (WebSocketProtocolException exception) {
+                log("WebSocket exception: " + exception.getMessage());
+                
+                return;
+            }
+            
+            runMainLoop();
         }
         
         catch (InterruptedException exception) {
             log("Server connection was interrupted");
         }
         
-        catch (EndConnectionException exception) {
+        catch (ExitConnectionException exception) {
             log("Server connection was exited");
+        }
+        
+        catch (IOException exception) {
+            log("I/O exception: " + exception.getMessage());
         }
         
         finally {

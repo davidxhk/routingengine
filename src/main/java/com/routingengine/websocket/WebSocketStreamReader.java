@@ -1,20 +1,18 @@
 package com.routingengine.websocket;
 
+import static com.routingengine.json.JsonProtocol.ExitConnectionException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 
 
 public class WebSocketStreamReader extends Reader
 {
-    private int byteCount;
-    private InputStreamReader inputStreamReader;
     private InputStream in;
     private long bytesToRead;
-    private boolean isWholeMessage;
-    private int[] mask = new int[4];
-    private int maskCounter;
+    private int byteCount;
+    private boolean masked = false;
+    private int[] mask;
     private boolean headerParsed;
     private boolean open;
     
@@ -24,25 +22,24 @@ public class WebSocketStreamReader extends Reader
         
         this.in = in;
         
-        inputStreamReader = new InputStreamReader(in);
-        
         resetState();
         
         open = true;
     }
     
+    public void setMasked(boolean masked)
+    {
+        this.masked = masked;
+    }
+    
     // Reset state - to use when whole frame is processed
     private void resetState()
     {
-        byteCount = 0;
-        
         bytesToRead = 0;
         
-        isWholeMessage = false;
+        byteCount = 0;
         
         mask = new int[4];
-        
-        maskCounter = 0;
         
         headerParsed = false;
     }
@@ -51,7 +48,7 @@ public class WebSocketStreamReader extends Reader
         throws IOException
     {
         if (!open)
-            throw new IOException("Stream Closed");
+            throw new ExitConnectionException("Stream Closed");
     }
     
     // Reads a byte from the stream and unmasks it with the relevant key
@@ -64,14 +61,17 @@ public class WebSocketStreamReader extends Reader
         if (!headerParsed)
             parseHeader();
         
-        byte decodedByte = (byte) ((in.read() & 0xff) ^ (mask[maskCounter++ & 0x3]));
+        byte nextByte = (byte) (in.read() & 0xff);
+        
+        if (masked)
+            nextByte ^= mask[byteCount % 4];
         
         byteCount++;
         
         if (byteCount == bytesToRead)
             resetState();
         
-        return ((int) decodedByte);
+        return ((int) nextByte);
     }
     
     // Reads a specified number of characters into the array and returns the number of characters read
@@ -109,14 +109,16 @@ public class WebSocketStreamReader extends Reader
         
         int firstByte = (in.read() & 0xff);
         
-        if (firstByte == 136) {
+        if (firstByte != 129) {
             close();
+            
             return;
         }
         
-        isWholeMessage = firstByte == 129;
+        bytesToRead = (in.read() & 0xff);
         
-        bytesToRead = (in.read() & 0xff) - 128;
+        if (masked)
+            bytesToRead -= 128;
         
         switch ((int) bytesToRead) {
             case 126:
@@ -136,8 +138,10 @@ public class WebSocketStreamReader extends Reader
                 break;
         }
         
-        for (int i = 0; i < 4; i++)
-            mask[i] = (in.read() & 0xff);
+        if (masked) {
+            for (int i = 0; i < 4; i++)
+                mask[i] = (in.read() & 0xff);
+        }
         
         headerParsed = true;
     }
@@ -149,14 +153,14 @@ public class WebSocketStreamReader extends Reader
         if (!open)
             return false;
         
-        return inputStreamReader.ready();
+        return in.available() > 0;
     }
     
     @Override
     public void close()
         throws IOException
     {
-        inputStreamReader.close();
+        in.close();
         
         open = false;
     }

@@ -3,23 +3,50 @@ package com.routingengine.client;
 import static com.routingengine.json.JsonUtils.toJsonElement;
 import static com.routingengine.json.JsonProtocol.JsonProtocolException;
 import static com.routingengine.json.JsonProtocol.EXIT_COMMAND;
-import java.io.IOException;
-import java.util.Map;
+import static com.routingengine.json.JsonProtocol.ExitConnectionException;
 import com.routingengine.json.JsonConnectionHandler;
+import com.routingengine.json.JsonReader;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
+import com.routingengine.json.JsonWriter;
+import com.routingengine.websocket.WebSocketJsonReader;
+import com.routingengine.websocket.WebSocketJsonWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Map;
 
 
 public abstract class ClientConnectionHandler extends JsonConnectionHandler
 {
-    protected final void exit()
-        throws IOException, EndConnectionException
+    @Override
+    protected JsonReader getJsonReader(InputStream inputStream)
     {
-        jsonWriter.reinitialize();
+        WebSocketJsonReader webSocketJsonReader = new WebSocketJsonReader(inputStream);
+        
+        webSocketJsonReader.setMasked(false);
+        
+        return (JsonReader) webSocketJsonReader;
+    }
+    
+    @Override
+    protected JsonWriter getJsonWriter(OutputStream outputStream)
+    {
+        WebSocketJsonWriter webSocketJsonWriter = new WebSocketJsonWriter(outputStream);
+        
+        webSocketJsonWriter.setMasked(true);
+        
+        return (JsonWriter) webSocketJsonWriter;
+    }
+    
+    protected final void exit()
+        throws IOException, ExitConnectionException
+    {
         jsonWriter.writeString(EXIT_COMMAND);
+        
         jsonWriter.flush();
         
-        throw new EndConnectionException();
+        throw new ExitConnectionException();
     }
     
     protected final JsonResponse ping()
@@ -27,7 +54,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
     {
         new JsonRequest()
             .setMethod("ping")
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
         
         return awaitResponse();
     }
@@ -40,7 +67,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
             .setArgument("name", name)
             .setArgument("email", email)
             .setArgument("type", requestTypeIndex)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
         
         return awaitResponse();
     }
@@ -53,7 +80,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
             .setArgument("name", name)
             .setArgument("email", email)
             .setArgument("type", requestTypeString)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -67,7 +94,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
             .setArgument("email", email)
             .setArgument("type", requestTypeIndex)
             .setArgument("address", address)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
         
         return awaitResponse();
     }
@@ -81,7 +108,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
             .setArgument("email", email)
             .setArgument("type", requestTypeString)
             .setArgument("address", address)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -92,7 +119,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
         new JsonRequest()
             .setMethod("check_support_request")
             .setArgument("uuid", supportRequestUUIDString)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -104,7 +131,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
             .setMethod("change_support_request_type")
             .setArgument("uuid", supportRequestUUIDString)
             .setArgument("type", requestTypeIndex)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -116,7 +143,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
             .setMethod("change_support_request_type")
             .setArgument("uuid", supportRequestUUIDString)
             .setArgument("type", requestTypeString)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -127,7 +154,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
         new JsonRequest()
             .setMethod("wait_for_agent")
             .setArgument("uuid", supportRequestUUIDString)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -138,7 +165,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
         new JsonRequest()
             .setMethod("close_support_request")
             .setArgument("uuid", supportRequestUUIDString)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -149,7 +176,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
         new JsonRequest()
             .setMethod("remove_support_request")
             .setArgument("uuid", supportRequestUUIDString)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -160,7 +187,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
         new JsonRequest()
         .setMethod("new_agent")
         .setArgument("skills", toJsonElement(skills))
-        .writeSafe(jsonWriter);
+        .writeTo(jsonWriter);
 
     return awaitResponse();
     }
@@ -172,7 +199,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
             .setMethod("new_agent")
             .setArgument("skills", skills)
             .setArgument("address", address)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
 
         return awaitResponse();
     }
@@ -184,7 +211,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
             .setMethod("activate_agent")
             .setArgument("uuid", agentUUIDString)
             .setArgument("activate", doActivate)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
         
         return awaitResponse();
     }
@@ -207,7 +234,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
         new JsonRequest()
             .setMethod("check_agent")
             .setArgument("uuid", agentUUIDString)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -219,7 +246,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
             .setMethod("update_agent_skills")
             .setArgument("uuid", agentUUIDString)
             .setArgument("skills", skills)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -231,7 +258,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
             .setMethod("update_agent_availability")
             .setArgument("uuid", agentUUIDString)
             .setArgument("available", isAvailable)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -242,7 +269,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
         new JsonRequest()
             .setMethod("take_support_request")
             .setArgument("uuid", agentUUIDString)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -253,7 +280,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
         new JsonRequest()
             .setMethod("drop_support_request")
             .setArgument("uuid", agentUUIDString)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -264,7 +291,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
         new JsonRequest()
             .setMethod("remove_agent")
             .setArgument("uuid", agentUUIDString)
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -274,7 +301,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
     {
         new JsonRequest()
             .setMethod("get_status_overview")
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -284,7 +311,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
     {
         new JsonRequest()
             .setMethod("get_agent_status")
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -294,7 +321,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
     {
         new JsonRequest()
             .setMethod("get_support_request_status")
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
     
         return awaitResponse();
     }
@@ -304,7 +331,7 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
     {
         new JsonRequest()
             .setMethod("get_queue_status")
-            .writeSafe(jsonWriter);
+            .writeTo(jsonWriter);
         
         return awaitResponse();
     }

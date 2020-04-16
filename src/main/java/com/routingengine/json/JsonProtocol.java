@@ -1,7 +1,6 @@
 package com.routingengine.json;
 
 import static com.routingengine.json.JsonUtils.getAsString;
-import static com.routingengine.json.JsonConnectionHandler.EndConnectionException;
 import java.io.IOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -18,7 +17,7 @@ public class JsonProtocol
     }
     
     public static JsonRequest readJsonRequest(JsonReader jsonReader)
-        throws IOException, JsonProtocolException, EndConnectionException
+        throws IOException, JsonProtocolException
     {
         JsonRequest jsonRequest = new JsonRequest();
         
@@ -28,13 +27,13 @@ public class JsonProtocol
     }
     
     public static void readJsonRequest(JsonReader jsonReader, JsonRequest jsonRequest)
-        throws IOException, JsonProtocolException, EndConnectionException
+        throws IOException, JsonProtocolException
     {
         try {
             String method = jsonReader.readString();
             
             if (EXIT_COMMAND.equals(method))
-                throw new EndConnectionException();
+                throw new ExitConnectionException();
             
             jsonRequest.setMethod(method);
         }
@@ -127,6 +126,19 @@ public class JsonProtocol
         jsonWriter.writeJsonObject(response);
         
         jsonWriter.flush();
+    }
+    
+    public static class ExitConnectionException extends IOException
+    {
+        public ExitConnectionException()
+        {
+            super();
+        }
+        
+        public ExitConnectionException(String message)
+        {
+            super(message);
+        }
     }
     
     public static class JsonProtocolException extends Exception

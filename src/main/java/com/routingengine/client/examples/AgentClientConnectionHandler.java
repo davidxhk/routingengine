@@ -1,4 +1,4 @@
-package com.routingengine.client;
+package com.routingengine.client.examples;
 
 import static com.routingengine.json.JsonUtils.getAsJsonObject;
 import java.io.IOException;
@@ -14,7 +14,7 @@ public class AgentClientConnectionHandler extends CustomerClientConnectionHandle
     
     @Override
     public void runMainLoop()
-        throws IOException, InterruptedException, EndConnectionException
+        throws IOException, InterruptedException
     {
         log("initialized!");
         

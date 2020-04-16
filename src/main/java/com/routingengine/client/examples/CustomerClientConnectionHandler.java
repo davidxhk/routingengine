@@ -1,4 +1,4 @@
-package com.routingengine.client;
+package com.routingengine.client.examples;
 
 import static com.routingengine.json.JsonUtils.getAsString;
 import static com.routingengine.json.JsonUtils.castToString;
@@ -20,7 +20,7 @@ public class CustomerClientConnectionHandler extends ClientConnectionHandler
     
     @Override
     public void runMainLoop()
-        throws IOException, InterruptedException, EndConnectionException
+        throws IOException, InterruptedException
     {
         log("initialized!");
         

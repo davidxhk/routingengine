@@ -12,7 +12,6 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import com.routingengine.RoutingEngine;
-import com.routingengine.json.JsonConnectionHandler.ConnectionException;
 
 
 public final class Server
@@ -75,11 +74,7 @@ public final class Server
                 }
                 
                 catch (IOException exception) {
-                    log("Unable to connect to: " + socket);
-                }
-                
-                catch (ConnectionException exception) {
-                    log("Connection issue: " + exception.getMessage());
+                    log("I/O exception: " + socket);
                 }
             }
         }
