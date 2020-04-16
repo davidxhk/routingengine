@@ -28,7 +28,7 @@ public class GetSupportRequestStatusMethodTest extends AbstractMethodTest
             {
                 new JsonRequest()
                     .setMethod(method)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 

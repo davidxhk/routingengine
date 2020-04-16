@@ -30,7 +30,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 JsonResponse response = changeSupportRequestType(supportRequestUUIDString, newType);
                 
@@ -59,7 +59,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 JsonResponse response = changeSupportRequestType(supportRequestUUIDString, newType);
                 
@@ -84,12 +84,12 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("type", 1)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -110,13 +110,13 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", new ArrayList<>())
                     .setArgument("type", 1)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -137,13 +137,13 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", new HashMap<>())
                     .setArgument("type", 1)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -164,13 +164,13 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", "hahaha test test")
                     .setArgument("type", 1)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -193,12 +193,12 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", supportRequestUUIDString)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -223,13 +223,13 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", supportRequestUUIDString)
                     .setArgument("type", new ArrayList<>())
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -254,13 +254,13 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", supportRequestUUIDString)
                     .setArgument("type", new HashMap<>())
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -285,13 +285,13 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", supportRequestUUIDString)
                     .setArgument("type", 999)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -316,13 +316,13 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", supportRequestUUIDString)
                     .setArgument("type", "blabla")
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -346,11 +346,11 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -375,14 +375,14 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", supportRequestUUIDString)
                     .setArgument("type", newType)
                     .setArgument("something", "something?")
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -407,7 +407,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " \"testtest\"");
                 jsonWriter.flush();
@@ -431,7 +431,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " []");
                 jsonWriter.flush();
@@ -455,7 +455,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " ;!/");
                 jsonWriter.flush();
@@ -479,7 +479,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " }}}}");
                 jsonWriter.flush();

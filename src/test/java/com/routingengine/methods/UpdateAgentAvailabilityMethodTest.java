@@ -30,7 +30,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 JsonResponse response = updateAgentAvailability(agentUUIDString, true);
                 
@@ -59,7 +59,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 JsonResponse response = updateAgentAvailability(agentUUIDString, false);
                 
@@ -84,12 +84,12 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("available", true)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -110,13 +110,13 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", new ArrayList<>())
                     .setArgument("available", true)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -137,13 +137,13 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", new HashMap<>())
                     .setArgument("available", true)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -164,13 +164,13 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", "hahaha test test")
                     .setArgument("available", true)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -193,12 +193,12 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", agentUUIDString)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -223,13 +223,13 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", agentUUIDString)
                     .setArgument("available", new ArrayList<>())
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -254,13 +254,13 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", agentUUIDString)
                     .setArgument("available", new HashMap<>())
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -285,13 +285,13 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", agentUUIDString)
                     .setArgument("available", 12345)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -316,13 +316,13 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", agentUUIDString)
                     .setArgument("available", "not true")
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -345,11 +345,11 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -374,14 +374,14 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", agentUUIDString)
                     .setArgument("available", true)
                     .setArgument("something", "something?")
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -406,7 +406,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " \"testtest\"");
                 jsonWriter.flush();
@@ -430,7 +430,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " []");
                 jsonWriter.flush();
@@ -454,7 +454,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " ;!/");
                 jsonWriter.flush();
@@ -478,7 +478,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " }}}}");
                 jsonWriter.flush();

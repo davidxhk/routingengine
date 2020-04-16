@@ -32,7 +32,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 JsonResponse response = updateAgentSkills(agentUUIDString, skills);
                 
@@ -63,7 +63,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 JsonResponse response = updateAgentSkills(agentUUIDString, skills);
                 
@@ -90,12 +90,12 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("skills", Map.of("GENERAL_ENQUIRY", true))
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -116,13 +116,13 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", new ArrayList<>())
                     .setArgument("skills", Map.of(1, true, 2, true))
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -143,13 +143,13 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", new HashMap<>())
                     .setArgument("skills", Map.of(1, true, 2, true))
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -170,13 +170,13 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", "hahaha test test")
                     .setArgument("skills", Map.of(1, true, 2, true))
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -199,12 +199,12 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", agentUUIDString)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -229,7 +229,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 JsonResponse response = updateAgentSkills(agentUUIDString, Map.of(999, true, -1, true));
                 
@@ -254,7 +254,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 JsonResponse response = updateAgentSkills(agentUUIDString, Map.of("TEST", true, "hmmm", true));
                 
@@ -279,7 +279,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 JsonResponse response = updateAgentSkills(agentUUIDString, Map.of(1, "haha"));
                 
@@ -304,7 +304,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 JsonResponse response = updateAgentSkills(agentUUIDString, Map.of("GENERAL_ENQUIRY", "no"));
                 
@@ -329,7 +329,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 JsonResponse response = updateAgentSkills(agentUUIDString, Map.of(0, false, 1, false, 2, false));
                 
@@ -354,13 +354,13 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", agentUUIDString)
                     .setArgument("skills", 2)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -385,13 +385,13 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", agentUUIDString)
                     .setArgument("skills", "zz")
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -416,13 +416,13 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", agentUUIDString)
                     .setArgument("skills", List.of(1, 2, 3, 4))
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -445,11 +445,11 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -474,14 +474,14 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", agentUUIDString)
                     .setArgument("skills", skills)
                     .setArgument("something", "something?")
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -508,7 +508,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " \"testtest\"");
                 jsonWriter.flush();
@@ -532,7 +532,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " []");
                 jsonWriter.flush();
@@ -556,7 +556,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " ;!/");
                 jsonWriter.flush();
@@ -580,7 +580,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " }}}}");
                 jsonWriter.flush();

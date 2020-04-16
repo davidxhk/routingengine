@@ -27,7 +27,7 @@ public class RemoveSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 JsonResponse response = removeSupportRequest(supportRequestUUIDString);
                 
@@ -58,11 +58,11 @@ public class RemoveSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -83,12 +83,12 @@ public class RemoveSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", new ArrayList<>())
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -109,12 +109,12 @@ public class RemoveSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", new HashMap<>())
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -135,12 +135,12 @@ public class RemoveSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", "hahaha test test")
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -161,11 +161,11 @@ public class RemoveSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -188,13 +188,13 @@ public class RemoveSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", supportRequestUUIDString)
                     .setArgument("something", "something?")
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
@@ -225,7 +225,7 @@ public class RemoveSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " \"testtest\"");
                 jsonWriter.flush();
@@ -249,7 +249,7 @@ public class RemoveSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " []");
                 jsonWriter.flush();
@@ -273,7 +273,7 @@ public class RemoveSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " ;!/");
                 jsonWriter.flush();
@@ -297,7 +297,7 @@ public class RemoveSupportRequestMethodTest extends AbstractMethodTest
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 jsonWriter.writeString(method + " }}}}");
                 jsonWriter.flush();

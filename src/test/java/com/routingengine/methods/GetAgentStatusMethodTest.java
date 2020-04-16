@@ -28,7 +28,7 @@ public class GetAgentStatusMethodTest extends AbstractMethodTest
             {
                 new JsonRequest()
                     .setMethod(method)
-                    .writeSafe(jsonWriter);
+                    .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 

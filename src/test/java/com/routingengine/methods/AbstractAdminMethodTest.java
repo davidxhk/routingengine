@@ -101,7 +101,7 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 assumeNotNull(agentUUIDString[0]);
                 
@@ -158,7 +158,7 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 assumeNotNull(agentUUIDString[0]);
                 
@@ -218,7 +218,7 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 assumeNotNull(agentUUIDString[0]);
                 
@@ -276,7 +276,7 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 assumeNotNull(agentUUIDString[0]);
                 
@@ -322,7 +322,7 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 assumeNotNull(agentUUIDString[0]);
                 
@@ -381,7 +381,7 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
         {
             @Override
             public void runMainLoop()
-                throws IOException, InterruptedException, EndConnectionException
+                throws IOException, InterruptedException
             {
                 assumeNotNull(agentUUIDString[0]);
                 
