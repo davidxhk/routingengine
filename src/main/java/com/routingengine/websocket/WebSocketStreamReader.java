@@ -107,12 +107,16 @@ public class WebSocketStreamReader extends Reader
         if (headerParsed)
             return;
         
-        int firstByte = (in.read() & 0xff);
+        int firstByte;
         
-        if (firstByte != 129) {
-            close();
+        while (true) {
+            firstByte = (in.read() & 0xff);
             
-            return;
+            if (firstByte == 129)
+                break;
+            
+            if (in.available() == 0)
+                return;
         }
         
         bytesToRead = (in.read() & 0xff);

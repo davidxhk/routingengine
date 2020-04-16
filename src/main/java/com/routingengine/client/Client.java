@@ -13,6 +13,7 @@ public final class Client
 {
     private Socket socket;
     private ClientConnectionHandler connectionHandler = null;
+    private boolean handshakeEstablished = false;
     
     public Client(String hostname, int port)
         throws IOException
@@ -45,15 +46,8 @@ public final class Client
             throw new IllegalStateException("socket closed");
         
         try {
-            try {
-                doOpeningHandshake(socket);
-            }
-            
-            catch (WebSocketProtocolException exception) {
-                log("WebSocket exception: " + exception.getMessage());
-                
-                return;
-            }
+            if (!handshakeEstablished)
+                establishHandshake();
             
             connectionHandler.runMainLoop();
         }
@@ -73,6 +67,22 @@ public final class Client
             
             close();
         }
+    }
+    
+    private final void establishHandshake()
+        throws IOException
+    {
+        try {
+            doOpeningHandshake(socket);
+        }
+        
+        catch (WebSocketProtocolException exception) {
+            log("WebSocket exception: " + exception.getMessage());
+            
+            return;
+        }
+        
+        handshakeEstablished = true;
     }
     
     private final void close()

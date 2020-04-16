@@ -31,10 +31,6 @@ public final class Server
         routingEngine = new RoutingEngine();
         
         executorService = newFixedThreadPool(THREAD_POOL_SIZE);
-        
-        for (Runnable runnable : routingEngine.getWorkers()) {
-            executorService.execute(runnable);
-        }
     }
     
     @Override
