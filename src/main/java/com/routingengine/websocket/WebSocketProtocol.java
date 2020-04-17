@@ -1,5 +1,6 @@
 package com.routingengine.websocket;
 
+import static com.routingengine.Logger.log;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.Charset;
@@ -40,8 +41,16 @@ public class WebSocketProtocol
         
         String acceptKey = matcher.find() ? matcher.group(1) : null;
         
-        if (acceptKey == null || !acceptKey.equals(openingHandshake.acceptKey))
-            throw new WebSocketProtocolException("Handshake failed");
+        if (acceptKey == null || !acceptKey.equals(openingHandshake.acceptKey)) {
+            log("Opening handshake failed");
+            log("");
+            log(data);
+            log("");
+            log(openingHandshake.acceptKey);
+            log("");
+            
+            throw new WebSocketProtocolException("Opening handshake failed");
+        }
     }
     
     public static final void doClosingHandshake(Socket socket)
@@ -56,7 +65,7 @@ public class WebSocketProtocol
         String key = matcher.find() ? matcher.group(1) : null;
         
         if (key == null)
-            throw new WebSocketProtocolException("Handshake failed");
+            throw new WebSocketProtocolException("Closing handshake failed");
         
         ClosingHandshake closingHandshake = new ClosingHandshake(key);
         
@@ -104,9 +113,11 @@ public class WebSocketProtocol
         
         public static final String getAcceptKey(String key)
         {
-            SHA_1.update((key + KEY_SUFFIX).getBytes(CHARSET));
-            
-            return ENCODER.encodeToString(SHA_1.digest());
+            synchronized (SHA_1) {
+                SHA_1.update((key + KEY_SUFFIX).getBytes(CHARSET));
+                
+                return ENCODER.encodeToString(SHA_1.digest());
+            }
         }
         
         @Override
