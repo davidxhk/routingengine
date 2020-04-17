@@ -9,7 +9,7 @@ import com.routingengine.json.JsonWriter;
 
 public class WebSocketJsonWriter extends JsonWriter
 {
-    private boolean masked;
+    private boolean masked = false;
     
     public WebSocketJsonWriter(OutputStream outputStream)
     {

@@ -7,7 +7,7 @@ import com.routingengine.json.JsonReader;
 
 public class WebSocketJsonReader extends JsonReader
 {
-    private boolean masked;
+    private boolean masked = false;
     
     public WebSocketJsonReader(InputStream inputStream)
     {
