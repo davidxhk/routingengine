@@ -1,6 +1,5 @@
 package com.routingengine.websocket;
 
-import static com.routingengine.Logger.log;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.Charset;
@@ -20,7 +19,7 @@ public class WebSocketProtocol
     public static final Random RANDOM = new SecureRandom();
     public static final Base64.Encoder ENCODER = Base64.getEncoder();
     public static final Charset CHARSET = StandardCharsets.UTF_8;
-    public static final String NEWLINE = "\n";
+    public static final String NEWLINE = "\r\n";
     
     public static final void doOpeningHandshake(Socket socket)
         throws IOException, WebSocketProtocolException
@@ -41,16 +40,8 @@ public class WebSocketProtocol
         
         String acceptKey = matcher.find() ? matcher.group(1) : null;
         
-        if (acceptKey == null || !acceptKey.equals(openingHandshake.acceptKey)) {
-            log("Opening handshake failed");
-            log("");
-            log(data);
-            log("");
-            log(openingHandshake.acceptKey);
-            log("");
-            
+        if (acceptKey == null || !acceptKey.equals(openingHandshake.acceptKey))
             throw new WebSocketProtocolException("Opening handshake failed");
-        }
     }
     
     public static final void doClosingHandshake(Socket socket)
