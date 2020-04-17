@@ -95,34 +95,28 @@ public final class Server
             return;
         }
         
-        log("Shutting down executor service");
+        log("Closing server");
         
         executorService.shutdown();
         
         try {
-            log("Waiting for executor service to terminate");
-            
             if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS)) {
-                log("Shutting down now");
+                
                 executorService.shutdownNow();
                 
-                if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS)) {
-                    log("Executor service did not terminate");
-                    
+                if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS))
                     return;
-                }
             }
-            
-            log("Server closed successfully");
         }
         
         catch (InterruptedException exception) {
-            log("Interrupted while shutting down executor service");
-            
-            log("Shutting down now");
             executorService.shutdownNow();
             
             Thread.currentThread().interrupt();
+        }
+        
+        finally {
+            log("Server closed successfully");
         }
     }
     

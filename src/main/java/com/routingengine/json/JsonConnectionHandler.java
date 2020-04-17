@@ -38,11 +38,12 @@ public abstract class JsonConnectionHandler
         return socket.getInetAddress().getHostAddress();
     }
     
-    protected final void waitForInput()
+    protected final boolean waitForInput()
         throws IOException, InterruptedException
     {
-        while (!jsonReader.ready())
-            TimeUnit.MILLISECONDS.sleep(SLEEP_MILLIS);
+        TimeUnit.MILLISECONDS.sleep(SLEEP_MILLIS);
+        
+        return jsonReader.ready();
     }
     
     public abstract void runMainLoop()

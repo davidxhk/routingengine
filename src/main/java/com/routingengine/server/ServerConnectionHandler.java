@@ -4,11 +4,20 @@ import static com.routingengine.Logger.log;
 import static com.routingengine.json.JsonProtocol.JsonProtocolException;
 import static com.routingengine.websocket.WebSocketProtocol.doClosingHandshake;
 import static com.routingengine.websocket.WebSocketProtocol.WebSocketProtocolException;
+import static java.util.concurrent.Executors.newCachedThreadPool;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 import com.google.gson.JsonElement;
 import com.routingengine.MethodManager;
 import com.routingengine.RoutingEngine;
@@ -25,7 +34,11 @@ import com.routingengine.websocket.WebSocketJsonWriter;
 public final class ServerConnectionHandler extends JsonConnectionHandler
     implements Runnable, Closeable
 {
+    private static final AtomicInteger responseCount = new AtomicInteger(1);
+    private static final int PENDING_TIMEOUT_MILLIS = 50;
     private final MethodManager methodManager;
+    private final ExecutorService executorService;
+    private final List<Future<JsonResponse>> pendingResponses;
     
     ServerConnectionHandler(Socket socket, RoutingEngine routingEngine)
         throws IOException
@@ -35,6 +48,10 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
         log("Server connected to " + socket.toString());
         
         methodManager = new MethodManager(routingEngine);
+        
+        executorService = newCachedThreadPool();
+        
+        pendingResponses = new ArrayList<>();
     }
     
     @Override
@@ -62,8 +79,15 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
         throws IOException, InterruptedException
     {
         while (!socket.isClosed()) {
+            
             try {
-                waitForInput();
+                boolean inputReceived = false;
+                
+                while (!inputReceived) {
+                    checkPendingResponses();
+                    
+                    inputReceived = waitForInput();
+                }
             }
             
             catch (InterruptedException exception) {
@@ -87,6 +111,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
                 
                 JsonResponse
                     .failure(jsonRequest, exception)
+                    .setNullTicketNumber()
                     .writeTo(jsonWriter);
                 
                 continue;
@@ -100,21 +125,76 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
                     jsonRequest.setArgument("address", getAddress());
             }
             
-            try {
-                JsonElement payload = methodManager.handle(
-                    jsonRequest.getMethod(),
-                    jsonRequest.getArguments());
+            int ticketNumber = responseCount.getAndIncrement();
+            
+            Future<JsonResponse> pendingResponse = executorService.submit(() -> {
+                JsonResponse response;
                 
-                JsonResponse
-                    .success(jsonRequest, payload)
-                    .writeTo(jsonWriter);
+                try {
+                    JsonElement payload = methodManager.handle(
+                        jsonRequest.getMethod(),
+                        jsonRequest.getArguments());
+                    
+                    response = JsonResponse.success(jsonRequest, payload);
+                }
+                
+                catch (IllegalArgumentException | IllegalStateException exception) {
+                    response = JsonResponse.failure(jsonRequest, exception);
+                }
+                
+                response.setTicketNumber(ticketNumber);
+                
+                return response;
+            });
+            
+            try {
+                handlePendingResponse(pendingResponse);
             }
             
-            catch (IllegalArgumentException | IllegalStateException exception) {
+            catch (TimeoutException exception) {
+                pendingResponses.add(pendingResponse);
+                
                 JsonResponse
-                    .failure(jsonRequest, exception)
+                    .pending(jsonRequest)
+                    .setTicketNumber(ticketNumber)
                     .writeTo(jsonWriter);
             }
+        }
+    }
+    
+    private final void checkPendingResponses()
+        throws IOException, InterruptedException
+    {
+        int i = 0;
+        
+        while (i < pendingResponses.size()) {
+            Future<JsonResponse> pendingResponse = pendingResponses.get(i);
+            
+            try {
+                handlePendingResponse(pendingResponse);
+                
+                pendingResponses.remove(i);
+                
+                continue;
+            }
+            
+            catch (TimeoutException exception) { }
+            
+            i++;
+        }
+    }
+    
+    private final void handlePendingResponse(Future<JsonResponse> pendingResponse)
+        throws IOException, TimeoutException, InterruptedException
+    {
+        try {
+            JsonResponse response = pendingResponse.get(PENDING_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+            
+            response.writeTo(jsonWriter);
+        }
+        
+        catch (ExecutionException exception) {
+            log("Error while handling method: " + exception.getCause().getMessage());
         }
     }
     
@@ -155,6 +235,8 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
     @Override
     public final void close()
     {
+        executorService.shutdownNow();
+        
         try {
             socket.close();
         }

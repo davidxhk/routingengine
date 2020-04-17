@@ -1,5 +1,6 @@
 package com.routingengine.json;
 
+import static com.routingengine.json.JsonUtils.getAsInt;
 import static com.routingengine.json.JsonUtils.getAsString;
 import java.io.IOException;
 import com.google.gson.JsonObject;
@@ -89,6 +90,7 @@ public class JsonProtocol
         }
         
         jsonResponse
+            .setTicketNumber(getAsInt(response, "ticket_number"))
             .setMethod(getAsString(response, "method"))
             .setResult(getAsString(response, "result"))
             .setPayload(response.get("payload"));

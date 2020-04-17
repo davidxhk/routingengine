@@ -1,5 +1,6 @@
 package com.routingengine.client;
 
+import static com.routingengine.Logger.log;
 import static com.routingengine.json.JsonUtils.toJsonElement;
 import static com.routingengine.json.JsonProtocol.JsonProtocolException;
 import static com.routingengine.json.JsonProtocol.EXIT_COMMAND;
@@ -14,11 +15,14 @@ import com.routingengine.websocket.WebSocketJsonWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 
 public abstract class ClientConnectionHandler extends JsonConnectionHandler
 {
+    protected Map<Integer, JsonResponse> pendingResponses = new HashMap<>();
+    
     @Override
     protected JsonReader getJsonReader(InputStream inputStream)
     {
@@ -339,14 +343,82 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
     protected final JsonResponse awaitResponse()
         throws IOException, InterruptedException
     {
-        waitForInput();
+        JsonResponse response = nextResponse();
+        
+        if (response.isPending()) {
+            log("Got pending response: " + response);
+            
+            return listenForResponse(response.getTicketNumber());
+        }
+        
+        else
+            return response;
+    }
+    
+    protected final JsonResponse nextResponse()
+        throws IOException, InterruptedException
+    {
+        boolean inputReceived = false;
+        
+        while (!inputReceived)
+            inputReceived = waitForInput();
         
         try {
             return JsonResponse.fromReader(jsonReader);
         }
         
         catch (JsonProtocolException exception) {
-            return null;
+            // this shouldn't have happened
+            throw new IllegalStateException("server returned invalid response: " + exception.getMessage());
+        }
+    }
+    
+    protected final JsonResponse listenForResponse(Integer ticketNumber)
+        throws IOException, InterruptedException
+    {
+        if (!pendingResponses.containsKey(ticketNumber))
+            pendingResponses.put(ticketNumber, null);
+        
+        else if (pendingResponses.get(ticketNumber) != null)
+            return pendingResponses.remove(ticketNumber);
+        
+        Thread listener = new Thread(() -> {
+            JsonResponse response;
+            
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    response = nextResponse();
+                }
+                
+                catch (Exception exception) {
+                    return;
+                }
+                
+                Integer responseTicketNumber = response.getTicketNumber();
+                
+                synchronized (pendingResponses) {
+                    pendingResponses.put(responseTicketNumber, response);
+                    
+                    if (responseTicketNumber.equals(ticketNumber)) {
+                        pendingResponses.notifyAll();
+                        
+                        return;
+                    }
+                }
+            }
+        });
+        
+        listener.start();
+        
+        synchronized (pendingResponses) {
+            
+            while (pendingResponses.get(ticketNumber) == null)
+                pendingResponses.wait();
+            
+            listener.interrupt();
+            listener.join();
+            
+            return pendingResponses.remove(ticketNumber);
         }
     }
 }
