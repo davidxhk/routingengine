@@ -4,7 +4,7 @@ import static com.routingengine.Logger.log;
 import static com.routingengine.json.JsonProtocol.JsonProtocolException;
 import static com.routingengine.websocket.WebSocketProtocol.doClosingHandshake;
 import static com.routingengine.websocket.WebSocketProtocol.WebSocketProtocolException;
-import static java.util.concurrent.Executors.newCachedThreadPool;
+import static java.util.concurrent.Executors.newFixedThreadPool;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,11 +34,12 @@ import com.routingengine.websocket.WebSocketJsonWriter;
 public final class ServerConnectionHandler extends JsonConnectionHandler
     implements Runnable, Closeable
 {
-    private static final AtomicInteger responseCount = new AtomicInteger(1);
-    private static final int PENDING_TIMEOUT_MILLIS = 50;
     private final MethodManager methodManager;
     private final ExecutorService executorService;
     private final List<Future<JsonResponse>> pendingResponses;
+    private static final int THREAD_POOL_SIZE = 100;
+    private static final int PENDING_TIMEOUT = 50;
+    private static final AtomicInteger TICKET_COUNTER = new AtomicInteger(1);
     
     ServerConnectionHandler(Socket socket, RoutingEngine routingEngine)
         throws IOException
@@ -49,7 +50,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
         
         methodManager = new MethodManager(routingEngine);
         
-        executorService = newCachedThreadPool();
+        executorService = newFixedThreadPool(THREAD_POOL_SIZE);
         
         pendingResponses = new ArrayList<>();
     }
@@ -125,7 +126,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
                     jsonRequest.setArgument("address", getAddress());
             }
             
-            int ticketNumber = responseCount.getAndIncrement();
+            int ticketNumber = TICKET_COUNTER.getAndIncrement();
             
             Future<JsonResponse> pendingResponse = executorService.submit(() -> {
                 JsonResponse response;
@@ -188,7 +189,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
         throws IOException, TimeoutException, InterruptedException
     {
         try {
-            JsonResponse response = pendingResponse.get(PENDING_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+            JsonResponse response = pendingResponse.get(PENDING_TIMEOUT, TimeUnit.MILLISECONDS);
             
             response.writeTo(jsonWriter);
         }
