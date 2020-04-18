@@ -25,7 +25,7 @@ public class JsonResponse
     private Result result = null;
     private JsonElement payload = null;
     
-    public int getTicketNumber()
+    public Integer getTicketNumber()
     {
         return ticketNumber;
     }
