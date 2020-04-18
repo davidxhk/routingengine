@@ -17,8 +17,8 @@ public class RoutingEngineExample
     {
         log("Start of Routing Engine Test");
         
-        final int DEFAULT_NUM_AGENTS = 1;
-        final int DEFAULT_NUM_CUSTOMERS = 1;
+        final int DEFAULT_NUM_AGENTS = 20;
+        final int DEFAULT_NUM_CUSTOMERS = 99;
         
         String hostname;
         int port;
@@ -32,7 +32,7 @@ public class RoutingEngineExample
                 numberOfAgents = DEFAULT_NUM_AGENTS;
                 numberOfCustomers = DEFAULT_NUM_CUSTOMERS;
                 break;
-        
+            
             case 2:
                 hostname = args[0];
                 port = Integer.valueOf(args[1]);
@@ -66,11 +66,17 @@ public class RoutingEngineExample
         
         ExecutorService executorService = newFixedThreadPool(numberOfAgents + numberOfCustomers);
         
-        log("Number of agents: " + numberOfAgents);
+        int[] numberOfSupportRequestsToService = new int[3];
+        for (int i = 0; i < 3; i++) {
+            int numberOfThisRequest = (numberOfCustomers/3) + (numberOfCustomers%3 > i%3 ? 1 : 0);
+            int numberOfThisAgent = (numberOfAgents/3) + (numberOfAgents%3 > i%3 ? 1 : 0);
+            numberOfSupportRequestsToService[i] = numberOfThisRequest/numberOfThisAgent+1;
+        }
+        
         for (int i = 0; i < numberOfAgents; i++) {
             AgentClientConnectionHandler connectionHandler = new AgentClientConnectionHandler();
-            connectionHandler.clientId = i + 1;
-            connectionHandler.numberOfSupportRequestsToService = numberOfCustomers/numberOfAgents + 1;
+            connectionHandler.id = i + 1;
+            connectionHandler.numberOfSupportRequestsToService = numberOfSupportRequestsToService[i%3];
             connectionHandler.random = random;
             
             Client client = new Client(hostname, port);
@@ -82,7 +88,7 @@ public class RoutingEngineExample
         log("Number of customers: " + numberOfCustomers);
         for (int i = 0; i < numberOfCustomers; i++) {
             CustomerClientConnectionHandler connectionHandler = new CustomerClientConnectionHandler();
-            connectionHandler.clientId = i + 1;
+            connectionHandler.id = i + 1;
             connectionHandler.random = random;
             
             Client client = new Client(hostname, port);

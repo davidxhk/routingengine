@@ -14,9 +14,9 @@ import com.routingengine.json.JsonResponse;
 public class CustomerClientConnectionHandler extends ClientConnectionHandler
 {
     public Random random;
-    public int clientId;
-    private static final int MIN_TIMEOUT_MILLIS = 5000;
-    private static final int MAX_TIMEOUT_MILLIS = 30000;
+    public int id;
+    private static final int MIN_TIMEOUT_MILLIS = 1000;
+    private static final int MAX_TIMEOUT_MILLIS = 3000;
     
     @Override
     public void runMainLoop()
@@ -27,10 +27,12 @@ public class CustomerClientConnectionHandler extends ClientConnectionHandler
         randomSleep();
         
         log("creating new support request");
-        JsonResponse response = newSupportRequest(
-            "Customer " + clientId,
-            "Customer" + clientId + "@gmail.com",
-            clientId % 3);
+        newSupportRequest(
+            "Customer " + id,
+            "Customer" + id + "@gmail.com",
+            (id-1) % 3);
+        JsonResponse response = awaitResponse();
+        
         String supportRequestUUIDString = getUUID(response);
         log("uuid -> " + supportRequestUUIDString);
         
@@ -38,8 +40,8 @@ public class CustomerClientConnectionHandler extends ClientConnectionHandler
         
         while (true) {
             log("waiting for agent");
-            response = waitForAgent(supportRequestUUIDString);
-            log(response);
+            waitForAgent(supportRequestUUIDString);
+            response = awaitResponse();
             
             if (response.didSucceed())
                 break;
@@ -59,8 +61,8 @@ public class CustomerClientConnectionHandler extends ClientConnectionHandler
         randomSleep();
         
         log("closing support request");
-        response = closeSupportRequest(supportRequestUUIDString);
-        log(response);
+        closeSupportRequest(supportRequestUUIDString);
+        awaitResponse();
         
         log("exiting");
         exit();
@@ -80,7 +82,17 @@ public class CustomerClientConnectionHandler extends ClientConnectionHandler
     
     protected void log(String message)
     {
-        Logger.log("Customer " + clientId + " " + message);
+        Logger.log("Customer " + id + " " + message);
+    }
+    
+    @Override
+    protected JsonResponse awaitResponse()
+        throws IOException, InterruptedException
+    {
+        JsonResponse response = super.awaitResponse();
+        log(response);
+        
+        return response;
     }
     
     protected static final String getUUID(JsonResponse response)

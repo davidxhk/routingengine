@@ -26,6 +26,9 @@ public final class Client
     public final Client setConnectionHandler(ClientConnectionHandler clientConnectionHandler)
         throws IOException
     {
+        if (connectionHandler != null)
+            connectionHandler.close();
+        
         clientConnectionHandler.connect(socket);
         
         this.connectionHandler = clientConnectionHandler;
@@ -87,6 +90,9 @@ public final class Client
     
     private final void close()
     {
+        if (connectionHandler != null)
+            connectionHandler.close();
+        
         try {
             socket.close();
         }

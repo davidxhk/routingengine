@@ -46,99 +46,118 @@ public class ClientExample
                     List<String> supportRequestUUIDs = new ArrayList<>();
                     List<String> agentUUIDs = new ArrayList<>();
                     
-                    JsonResponse response;
+                    ping();
+                    awaitResponse();
                     
-                    response = ping();
-                    log(response.toString());
+                    newSupportRequest("bob", "bob@gmail.com", 1);
+                    supportRequestUUIDs.add(getUUIDFromResponse(awaitResponse()));
                     
-                    response = newSupportRequest("bob", "bob@gmail.com", 1);
-                    supportRequestUUIDs.add(response.getPayload().getAsJsonObject().get("uuid").getAsString());
-                    log(response.toString());
+                    newSupportRequest("bob", "bob@gmail.com", "GENERAL_ENQUIRY");
+                    supportRequestUUIDs.add(getUUIDFromResponse(awaitResponse()));
                     
-                    response = newSupportRequest("bob", "bob@gmail.com", "GENERAL_ENQUIRY");
-                    supportRequestUUIDs.add(response.getPayload().getAsJsonObject().get("uuid").getAsString());
-                    log(response.toString());
+                    newSupportRequest("bob", "bob@gmail.com", 1, "127.0.0.1");
+                    supportRequestUUIDs.add(getUUIDFromResponse(awaitResponse()));
                     
-                    response = newSupportRequest("bob", "bob@gmail.com", 1, "127.0.0.1");
-                    supportRequestUUIDs.add(response.getPayload().getAsJsonObject().get("uuid").getAsString());
-                    log(response.toString());
+                    newSupportRequest("bob", "bob@gmail.com", "GENERAL_ENQUIRY", "127.0.0.1");
+                    supportRequestUUIDs.add(getUUIDFromResponse(awaitResponse()));
                     
-                    response = newSupportRequest("bob", "bob@gmail.com", "GENERAL_ENQUIRY", "127.0.0.1");
-                    supportRequestUUIDs.add(response.getPayload().getAsJsonObject().get("uuid").getAsString());
-                    log(response.toString());
+                    checkSupportRequest(supportRequestUUIDs.get(0));
+                    awaitResponse();
                     
-                    response = checkSupportRequest(supportRequestUUIDs.get(0));
-                    log(response.toString());
+                    changeSupportRequestType(supportRequestUUIDs.get(0), 2);
+                    awaitResponse();
                     
-                    response = changeSupportRequestType(supportRequestUUIDs.get(0), 2);
-                    log(response.toString());
+                    changeSupportRequestType(supportRequestUUIDs.get(1), "CHECK_BILL");
+                    awaitResponse();
                     
-                    response = changeSupportRequestType(supportRequestUUIDs.get(1), "CHECK_BILL");
-                    log(response.toString());
+                    closeSupportRequest(supportRequestUUIDs.get(2));
+                    awaitResponse();
                     
-                    response = closeSupportRequest(supportRequestUUIDs.get(2));
-                    log(response.toString());
+                    removeSupportRequest(supportRequestUUIDs.get(3));
+                    awaitResponse();
                     
-                    response = removeSupportRequest(supportRequestUUIDs.get(3));
-                    log(response.toString());
+                    newAgent(Map.of(2, true));
+                    agentUUIDs.add(getUUIDFromResponse(awaitResponse()));
                     
-                    response = newAgent(Map.of(2, true));
-                    agentUUIDs.add(response.getPayload().getAsJsonObject().get("uuid").getAsString());
-                    log(response.toString());
+                    newAgent(Map.of("CHECK_SUBSCRIPTION", true), "127.0.0.1");
+                    agentUUIDs.add(getUUIDFromResponse(awaitResponse()));
                     
-                    response = newAgent(Map.of("CHECK_SUBSCRIPTION", true), "127.0.0.1");
-                    agentUUIDs.add(response.getPayload().getAsJsonObject().get("uuid").getAsString());
-                    log(response.toString());
+                    checkAgent(agentUUIDs.get(0));
+                    awaitResponse();
                     
-                    response = checkAgent(agentUUIDs.get(0));
-                    log(response.toString());
+                    updateAgentSkills(agentUUIDs.get(0), Map.of(1, true));
+                    awaitResponse();
                     
-                    response = updateAgentSkills(agentUUIDs.get(0), Map.of(1, true));
-                    log(response.toString());
+                    updateAgentSkills(agentUUIDs.get(1), Map.of("GENERAL_ENQUIRY", true));
+                    awaitResponse();
                     
-                    response = updateAgentSkills(agentUUIDs.get(1), Map.of("GENERAL_ENQUIRY", true));
-                    log(response.toString());
+                    updateAgentAvailability(agentUUIDs.get(0), true);
+                    awaitResponse();
                     
-                    response = updateAgentAvailability(agentUUIDs.get(0), true);
-                    log(response.toString());
+                    updateAgentAvailability(agentUUIDs.get(1), true);
+                    awaitResponse();
                     
-                    response = updateAgentAvailability(agentUUIDs.get(1), true);
-                    log(response.toString());
+                    waitForAgent(supportRequestUUIDs.get(0));
+                    nextJsonResponse();
                     
-//                  response = waitForAgent(supportRequestUUIDs.get(0));
-//                  log(response.toString());
+                    waitForAgent(supportRequestUUIDs.get(1));
+                    nextJsonResponse();
                     
-//                  response = waitForAgent(supportRequestUUIDs.get(1));
-//                  log(response.toString());
+                    takeSupportRequest(agentUUIDs.get(0));
+                    nextJsonResponse();
                     
-//                  response = takeSupportRequest(agentUUIDs.get(0));
-//                  log(response.toString());
+                    takeSupportRequest(agentUUIDs.get(1));
+                    nextJsonResponse();
                     
-//                  response = takeSupportRequest(agentUUIDs.get(1));
-//                  log(response.toString());
+                    dropSupportRequest(agentUUIDs.get(0));
+                    awaitResponse();
                     
-//                  response = dropSupportRequest(agentUUIDs.get(0));
-//                  log(response.toString());
+                    dropSupportRequest(agentUUIDs.get(0));
+                    awaitResponse();
                     
-//                  response = dropSupportRequest(agentUUIDs.get(0));
-//                  log(response.toString());
+                    removeAgent(agentUUIDs.get(0));
+                    awaitResponse();
                     
-                    response = removeAgent(agentUUIDs.get(0));
-                    log(response.toString());
+                    getStatusOverview();
+                    awaitResponse();
                     
-                    response = getStatusOverview();
-                    log(response.toString());
+                    getAgentStatus();
+                    awaitResponse();
                     
-                    response = getAgentStatus();
-                    log(response.toString());
+                    getSupportRequestStatus();
+                    awaitResponse();
                     
-                    response = getSupportRequestStatus();
-                    log(response.toString());
-                    
-                    response = getQueueStatus();
-                    log(response.toString());
+                    getQueueStatus();
+                    awaitResponse();
                     
                     exit();
+                }
+                
+                @Override
+                protected JsonResponse awaitResponse()
+                    throws IOException, InterruptedException
+                {
+                    JsonResponse response = super.awaitResponse();
+                    
+                    log(response.toString());
+                    
+                    return response;
+                }
+                
+                @Override
+                protected JsonResponse nextJsonResponse()
+                    throws IOException, InterruptedException
+                {
+                    JsonResponse response = super.nextJsonResponse();
+                    
+                    log(response.toString());
+                    
+                    return response;
+                }
+                
+                private final String getUUIDFromResponse(JsonResponse response)
+                {
+                    return response.getPayload().getAsJsonObject().get("uuid").getAsString();
                 }
             });
             

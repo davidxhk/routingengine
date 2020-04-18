@@ -21,22 +21,24 @@ public class AgentClientConnectionHandler extends CustomerClientConnectionHandle
         randomSleep();
         
         log("creating new agent");
-        JsonResponse response = newAgent(Map.of(clientId % 3, true));
+        newAgent(Map.of((id-1) % 3, true));
+        JsonResponse response = awaitResponse();
+        
         String agentUUIDString = getUUID(response);
         log("uuid -> " + agentUUIDString);
         
         randomSleep();
         
         log("updating availability");
-        response = updateAgentAvailability(agentUUIDString, true);
-        log(response);
+        updateAgentAvailability(agentUUIDString, true);
+        awaitResponse();
         
         randomSleep();
         
         for (int i = 0; i < numberOfSupportRequestsToService; i++) {
             log("taking support request");
-            response = takeSupportRequest(agentUUIDString);
-            log(response);
+            takeSupportRequest(agentUUIDString);
+            response = awaitResponse();
             
             if (!response.didSucceed()) {
                 log("exiting");
@@ -44,12 +46,12 @@ public class AgentClientConnectionHandler extends CustomerClientConnectionHandle
             }
             
             String supportRequestUUIDString = getUUID(getAssignedSupportRequest(response));
-        
+            
             randomSleep();
-        
+            
             log("closing support request");
-            response = closeSupportRequest(supportRequestUUIDString);
-            log(response);
+            closeSupportRequest(supportRequestUUIDString);
+            awaitResponse();
         }
         
         log("exiting");
@@ -59,7 +61,7 @@ public class AgentClientConnectionHandler extends CustomerClientConnectionHandle
     @Override
     protected void log(String message)
     {
-        Logger.log("Agent " + clientId + " " + message);
+        Logger.log("Agent " + id + " " + message);
     }
     
     private static final JsonObject getAssignedSupportRequest(JsonResponse response)

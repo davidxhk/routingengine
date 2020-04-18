@@ -1,48 +1,15 @@
 package com.routingengine.client;
 
-import static com.routingengine.Logger.log;
 import static com.routingengine.json.JsonUtils.toJsonElement;
-import static com.routingengine.json.JsonProtocol.JsonProtocolException;
 import static com.routingengine.json.JsonProtocol.EXIT_COMMAND;
 import static com.routingengine.json.JsonProtocol.ExitConnectionException;
-import com.routingengine.json.JsonConnectionHandler;
-import com.routingengine.json.JsonReader;
 import com.routingengine.json.JsonRequest;
-import com.routingengine.json.JsonResponse;
-import com.routingengine.json.JsonWriter;
-import com.routingengine.websocket.WebSocketJsonReader;
-import com.routingengine.websocket.WebSocketJsonWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 
-public abstract class ClientConnectionHandler extends JsonConnectionHandler
+public abstract class ClientConnectionHandler extends AbstractClientConnectionHandler
 {
-    protected Map<Integer, JsonResponse> pendingResponses = new HashMap<>();
-    
-    @Override
-    protected JsonReader getJsonReader(InputStream inputStream)
-    {
-        WebSocketJsonReader webSocketJsonReader = new WebSocketJsonReader(inputStream);
-        
-        webSocketJsonReader.setMasked(false);
-        
-        return (JsonReader) webSocketJsonReader;
-    }
-    
-    @Override
-    protected JsonWriter getJsonWriter(OutputStream outputStream)
-    {
-        WebSocketJsonWriter webSocketJsonWriter = new WebSocketJsonWriter(outputStream);
-        
-        webSocketJsonWriter.setMasked(true);
-        
-        return (JsonWriter) webSocketJsonWriter;
-    }
-    
     protected final void exit()
         throws IOException, ExitConnectionException
     {
@@ -50,21 +17,21 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
         
         jsonWriter.flush();
         
+        close();
+        
         throw new ExitConnectionException();
     }
     
-    protected final JsonResponse ping()
-        throws IOException, InterruptedException
+    protected final void ping()
+        throws IOException
     {
         new JsonRequest()
             .setMethod("ping")
             .writeTo(jsonWriter);
-        
-        return awaitResponse();
     }
     
-    protected final JsonResponse newSupportRequest(String name, String email, int requestTypeIndex)
-        throws IOException, InterruptedException
+    protected final void newSupportRequest(String name, String email, int requestTypeIndex)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("new_support_request")
@@ -72,12 +39,10 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
             .setArgument("email", email)
             .setArgument("type", requestTypeIndex)
             .writeTo(jsonWriter);
-        
-        return awaitResponse();
     }
     
-    protected final JsonResponse newSupportRequest(String name, String email, String requestTypeString)
-        throws IOException, InterruptedException
+    protected final void newSupportRequest(String name, String email, String requestTypeString)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("new_support_request")
@@ -85,12 +50,10 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
             .setArgument("email", email)
             .setArgument("type", requestTypeString)
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse newSupportRequest(String name, String email, int requestTypeIndex, String address)
-        throws IOException, InterruptedException
+    protected final void newSupportRequest(String name, String email, int requestTypeIndex, String address)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("new_support_request")
@@ -99,12 +62,10 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
             .setArgument("type", requestTypeIndex)
             .setArgument("address", address)
             .writeTo(jsonWriter);
-        
-        return awaitResponse();
     }
     
-    protected final JsonResponse newSupportRequest(String name, String email, String requestTypeString, String address)
-        throws IOException, InterruptedException
+    protected final void newSupportRequest(String name, String email, String requestTypeString, String address)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("new_support_request")
@@ -113,312 +74,190 @@ public abstract class ClientConnectionHandler extends JsonConnectionHandler
             .setArgument("type", requestTypeString)
             .setArgument("address", address)
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse checkSupportRequest(String supportRequestUUIDString)
-        throws IOException, InterruptedException
+    protected final void checkSupportRequest(String supportRequestUUIDString)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("check_support_request")
             .setArgument("uuid", supportRequestUUIDString)
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse changeSupportRequestType(String supportRequestUUIDString, int requestTypeIndex)
-        throws IOException, InterruptedException
+    protected final void changeSupportRequestType(String supportRequestUUIDString, int requestTypeIndex)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("change_support_request_type")
             .setArgument("uuid", supportRequestUUIDString)
             .setArgument("type", requestTypeIndex)
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse changeSupportRequestType(String supportRequestUUIDString, String requestTypeString)
-        throws IOException, InterruptedException
+    protected final void changeSupportRequestType(String supportRequestUUIDString, String requestTypeString)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("change_support_request_type")
             .setArgument("uuid", supportRequestUUIDString)
             .setArgument("type", requestTypeString)
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse waitForAgent(String supportRequestUUIDString)
-        throws IOException, InterruptedException
+    protected final void waitForAgent(String supportRequestUUIDString)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("wait_for_agent")
             .setArgument("uuid", supportRequestUUIDString)
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse closeSupportRequest(String supportRequestUUIDString)
-        throws IOException, InterruptedException
+    protected final void closeSupportRequest(String supportRequestUUIDString)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("close_support_request")
             .setArgument("uuid", supportRequestUUIDString)
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse removeSupportRequest(String supportRequestUUIDString)
-        throws IOException, InterruptedException
+    protected final void removeSupportRequest(String supportRequestUUIDString)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("remove_support_request")
             .setArgument("uuid", supportRequestUUIDString)
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse newAgent(@SuppressWarnings("rawtypes") Map skills)
-        throws IOException, InterruptedException
+    protected final void newAgent(@SuppressWarnings("rawtypes") Map skills)
+        throws IOException
     {
         new JsonRequest()
         .setMethod("new_agent")
         .setArgument("skills", toJsonElement(skills))
         .writeTo(jsonWriter);
-
-    return awaitResponse();
     }
     
-    protected final JsonResponse newAgent(@SuppressWarnings("rawtypes") Map skills, String address)
-        throws IOException, InterruptedException
+    protected final void newAgent(@SuppressWarnings("rawtypes") Map skills, String address)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("new_agent")
             .setArgument("skills", skills)
             .setArgument("address", address)
             .writeTo(jsonWriter);
-
-        return awaitResponse();
     }
     
-    protected final JsonResponse activateAgent(String agentUUIDString, Boolean doActivate)
-        throws IOException, InterruptedException
+    protected final void activateAgent(String agentUUIDString, Boolean doActivate)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("activate_agent")
             .setArgument("uuid", agentUUIDString)
             .setArgument("activate", doActivate)
             .writeTo(jsonWriter);
-        
-        return awaitResponse();
     }
     
-    protected final JsonResponse activateAgent(String agentUUIDString)
-        throws IOException, InterruptedException
+    protected final void activateAgent(String agentUUIDString)
+        throws IOException
     {
-        return activateAgent(agentUUIDString, true);
+        activateAgent(agentUUIDString, true);
     }
     
-    protected final JsonResponse deactivateAgent(String agentUUIDString)
-        throws IOException, InterruptedException
+    protected final void deactivateAgent(String agentUUIDString)
+        throws IOException
     {
-        return activateAgent(agentUUIDString, false);
+        activateAgent(agentUUIDString, false);
     }
     
-    protected final JsonResponse checkAgent(String agentUUIDString)
-        throws IOException, InterruptedException
+    protected final void checkAgent(String agentUUIDString)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("check_agent")
             .setArgument("uuid", agentUUIDString)
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse updateAgentSkills(String agentUUIDString, @SuppressWarnings("rawtypes") Map skills)
-        throws IOException, InterruptedException
+    protected final void updateAgentSkills(String agentUUIDString, @SuppressWarnings("rawtypes") Map skills)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("update_agent_skills")
             .setArgument("uuid", agentUUIDString)
             .setArgument("skills", skills)
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse updateAgentAvailability(String agentUUIDString, Boolean isAvailable)
-        throws IOException, InterruptedException
+    protected final void updateAgentAvailability(String agentUUIDString, Boolean isAvailable)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("update_agent_availability")
             .setArgument("uuid", agentUUIDString)
             .setArgument("available", isAvailable)
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse takeSupportRequest(String agentUUIDString)
-        throws IOException, InterruptedException
+    protected final void takeSupportRequest(String agentUUIDString)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("take_support_request")
             .setArgument("uuid", agentUUIDString)
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse dropSupportRequest(String agentUUIDString)
-        throws IOException, InterruptedException
+    protected final void dropSupportRequest(String agentUUIDString)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("drop_support_request")
             .setArgument("uuid", agentUUIDString)
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse removeAgent(String agentUUIDString)
-        throws IOException, InterruptedException
+    protected final void removeAgent(String agentUUIDString)
+        throws IOException
     {
         new JsonRequest()
             .setMethod("remove_agent")
             .setArgument("uuid", agentUUIDString)
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse getStatusOverview()
-        throws IOException, InterruptedException
+    protected final void getStatusOverview()
+        throws IOException
     {
         new JsonRequest()
             .setMethod("get_status_overview")
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse getAgentStatus()
-        throws IOException, InterruptedException
+    protected final void getAgentStatus()
+        throws IOException
     {
         new JsonRequest()
             .setMethod("get_agent_status")
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse getSupportRequestStatus()
-        throws IOException, InterruptedException
+    protected final void getSupportRequestStatus()
+        throws IOException
     {
         new JsonRequest()
             .setMethod("get_support_request_status")
             .writeTo(jsonWriter);
-    
-        return awaitResponse();
     }
     
-    protected final JsonResponse getQueueStatus()
-        throws IOException, InterruptedException
+    protected final void getQueueStatus()
+        throws IOException
     {
         new JsonRequest()
             .setMethod("get_queue_status")
             .writeTo(jsonWriter);
-        
-        return awaitResponse();
-    }
-    
-    protected final JsonResponse awaitResponse()
-        throws IOException, InterruptedException
-    {
-        JsonResponse response = nextResponse();
-        
-        if (response.isPending()) {
-            log("Got pending response: " + response);
-            
-            return listenForResponse(response.getTicketNumber());
-        }
-        
-        else
-            return response;
-    }
-    
-    protected final JsonResponse nextResponse()
-        throws IOException, InterruptedException
-    {
-        boolean inputReceived = false;
-        
-        while (!inputReceived)
-            inputReceived = waitForInput();
-        
-        try {
-            return JsonResponse.fromReader(jsonReader);
-        }
-        
-        catch (JsonProtocolException exception) {
-            // this shouldn't have happened
-            throw new IllegalStateException("server returned invalid response: " + exception.getMessage());
-        }
-    }
-    
-    protected final JsonResponse listenForResponse(Integer ticketNumber)
-        throws IOException, InterruptedException
-    {
-        if (!pendingResponses.containsKey(ticketNumber))
-            pendingResponses.put(ticketNumber, null);
-        
-        else if (pendingResponses.get(ticketNumber) != null)
-            return pendingResponses.remove(ticketNumber);
-        
-        Thread listener = new Thread(() -> {
-            JsonResponse response;
-            
-            while (!Thread.currentThread().isInterrupted()) {
-                try {
-                    response = nextResponse();
-                }
-                
-                catch (Exception exception) {
-                    return;
-                }
-                
-                Integer responseTicketNumber = response.getTicketNumber();
-                
-                synchronized (pendingResponses) {
-                    pendingResponses.put(responseTicketNumber, response);
-                    
-                    if (responseTicketNumber.equals(ticketNumber)) {
-                        pendingResponses.notifyAll();
-                        
-                        return;
-                    }
-                }
-            }
-        });
-        
-        listener.start();
-        
-        synchronized (pendingResponses) {
-            
-            while (pendingResponses.get(ticketNumber) == null)
-                pendingResponses.wait();
-            
-            listener.interrupt();
-            listener.join();
-            
-            return pendingResponses.remove(ticketNumber);
-        }
     }
 }
