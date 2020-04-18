@@ -58,7 +58,7 @@ public class WebSocketStreamWriter
         if (payloadDataLength <= 125)
             return new byte[] {(byte) payloadDataLength};
         
-        if (payloadDataLength <= 65536)
+        if (payloadDataLength <= 65535)
             return new byte[] {(byte) 126, (byte) (payloadDataLength >> 8), (byte) payloadDataLength};
         
         return new byte[] {
