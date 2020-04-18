@@ -26,7 +26,7 @@ public class WebSocketProtocol
     {
         OpeningHandshake openingHandshake = new OpeningHandshake(socket.getInetAddress().getHostAddress());
         
-        byte[] handshakeBytes = openingHandshake.toString().getBytes(CHARSET);
+        byte[] handshakeBytes = openingHandshake.toBytes();
         
         socket.getOutputStream().write(handshakeBytes, 0, handshakeBytes.length);
         
@@ -60,7 +60,7 @@ public class WebSocketProtocol
         
         ClosingHandshake closingHandshake = new ClosingHandshake(key);
         
-        byte[] handshakeBytes = closingHandshake.toString().getBytes(CHARSET);
+        byte[] handshakeBytes = closingHandshake.toBytes();
         
         socket.getOutputStream().write(handshakeBytes, 0, handshakeBytes.length);
         
@@ -116,14 +116,19 @@ public class WebSocketProtocol
         {
             StringBuilder builder = new StringBuilder();
             
-            builder.append("GET HTTP/1.1 " + NEWLINE);
+            builder.append("GET HTTP/1.1" + NEWLINE);
             builder.append("Host: " + host + NEWLINE);
-            builder.append("Upgrade: websocket " + NEWLINE);
-            builder.append("Connection: Upgrade " + NEWLINE);
+            builder.append("Upgrade: websocket" + NEWLINE);
+            builder.append("Connection: Upgrade" + NEWLINE);
             builder.append("Sec-WebSocket-Key: " + key + NEWLINE);
-            builder.append("Sec-WebSocket-Version: 13 " + NEWLINE + NEWLINE);
+            builder.append("Sec-WebSocket-Version: 13" + NEWLINE + NEWLINE);
             
             return builder.toString();
+        }
+        
+        public byte[] toBytes()
+        {
+            return toString().getBytes(CHARSET);
         }
     }
     
@@ -141,12 +146,17 @@ public class WebSocketProtocol
         {
             StringBuilder builder = new StringBuilder();
             
-            builder.append("HTTP/1.1 101 Switching Protocols " + NEWLINE);
-            builder.append("Upgrade: websocket " + NEWLINE);
-            builder.append("Connection: Upgrade " + NEWLINE);
+            builder.append("HTTP/1.1 101 Switching Protocols" + NEWLINE);
+            builder.append("Upgrade: websocket" + NEWLINE);
+            builder.append("Connection: Upgrade" + NEWLINE);
             builder.append("Sec-WebSocket-Accept: " + acceptKey + NEWLINE + NEWLINE);
             
             return builder.toString();
+        }
+        
+        public byte[] toBytes()
+        {
+            return toString().getBytes(CHARSET);
         }
     }
     
