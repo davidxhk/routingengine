@@ -54,7 +54,7 @@ public class JsonWriter
     public void writeJsonObject(JsonObject jsonObject)
         throws IOException
     {
-        writeLine(gson.toJson(jsonObject));
+        writeString(gson.toJson(jsonObject));
     }
     
     public final void flush()
