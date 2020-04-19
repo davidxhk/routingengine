@@ -1,5 +1,6 @@
 package com.routingengine.examples;
 
+import static com.routingengine.json.JsonUtils.castToString;
 import static com.routingengine.json.JsonUtils.getAsJsonObject;
 import java.io.IOException;
 import java.util.Map;
@@ -41,9 +42,14 @@ public class AgentClientConnectionHandler extends CustomerClientConnectionHandle
             response = awaitResponse();
             
             if (!response.didSucceed()) {
-//                log("exiting");
-//                exit();
-                continue;
+                String error = castToString(response.getPayload());
+                
+                if (!"take support request timeout".matches(error)) {
+                    log("got unexpected error -> "+ error);
+                    
+                    log("exiting");
+                    exit();
+                }
             }
             
             String supportRequestUUIDString = getUUID(getAssignedSupportRequest(response));

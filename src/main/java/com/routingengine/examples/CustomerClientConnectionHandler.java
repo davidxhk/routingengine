@@ -52,7 +52,7 @@ public class CustomerClientConnectionHandler extends ClientConnectionHandler
                 String error = castToString(response.getPayload());
                 
                 if (!"wait for agent timeout".matches(error)) {
-                    log("had unexpected error -> "+ error);
+                    log("got unexpected error -> "+ error);
                     
                     log("exiting");
                     exit();
