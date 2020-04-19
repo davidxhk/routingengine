@@ -47,6 +47,8 @@ public abstract class AbstractClientConnectionHandler extends JsonConnectionHand
         
         webSocketJsonReader.setMasked(false);
         
+        webSocketJsonReader.initializeReader();
+        
         return (JsonReader) webSocketJsonReader;
     }
     

@@ -17,8 +17,6 @@ public class WebSocketJsonReader extends JsonReader
     public void setMasked(boolean masked)
     {
         this.masked = masked;
-        
-        initializeReader();
     }
     
     @Override

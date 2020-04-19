@@ -40,7 +40,7 @@ public class JsonProtocol
         }
         
         catch (IllegalStateException | MalformedJsonException exception) {
-            jsonReader.clearInputStream();
+            jsonReader.initializeReader();
             
             throw new JsonProtocolException("malformed request");
         }
@@ -50,11 +50,11 @@ public class JsonProtocol
             
             jsonRequest.setArguments(arguments);
             
-            jsonReader.clearInputStream();
+            jsonReader.initializeReader();
         }
         
         catch (IllegalArgumentException | JsonParseException exception) {
-            jsonReader.clearInputStream();
+            jsonReader.initializeReader();
             
             throw new JsonProtocolException("malformed arguments");
         }
@@ -80,11 +80,11 @@ public class JsonProtocol
         try {
             response = jsonReader.parseJsonObject();
             
-            jsonReader.clearInputStream();
+            jsonReader.initializeReader();
         }
         
         catch (IllegalArgumentException | JsonParseException exception) {
-            jsonReader.clearInputStream();
+            jsonReader.initializeReader();
             
             throw new JsonProtocolException("malformed response");
         }

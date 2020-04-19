@@ -19,8 +19,6 @@ public class JsonReader
     public JsonReader(InputStream inputStream)
     {
         this.inputStream = inputStream;
-        
-        initializeReader();
     }
     
     protected Reader getReader(InputStream inputStream)
@@ -54,14 +52,5 @@ public class JsonReader
         JsonElement jsonElement = parseReader(jsonReader);
         
         return castToJsonObject(jsonElement);
-    }
-    
-    public final void clearInputStream()
-        throws IOException
-    {
-        while (reader.ready() && reader.skip(1) != 1)
-            ;
-        
-        initializeReader();
     }
 }
