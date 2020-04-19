@@ -36,7 +36,9 @@ public class TakeSupportRequestMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = takeSupportRequest(agentUUIDString);
+                takeSupportRequest(agentUUIDString);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 

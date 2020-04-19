@@ -36,7 +36,9 @@ public class WaitForAgentMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = waitForAgent(supportRequestUUIDString);
+                waitForAgent(supportRequestUUIDString);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 

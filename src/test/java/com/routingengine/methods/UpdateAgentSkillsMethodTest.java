@@ -34,7 +34,9 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = updateAgentSkills(agentUUIDString, skills);
+                updateAgentSkills(agentUUIDString, skills);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
@@ -65,7 +67,9 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = updateAgentSkills(agentUUIDString, skills);
+                updateAgentSkills(agentUUIDString, skills);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
@@ -231,7 +235,9 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = updateAgentSkills(agentUUIDString, Map.of(999, true, -1, true));
+                updateAgentSkills(agentUUIDString, Map.of(999, true, -1, true));
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
@@ -256,7 +262,9 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = updateAgentSkills(agentUUIDString, Map.of("TEST", true, "hmmm", true));
+                updateAgentSkills(agentUUIDString, Map.of("TEST", true, "hmmm", true));
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
@@ -281,7 +289,9 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = updateAgentSkills(agentUUIDString, Map.of(1, "haha"));
+                updateAgentSkills(agentUUIDString, Map.of(1, "haha"));
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
@@ -306,7 +316,9 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = updateAgentSkills(agentUUIDString, Map.of("GENERAL_ENQUIRY", "no"));
+                updateAgentSkills(agentUUIDString, Map.of("GENERAL_ENQUIRY", "no"));
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
@@ -331,7 +343,9 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = updateAgentSkills(agentUUIDString, Map.of(0, false, 1, false, 2, false));
+                updateAgentSkills(agentUUIDString, Map.of(0, false, 1, false, 2, false));
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 

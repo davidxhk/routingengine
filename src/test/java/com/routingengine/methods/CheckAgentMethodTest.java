@@ -31,7 +31,9 @@ public class CheckAgentMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = checkAgent(agentUUIDString);
+                checkAgent(agentUUIDString);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 

@@ -32,7 +32,9 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = updateAgentAvailability(agentUUIDString, true);
+                updateAgentAvailability(agentUUIDString, true);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
@@ -61,7 +63,9 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = updateAgentAvailability(agentUUIDString, false);
+                updateAgentAvailability(agentUUIDString, false);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 

@@ -31,7 +31,9 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 String email = "bob@abc.com";
                 int type = 1;
                 
-                JsonResponse response = newSupportRequest(name, email, type);
+                newSupportRequest(name, email, type);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
@@ -64,7 +66,9 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 String email = "bob@abc.com";
                 String type = "GENERAL_ENQUIRY";
                 
-                JsonResponse response = newSupportRequest(name, email, type);
+                newSupportRequest(name, email, type);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
@@ -98,7 +102,9 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 String type = "GENERAL_ENQUIRY";
                 String address = "127.0.0.1";
                 
-                JsonResponse response = newSupportRequest(name, email, type, address);
+                newSupportRequest(name, email, type, address);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 

@@ -29,7 +29,9 @@ public class RemoveSupportRequestMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = removeSupportRequest(supportRequestUUIDString);
+                removeSupportRequest(supportRequestUUIDString);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
@@ -41,7 +43,9 @@ public class RemoveSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertFalse(supportRequest.hasAssignedAgent());
                 
-                response = checkSupportRequest(supportRequestUUIDString);
+                checkSupportRequest(supportRequestUUIDString);
+                
+                response = awaitResponse();
                 
                 assertResponseDidNotSucceed(response);
                 
@@ -208,7 +212,9 @@ public class RemoveSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertFalse(supportRequest.hasAssignedAgent());
                 
-                response = checkSupportRequest(supportRequestUUIDString);
+                checkSupportRequest(supportRequestUUIDString);
+                
+                response = awaitResponse();
                 
                 assertResponseDidNotSucceed(response);
                 

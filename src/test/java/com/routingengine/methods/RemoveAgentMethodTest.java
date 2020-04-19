@@ -45,7 +45,9 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = removeAgent(agentUUIDString);
+                removeAgent(agentUUIDString);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
@@ -59,11 +61,15 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
                 
                 assertFalse(agent.isActivated());
                 
-                response = checkAgent(agentUUIDString);
+                checkAgent(agentUUIDString);
+                
+                response = awaitResponse();
                 
                 assertResponseDidNotSucceed(response);
                 
-                response = checkSupportRequest(supportRequestUUIDString);
+                checkSupportRequest(supportRequestUUIDString);
+                
+                response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -248,11 +254,15 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
                 
                 assertFalse(agent.isActivated());
                 
-                response = checkAgent(agentUUIDString);
+                checkAgent(agentUUIDString);
+                
+                response = awaitResponse();
                 
                 assertResponseDidNotSucceed(response);
                 
-                response = checkSupportRequest(supportRequestUUIDString);
+                checkSupportRequest(supportRequestUUIDString);
+                
+                response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 

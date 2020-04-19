@@ -32,7 +32,9 @@ public class ActivateAgentMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = activateAgent(agentUUIDString, true);
+                activateAgent(agentUUIDString, true);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
@@ -59,7 +61,9 @@ public class ActivateAgentMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = activateAgent(agentUUIDString, false);
+                activateAgent(agentUUIDString, false);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 

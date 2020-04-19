@@ -219,7 +219,9 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = newSupportRequest(name, email, type);
+                newSupportRequest(name, email, type);
+                
+                JsonResponse response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -245,7 +247,9 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = newSupportRequest(name, email, type);
+                newSupportRequest(name, email, type);
+                
+                JsonResponse response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -271,7 +275,9 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = newAgent(skills);
+                newAgent(skills);
+                
+                JsonResponse response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -295,7 +301,9 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = checkSupportRequest(supportRequestUUIDString);
+                checkSupportRequest(supportRequestUUIDString);
+                
+                JsonResponse response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -329,7 +337,9 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = activateAgent(agentUUIDString, isActivated);
+                activateAgent(agentUUIDString, isActivated);
+                
+                JsonResponse response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -349,7 +359,9 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = updateAgentAvailability(agentUUIDString, isAvailable);
+                updateAgentAvailability(agentUUIDString, isAvailable);
+                
+                JsonResponse response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -369,7 +381,9 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = checkAgent(agentUUIDString);
+                checkAgent(agentUUIDString);
+                
+                JsonResponse response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -407,7 +421,9 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = checkAgent(agentUUIDString);
+                checkAgent(agentUUIDString);
+                
+                JsonResponse response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -421,7 +437,9 @@ public abstract class AbstractMethodTest
                 
                 assumeTrue("agent is not available", agent.hasAssignedSupportRequest());
                 
-                response = checkSupportRequest(supportRequestUUIDString);
+                checkSupportRequest(supportRequestUUIDString);
+                
+                response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -451,7 +469,9 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = removeSupportRequest(supportRequestUUIDString);
+                removeSupportRequest(supportRequestUUIDString);
+                
+                JsonResponse response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
             }
@@ -467,7 +487,9 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = removeAgent(agentUUIDString);
+                removeAgent(agentUUIDString);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertResponseDidSucceed(response);
             }

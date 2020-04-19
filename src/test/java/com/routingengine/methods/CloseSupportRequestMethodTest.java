@@ -29,7 +29,9 @@ public class CloseSupportRequestMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = closeSupportRequest(supportRequestUUIDString);
+                closeSupportRequest(supportRequestUUIDString);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 

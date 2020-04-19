@@ -105,7 +105,9 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
             {
                 assumeNotNull(agentUUIDString[0]);
                 
-                JsonResponse response = checkAgent(agentUUIDString[0]);
+                checkAgent(agentUUIDString[0]);
+                
+                JsonResponse response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -162,7 +164,9 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
             {
                 assumeNotNull(agentUUIDString[0]);
                 
-                JsonResponse response = checkAgent(agentUUIDString[0]);
+                checkAgent(agentUUIDString[0]);
+                
+                JsonResponse response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -172,7 +176,9 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
                 
                 String supportRequestUUIDString = agent.getAssignedSupportRequest().getUUID().toString();
                 
-                response = closeSupportRequest(supportRequestUUIDString);
+                closeSupportRequest(supportRequestUUIDString);
+                
+                response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -184,7 +190,9 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
                 
                 closedSupportRequests.add(supportRequestUUIDString);
                 
-                response = checkAgent(agentUUIDString[0]);
+                checkAgent(agentUUIDString[0]);
+                
+                response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -222,7 +230,9 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
             {
                 assumeNotNull(agentUUIDString[0]);
                 
-                JsonResponse response = checkAgent(agentUUIDString[0]);
+                checkAgent(agentUUIDString[0]);
+                
+                JsonResponse response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -232,7 +242,9 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
                 
                 String supportRequestUUIDString = agent.getAssignedSupportRequest().getUUID().toString();
                 
-                response = dropSupportRequest(agentUUIDString[0]);
+                dropSupportRequest(agentUUIDString[0]);
+                
+                response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -244,7 +256,9 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
                 
                 availableAgents.add(agentUUIDString[0]);
                 
-                response = checkSupportRequest(supportRequestUUIDString);
+                checkSupportRequest(supportRequestUUIDString);
+                
+                response = awaitResponse();
                 
                 SupportRequest supportRequest = assumeResponseHasSupportRequestPayload(response);
                 
@@ -280,7 +294,9 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
             {
                 assumeNotNull(agentUUIDString[0]);
                 
-                JsonResponse response = checkAgent(agentUUIDString[0]);
+                checkAgent(agentUUIDString[0]);
+                
+                JsonResponse response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -288,7 +304,9 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
                 
                 assumeFalse(agent.isActivated());
                 
-                response = activateAgent(agentUUIDString[0]);
+                activateAgent(agentUUIDString[0]);
+                
+                response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -326,7 +344,9 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
             {
                 assumeNotNull(agentUUIDString[0]);
                 
-                JsonResponse response = checkAgent(agentUUIDString[0]);
+                checkAgent(agentUUIDString[0]);
+                
+                JsonResponse response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -349,7 +369,9 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
                 else
                     assumeTrue(unavailableAgents.remove(agentUUIDString[0]));
                 
-                response = deactivateAgent(agentUUIDString[0]);
+                deactivateAgent(agentUUIDString[0]);
+                
+                response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -385,7 +407,9 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
             {
                 assumeNotNull(agentUUIDString[0]);
                 
-                JsonResponse response = checkAgent(agentUUIDString[0]);
+                checkAgent(agentUUIDString[0]);
+                
+                JsonResponse response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -415,7 +439,9 @@ public class AbstractAdminMethodTest extends AbstractMethodTest
                         assumeTrue(unavailableAgents.remove(agentUUIDString[0]));
                 }
                 
-                response = removeAgent(agentUUIDString[0]);
+                removeAgent(agentUUIDString[0]);
+                
+                response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 

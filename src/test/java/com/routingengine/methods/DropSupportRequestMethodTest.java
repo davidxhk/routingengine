@@ -45,7 +45,9 @@ public class DropSupportRequestMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = dropSupportRequest(agentUUIDString);
+                dropSupportRequest(agentUUIDString);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
@@ -57,7 +59,9 @@ public class DropSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertFalse(agent.hasAssignedSupportRequest());
                 
-                response = checkSupportRequest(supportRequestUUIDString);
+                checkSupportRequest(supportRequestUUIDString);
+                
+                response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 
@@ -244,7 +248,9 @@ public class DropSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertFalse(agent.hasAssignedSupportRequest());
                 
-                response = checkSupportRequest(supportRequestUUIDString);
+                checkSupportRequest(supportRequestUUIDString);
+                
+                response = awaitResponse();
                 
                 assumeResponseDidSucceed(response);
                 

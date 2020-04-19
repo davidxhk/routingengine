@@ -32,7 +32,9 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = changeSupportRequestType(supportRequestUUIDString, newType);
+                changeSupportRequestType(supportRequestUUIDString, newType);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
@@ -61,7 +63,9 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                JsonResponse response = changeSupportRequestType(supportRequestUUIDString, newType);
+                changeSupportRequestType(supportRequestUUIDString, newType);
+                
+                JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
