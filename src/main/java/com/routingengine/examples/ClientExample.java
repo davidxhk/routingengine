@@ -1,6 +1,5 @@
 package com.routingengine.examples;
 
-import static com.routingengine.Logger.log;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

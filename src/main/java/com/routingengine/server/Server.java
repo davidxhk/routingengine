@@ -4,7 +4,6 @@ import static com.routingengine.Logger.log;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -48,7 +47,7 @@ public final class Server
             
             Socket socket = null;
             
-            while (!Thread.interrupted()) {
+            while (true) {
                 
                 try {
                     socket = listener.accept();
@@ -63,14 +62,14 @@ public final class Server
                     log(".");
                 }
                 
-                catch (InterruptedIOException exception) {
+                catch (IOException exception) {
+                    log("I/O exception: " + socket);
+                }
+                
+                if (Thread.currentThread().isInterrupted()) {
                     log("Server interrupted");
                     
                     break;
-                }
-                
-                catch (IOException exception) {
-                    log("I/O exception: " + socket);
                 }
             }
         }
@@ -99,10 +98,14 @@ public final class Server
         
         executorService.shutdown();
         
+        log("Waiting for server to shut down...");
+        
         try {
             if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS)) {
                 
                 executorService.shutdownNow();
+                
+                log("Waiting for server to shut down...");
                 
                 if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT, TimeUnit.MILLISECONDS))
                     return;

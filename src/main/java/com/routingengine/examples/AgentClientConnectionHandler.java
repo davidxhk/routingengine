@@ -21,7 +21,7 @@ public class AgentClientConnectionHandler extends CustomerClientConnectionHandle
         randomSleep();
         
         log("creating new agent");
-        newAgent(Map.of((id-1) % 3, true));
+        newAgent(Map.of(type, true));
         JsonResponse response = awaitResponse();
         
         String agentUUIDString = getUUID(response);
@@ -41,8 +41,9 @@ public class AgentClientConnectionHandler extends CustomerClientConnectionHandle
             response = awaitResponse();
             
             if (!response.didSucceed()) {
-                log("exiting");
-                exit();
+//                log("exiting");
+//                exit();
+                continue;
             }
             
             String supportRequestUUIDString = getUUID(getAssignedSupportRequest(response));

@@ -1,6 +1,5 @@
 package com.routingengine.client;
 
-import static com.routingengine.Logger.log;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,11 +8,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import com.routingengine.Logger;
 import com.routingengine.json.JsonConnectionHandler;
 import com.routingengine.json.JsonReader;
 import com.routingengine.json.JsonResponse;
@@ -31,14 +28,6 @@ public abstract class AbstractClientConnectionHandler extends JsonConnectionHand
     private ConcurrentMap<Integer, JsonResponse[]> pendingResponses = new ConcurrentHashMap<>();
     private BlockingQueue<JsonResponse> responseBuffer = new ArrayBlockingQueue<>(RESPONSE_BUFFER_SIZE);
     private Listener listener = new Listener();
-    
-    public final void close()
-    {
-        if (listener.started && !listener.stopped)
-            listener.stop();
-        
-        executorService.shutdownNow();
-    }
     
     @Override
     protected JsonReader getJsonReader(InputStream inputStream)
@@ -62,6 +51,18 @@ public abstract class AbstractClientConnectionHandler extends JsonConnectionHand
         return (JsonWriter) webSocketJsonWriter;
     }
     
+    protected void log(String message)
+    {
+        Logger.log(message);
+    }
+    
+    public final void close()
+    {
+        if (listener.started && !listener.stopped)
+            listener.stop();
+        
+        executorService.shutdownNow();
+    }
     
     protected JsonResponse nextJsonResponse()
         throws IOException, InterruptedException
@@ -70,38 +71,6 @@ public abstract class AbstractClientConnectionHandler extends JsonConnectionHand
             listener.start();
         
         return responseBuffer.take();
-    }
-    
-    protected JsonResponse awaitResponse()
-        throws IOException, InterruptedException
-    {
-        JsonResponse response = nextJsonResponse();
-        
-        if (response.isPending()) {
-            log("Got pending response: " + response);
-            
-            Future<JsonResponse> pendingResponse = listenForResponse(response.getTicketNumber());
-            
-            while (true) {
-                try {
-                    response = pendingResponse.get(10, TimeUnit.SECONDS);
-                    
-                    break;
-                }
-                
-                catch (ExecutionException exception) {
-                    log("error while listening for response");
-                    
-                    throw new IllegalStateException(exception);
-                }
-                
-                catch (TimeoutException exception) {
-                    log("waiting...");
-                }
-            }
-        }
-        
-        return response;
     }
     
     protected Future<JsonResponse> listenForResponse(Integer ticketNumber)
@@ -124,22 +93,6 @@ public abstract class AbstractClientConnectionHandler extends JsonConnectionHand
         });
     }
     
-    private final JsonResponse nextJsonResponse_()
-        throws IOException, InterruptedException
-    {
-        while (!waitForInput())
-            ;
-        
-        try {
-            return JsonResponse.fromReader(jsonReader);
-        }
-        
-        catch (JsonProtocolException exception) {
-            // this shouldn't happen
-            throw new IllegalStateException("server returned invalid response: " + exception.getMessage());
-        }
-    }
-    
     private final class Listener
     {
         private volatile boolean started = false;
@@ -148,7 +101,7 @@ public abstract class AbstractClientConnectionHandler extends JsonConnectionHand
         {
             while (!stopped) {
                 try {
-                    JsonResponse response = nextJsonResponse_();
+                    JsonResponse response = nextJsonResponse();
                     
                     Integer ticketNumber = response.getTicketNumber();
                     
@@ -181,14 +134,30 @@ public abstract class AbstractClientConnectionHandler extends JsonConnectionHand
             }
         });
         
-        void start()
+        private JsonResponse nextJsonResponse()
+            throws IOException, InterruptedException
+        {
+            while (!waitForInput())
+                ;
+            
+            try {
+                return JsonResponse.fromReader(jsonReader);
+            }
+            
+            catch (JsonProtocolException exception) {
+                // this shouldn't happen
+                throw new IllegalStateException("server returned invalid response: " + exception.getMessage());
+            }
+        }
+        
+        private void start()
         {
             thread.start();
             
             started = true;
         }
         
-        void stop()
+        private void stop()
         {
             stopped = true;
             
