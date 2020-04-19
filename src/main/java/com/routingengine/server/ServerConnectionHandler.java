@@ -62,6 +62,8 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
         
         webSocketJsonReader.setMasked(true);
         
+        webSocketJsonReader.initializeReader();
+        
         return (JsonReader) webSocketJsonReader;
     }
     
