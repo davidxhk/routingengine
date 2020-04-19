@@ -8,7 +8,7 @@ import java.io.Reader;
 
 public class WebSocketStreamReader extends Reader
 {
-    private InputStream in;
+    private InputStream inputStream;
     private long bytesToRead;
     private int byteCount;
     private boolean masked = false;
@@ -16,11 +16,11 @@ public class WebSocketStreamReader extends Reader
     private boolean headerParsed;
     private boolean open;
     
-    public WebSocketStreamReader(InputStream in)
+    public WebSocketStreamReader(InputStream inputStream)
     {
-        super(in);
+        super(inputStream);
         
-        this.in = in;
+        this.inputStream = inputStream;
         
         resetState();
         
@@ -61,12 +61,14 @@ public class WebSocketStreamReader extends Reader
         if (!headerParsed)
             parseHeader();
         
-        byte nextByte = (byte) (in.read() & 0xff);
+        byte nextByte = (byte) (inputStream.read() & 0xff);
         
         if (masked)
             nextByte ^= mask[byteCount % 4];
         
         byteCount++;
+        
+        System.out.print((char) nextByte);
         
         if (byteCount == bytesToRead)
             resetState();
@@ -76,7 +78,7 @@ public class WebSocketStreamReader extends Reader
     
     // Reads a specified number of characters into the array and returns the number of characters read
     @Override
-    public int read(char[] cbuf, int off, int len)
+    public int read(char[] charArray, int offset, int length)
         throws IOException
     {
         ensureOpen();
@@ -84,18 +86,18 @@ public class WebSocketStreamReader extends Reader
         if (!headerParsed)
             parseHeader();
         
-        if (off > bytesToRead)
+        if (offset > bytesToRead)
             return -1;
         
-        for (int i = 0; i < off; i++)
+        for (int i = 0; i < offset; i++)
             read();
         
-        int iterations = len > bytesToRead ? (int) bytesToRead : len;
+        int bytesLeftToRead = (int) bytesToRead - byteCount;
         
-        iterations -= byteCount;
+        int iterations = length > bytesLeftToRead ? bytesLeftToRead : length;
         
         for (int i = 0; i < iterations; i++)
-            cbuf[i] = (char) read();
+            charArray[i] = (char) read();
         
         return iterations;
     }
@@ -110,43 +112,44 @@ public class WebSocketStreamReader extends Reader
         int firstByte;
         
         while (true) {
-            firstByte = (in.read() & 0xff);
+            firstByte = (inputStream.read() & 0xff);
             
             if (firstByte == 129)
                 break;
             
-            if (in.available() == 0)
+            if (!ready())
                 return;
         }
         
-        bytesToRead = (in.read() & 0xff);
+        bytesToRead = (inputStream.read() & 0xff);
         
         if (masked)
             bytesToRead -= 128;
         
         switch ((int) bytesToRead) {
             case 126:
-                bytesToRead = ((in.read() & 0xff) << 8) | (in.read() & 0xff);
+                bytesToRead = ((inputStream.read() & 0xff) << 8) | (inputStream.read() & 0xff);
                 break;
             
             case 127:
                 bytesToRead = (
-                    ((in.read() & 0xff) << 56) |
-                    ((in.read() & 0xff) << 48) |
-                    ((in.read() & 0xff) << 40) |
-                    ((in.read() & 0xff) << 32) |
-                    ((in.read() & 0xff) << 24) |
-                    ((in.read() & 0xff) << 16) |
-                    ((in.read() & 0xff) << 8)  |
-                    ((in.read() & 0xff)));
+                    ((inputStream.read() & 0xff) << 56) |
+                    ((inputStream.read() & 0xff) << 48) |
+                    ((inputStream.read() & 0xff) << 40) |
+                    ((inputStream.read() & 0xff) << 32) |
+                    ((inputStream.read() & 0xff) << 24) |
+                    ((inputStream.read() & 0xff) << 16) |
+                    ((inputStream.read() & 0xff) << 8)  |
+                    ((inputStream.read() & 0xff)));
                 break;
         }
         
         if (masked) {
             for (int i = 0; i < 4; i++)
-                mask[i] = (in.read() & 0xff);
+                mask[i] = (inputStream.read() & 0xff);
         }
         
+        System.out.println("masked: " + masked + ", mask: [" + mask[0] + ", " + mask[1] + ", " + mask[2] + ", " + mask[3] + "], bytesToRead: " + bytesToRead);
         headerParsed = true;
     }
     
@@ -157,14 +160,14 @@ public class WebSocketStreamReader extends Reader
         if (!open)
             return false;
         
-        return in.available() > 0;
+        return inputStream.available() > 0;
     }
     
     @Override
     public void close()
         throws IOException
     {
-        in.close();
+        inputStream.close();
         
         open = false;
     }
