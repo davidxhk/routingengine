@@ -15,8 +15,8 @@ public class CustomerClientConnectionHandler extends ClientConnectionHandler
 {
     public Random random;
     public int id;
-    private static final int MIN_TIMEOUT_MILLIS = 1000;
-    private static final int MAX_TIMEOUT_MILLIS = 3000;
+    private static final int MIN_TIMEOUT_MILLIS = 2000;
+    private static final int MAX_TIMEOUT_MILLIS = 8000;
     
     @Override
     public void runMainLoop()
