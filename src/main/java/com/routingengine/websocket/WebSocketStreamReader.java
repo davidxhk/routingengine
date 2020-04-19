@@ -10,7 +10,7 @@ public class WebSocketStreamReader extends Reader
 {
     private InputStream inputStream;
     private long bytesToRead;
-    private int byteCount;
+    private long byteCount;
     private boolean masked = false;
     private int[] mask;
     private boolean headerParsed;
@@ -61,10 +61,13 @@ public class WebSocketStreamReader extends Reader
         if (!headerParsed)
             parseHeader();
         
+        if (byteCount == bytesToRead)
+            return -1;
+        
         byte nextByte = (byte) (inputStream.read() & 0xff);
         
         if (masked)
-            nextByte ^= mask[byteCount % 4];
+            nextByte ^= mask[(int) byteCount % 4];
         
         byteCount++;
         
@@ -84,15 +87,17 @@ public class WebSocketStreamReader extends Reader
         if (!headerParsed)
             parseHeader();
         
-        if (offset > bytesToRead)
+        long bytesLeft = bytesToRead - byteCount;
+        
+        if (bytesLeft == 0 || bytesLeft < Integer.toUnsignedLong(offset))
             return -1;
         
         for (int i = 0; i < offset; i++)
             read();
         
-        int bytesLeftToRead = (int) bytesToRead - byteCount;
+        bytesLeft = bytesToRead - byteCount;
         
-        int iterations = length > bytesLeftToRead ? bytesLeftToRead : length;
+        int iterations = bytesLeft < Integer.toUnsignedLong(length) ? (int) bytesLeft : length;
         
         for (int i = 0; i < iterations; i++)
             charArray[i] = (char) read();
@@ -104,7 +109,7 @@ public class WebSocketStreamReader extends Reader
     private void parseHeader()
         throws IOException
     {
-        if (headerParsed)
+        if (headerParsed || !ready())
             return;
         
         int firstByte;
