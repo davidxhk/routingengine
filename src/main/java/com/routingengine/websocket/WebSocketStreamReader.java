@@ -68,8 +68,6 @@ public class WebSocketStreamReader extends Reader
         
         byteCount++;
         
-        System.out.print((char) nextByte);
-        
         if (byteCount == bytesToRead)
             resetState();
         
@@ -149,7 +147,6 @@ public class WebSocketStreamReader extends Reader
                 mask[i] = (inputStream.read() & 0xff);
         }
         
-        System.out.println("masked: " + masked + ", mask: [" + mask[0] + ", " + mask[1] + ", " + mask[2] + ", " + mask[3] + "], bytesToRead: " + bytesToRead);
         headerParsed = true;
     }
     
