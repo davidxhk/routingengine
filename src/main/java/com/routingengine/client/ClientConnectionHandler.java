@@ -4,13 +4,8 @@ import static com.routingengine.json.JsonUtils.toJsonElement;
 import static com.routingengine.json.JsonProtocol.EXIT_COMMAND;
 import static com.routingengine.json.JsonProtocol.ExitConnectionException;
 import com.routingengine.json.JsonRequest;
-import com.routingengine.json.JsonResponse;
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 
 public abstract class ClientConnectionHandler extends AbstractClientConnectionHandler
@@ -25,38 +20,6 @@ public abstract class ClientConnectionHandler extends AbstractClientConnectionHa
         close();
         
         throw new ExitConnectionException();
-    }
-    
-    protected JsonResponse awaitResponse()
-        throws IOException, InterruptedException
-    {
-        JsonResponse response = nextJsonResponse();
-        
-        if (response.isPending()) {
-            log("got pending response: " + response);
-            
-            Future<JsonResponse> pendingResponse = listenForResponse(response.getTicketNumber());
-            
-            while (true) {
-                try {
-                    response = pendingResponse.get(10, TimeUnit.SECONDS);
-                    
-                    break;
-                }
-                
-                catch (ExecutionException exception) {
-                    log("error while listening for response");
-                    
-                    throw new IllegalStateException(exception);
-                }
-                
-                catch (TimeoutException exception) {
-                    log("waiting...");
-                }
-            }
-        }
-        
-        return response;
     }
     
     protected final void ping()

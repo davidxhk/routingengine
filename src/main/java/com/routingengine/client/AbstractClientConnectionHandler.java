@@ -6,10 +6,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import com.routingengine.Logger;
 import com.routingengine.json.JsonConnectionHandler;
 import com.routingengine.json.JsonReader;
@@ -25,7 +28,7 @@ public abstract class AbstractClientConnectionHandler extends JsonConnectionHand
     private static final int RESPONSE_BUFFER_SIZE = 100;
     private static final int THREAD_POOL_SIZE = 100;
     private ExecutorService executorService = newFixedThreadPool(THREAD_POOL_SIZE);
-    private ConcurrentMap<Integer, JsonResponse[]> pendingResponses = new ConcurrentHashMap<>();
+    private ConcurrentMap<Integer, PendingResponse> pendingResponses = new ConcurrentHashMap<>();
     private BlockingQueue<JsonResponse> responseBuffer = new ArrayBlockingQueue<>(RESPONSE_BUFFER_SIZE);
     private Listener listener = new Listener();
     
@@ -64,6 +67,50 @@ public abstract class AbstractClientConnectionHandler extends JsonConnectionHand
         executorService.shutdownNow();
     }
     
+    protected JsonResponse awaitResponse()
+        throws IOException, InterruptedException
+    {
+        JsonResponse response = nextJsonResponse();
+        
+        if (response.isPending()) {
+            log("got pending response: " + response);
+            
+            PendingResponse pendingResponse = getPendingResponse(response.getTicketNumber());
+            
+            while (true) {
+                try {
+                    response = pendingResponse
+                        .getFutureJsonResponse()
+                        .get(10, TimeUnit.SECONDS);
+                    
+                    if (response.isPending()) {
+                        pendingResponse.reset();
+                        
+                        log("got pending response: " + response);
+                    }
+                    
+                    else {
+                        pendingResponse.remove();
+                        
+                        break;
+                    }
+                }
+                
+                catch (ExecutionException exception) {
+                    log("error while listening for response");
+                    
+                    throw new IllegalStateException(exception);
+                }
+                
+                catch (TimeoutException exception) {
+                    log("waiting...");
+                }
+            }
+        }
+        
+        return response;
+    }
+    
     protected JsonResponse nextJsonResponse()
         throws IOException, InterruptedException
     {
@@ -73,24 +120,89 @@ public abstract class AbstractClientConnectionHandler extends JsonConnectionHand
         return responseBuffer.take();
     }
     
-    protected Future<JsonResponse> listenForResponse(Integer ticketNumber)
-        throws IOException, InterruptedException
+    protected PendingResponse getPendingResponse(Integer ticketNumber)
     {
         if (!pendingResponses.containsKey(ticketNumber))
             throw new IllegalStateException("ticket number not found");
         
-        return executorService.submit(() ->
+        return pendingResponses.get(ticketNumber);
+    }
+    
+    public final class PendingResponse
+    {
+        private final Integer ticketNumber;
+        private volatile JsonResponse jsonResponse;
+        private volatile boolean removed = false;
+        
+        public PendingResponse(Integer ticketNumber)
         {
-            JsonResponse[] pendingResponse = pendingResponses.get(ticketNumber);
+            this.ticketNumber = ticketNumber;
             
-            synchronized (pendingResponse) {
-                
-                while (pendingResponse[0] == null)
-                    pendingResponse.wait();
-                
-                return pendingResponse[0];
-            }
-        });
+            jsonResponse = null;
+        }
+        
+        public Integer getTicketNumber()
+        {
+            return ticketNumber;
+        }
+        
+        public synchronized JsonResponse getJsonResponse()
+        {
+            return jsonResponse;
+        }
+        
+        public synchronized boolean hasJsonResponse()
+        {
+            return jsonResponse != null;
+        }
+        
+        public Future<JsonResponse> getFutureJsonResponse()
+            throws ExecutionException, TimeoutException, InterruptedException
+        {
+            ensureNotRemoved();
+            
+            return executorService.submit(() -> { return awaitJsonResponse(); });
+        }
+        
+        public synchronized JsonResponse awaitJsonResponse()
+            throws IOException, InterruptedException
+        {
+            ensureNotRemoved();
+            
+            while (jsonResponse == null && !removed)
+                wait();
+            
+            return jsonResponse;
+        }
+        
+        public synchronized void setJsonResponse(JsonResponse jsonResponse)
+        {
+            ensureNotRemoved();
+            
+            this.jsonResponse = jsonResponse;
+            
+            notifyAll();
+        }
+        
+        public synchronized void reset()
+        {
+            ensureNotRemoved();
+            
+            jsonResponse = null;
+        }
+        
+        public synchronized void remove()
+        {
+            ensureNotRemoved();
+            
+            pendingResponses.remove(ticketNumber);
+        }
+        
+        private synchronized void ensureNotRemoved()
+        {
+            if (removed)
+                throw new IllegalStateException("pending response has been removed");
+        }
     }
     
     private final class Listener
@@ -106,21 +218,16 @@ public abstract class AbstractClientConnectionHandler extends JsonConnectionHand
                     Integer ticketNumber = response.getTicketNumber();
                     
                     if (pendingResponses.containsKey(ticketNumber)) {
-                        JsonResponse[] pendingResponse = pendingResponses.get(ticketNumber);
+                        PendingResponse pendingResponse = pendingResponses.get(ticketNumber);
                         
-                        synchronized (pendingResponse) {
-                            pendingResponse[0] = response;
-                            
-                            pendingResponse.notifyAll();
-                        }
+                        pendingResponse.setJsonResponse(response);
                     }
                     
                     else {
                         if (response.isPending())
-                            pendingResponses.put(ticketNumber, new JsonResponse[1]);
+                            pendingResponses.put(ticketNumber, new PendingResponse(ticketNumber));
                         
                         responseBuffer.put(response);
-                        
                     }
                 }
                 
