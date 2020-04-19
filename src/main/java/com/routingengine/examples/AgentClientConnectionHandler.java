@@ -44,7 +44,10 @@ public class AgentClientConnectionHandler extends CustomerClientConnectionHandle
             if (!response.didSucceed()) {
                 String error = castToString(response.getPayload());
                 
-                if (!"take support request timeout".matches(error)) {
+                if ("take support request timeout".matches(error))
+                    continue;
+                
+                else {
                     log("got unexpected error -> "+ error);
                     
                     log("exiting");
