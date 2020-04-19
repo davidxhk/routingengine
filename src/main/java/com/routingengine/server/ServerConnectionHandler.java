@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -36,9 +36,8 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
 {
     private final MethodManager methodManager;
     private final ExecutorService executorService;
-    private final List<Future<JsonResponse>> pendingResponses;
+    private final Map<Integer, PendingMethod> pendingMethods;
     private static final int THREAD_POOL_SIZE = 100;
-    private static final int PENDING_TIMEOUT = 50;
     private static final AtomicInteger TICKET_COUNTER = new AtomicInteger(1);
     
     ServerConnectionHandler(Socket socket, RoutingEngine routingEngine)
@@ -52,7 +51,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
         
         executorService = newFixedThreadPool(THREAD_POOL_SIZE);
         
-        pendingResponses = new ArrayList<>();
+        pendingMethods = new HashMap<>();
     }
     
     @Override
@@ -87,7 +86,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
                 boolean inputReceived = false;
                 
                 while (!inputReceived) {
-                    checkPendingResponses();
+                    checkPendingMethods();
                     
                     inputReceived = waitForInput();
                 }
@@ -130,68 +129,51 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
             
             int ticketNumber = TICKET_COUNTER.getAndIncrement();
             
-            Future<JsonResponse> pendingResponse = executorService.submit(() -> {
-                JsonResponse response;
-                
-                try {
-                    JsonElement payload = methodManager.handle(
-                        jsonRequest.getMethod(),
-                        jsonRequest.getArguments());
-                    
-                    response = JsonResponse.success(jsonRequest, payload);
-                }
-                
-                catch (IllegalArgumentException | IllegalStateException exception) {
-                    response = JsonResponse.failure(jsonRequest, exception);
-                }
-                
-                response.setTicketNumber(ticketNumber);
-                
-                return response;
-            });
+            PendingMethod pendingMethod = new PendingMethod(jsonRequest, ticketNumber);
             
             try {
-                handlePendingResponse(pendingResponse);
+                handlePendingMethod(pendingMethod);
             }
             
             catch (TimeoutException exception) {
-                pendingResponses.add(pendingResponse);
+                pendingMethods.put(ticketNumber, pendingMethod);
                 
-                JsonResponse
-                    .pending(jsonRequest)
-                    .setTicketNumber(ticketNumber)
+                pendingMethod
+                    .getPendingResponse()
                     .writeTo(jsonWriter);
             }
         }
     }
     
-    private final void checkPendingResponses()
+    private final void checkPendingMethods()
         throws IOException, InterruptedException
     {
-        int i = 0;
-        
-        while (i < pendingResponses.size()) {
-            Future<JsonResponse> pendingResponse = pendingResponses.get(i);
+        for (Integer ticketNumber : pendingMethods.keySet()) {
+            PendingMethod pendingMethod = pendingMethods.get(ticketNumber);
             
             try {
-                handlePendingResponse(pendingResponse);
+                handlePendingMethod(pendingMethod);
                 
-                pendingResponses.remove(i);
+                pendingMethods.remove(ticketNumber);
                 
                 continue;
             }
             
-            catch (TimeoutException exception) { }
-            
-            i++;
+            catch (TimeoutException exception) {
+                
+                if (pendingMethod.isDue())
+                    pendingMethod
+                        .getPendingResponse()
+                        .writeTo(jsonWriter);
+            }
         }
     }
     
-    private final void handlePendingResponse(Future<JsonResponse> pendingResponse)
+    private final void handlePendingMethod(PendingMethod pendingMethod)
         throws IOException, TimeoutException, InterruptedException
     {
         try {
-            JsonResponse response = pendingResponse.get(PENDING_TIMEOUT, TimeUnit.MILLISECONDS);
+            JsonResponse response = pendingMethod.getFutureJsonResponse();
             
             response.writeTo(jsonWriter);
         }
@@ -249,5 +231,67 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
         }
         
         log("Server connection closed");
+    }
+    
+    private class PendingMethod
+    {
+        private static final long PENDING_TIMEOUT = 50L;
+        private static final long PENDING_DUE_TIMEOUT = Long.MAX_VALUE;
+        private JsonResponse pendingResponse;
+        private Future<JsonResponse> futureResponse;
+        private long lastTimestamp;
+        
+        private PendingMethod(JsonRequest jsonRequest, Integer ticketNumber)
+        {
+            futureResponse = executorService.submit(() -> {
+                JsonResponse response;
+                
+                try {
+                    JsonElement payload = methodManager.handle(
+                        jsonRequest.getMethod(),
+                        jsonRequest.getArguments());
+                    
+                    response = JsonResponse.success(jsonRequest, payload);
+                }
+                
+                catch (IllegalArgumentException | IllegalStateException exception) {
+                    response = JsonResponse.failure(jsonRequest, exception);
+                }
+                
+                response.setTicketNumber(ticketNumber);
+                
+                return response;
+            });
+            
+            pendingResponse = JsonResponse
+                .pending(jsonRequest)
+                .setTicketNumber(ticketNumber);
+            
+            lastTimestamp = System.currentTimeMillis();
+        }
+        
+        private boolean isDue()
+        {
+            long now = System.currentTimeMillis();
+            
+            if (now - lastTimestamp > PENDING_DUE_TIMEOUT) {
+                lastTimestamp = now;
+                
+                return true;
+            }
+            
+            return false;
+        }
+        
+        private JsonResponse getFutureJsonResponse()
+            throws ExecutionException, TimeoutException, InterruptedException
+        {
+            return futureResponse.get(PENDING_TIMEOUT, TimeUnit.MILLISECONDS);
+        }
+        
+        private JsonResponse getPendingResponse()
+        {
+            return pendingResponse;
+        }
     }
 }
