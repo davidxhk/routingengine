@@ -4,6 +4,7 @@ import static com.routingengine.json.JsonUtils.getAsString;
 import static com.routingengine.json.JsonUtils.getAsBoolean;
 import static com.routingengine.json.JsonUtils.getAsInt;
 import static com.routingengine.json.JsonUtils.getAsJsonObject;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -207,9 +208,19 @@ public class SupportRequest extends InetEntity
         if (hasAssignedAgent()) {
             assignedAgentJsonObject = new JsonObject();
             
+            assignedAgentJsonObject.addProperty("rainbow_id", assignedAgent.rainbowId);
+            
+            assignedAgentJsonObject.addProperty("uuid", assignedAgent.getUUID().toString());
+            
             assignedAgentJsonObject.addProperty("address", assignedAgent.getAddress().getHostAddress());
             
+            assignedAgentJsonObject.add("skills", new Gson().toJsonTree(assignedAgent.getSkills()).getAsJsonArray());
+            
+            assignedAgentJsonObject.addProperty("activated", assignedAgent.activated);
+            
             assignedAgentJsonObject.addProperty("available", assignedAgent.available);
+            
+            assignedAgentJsonObject.addProperty("waiting", assignedAgent.waiting);
         }
         
         supportRequestJsonObject.add("assigned_agent", assignedAgentJsonObject);

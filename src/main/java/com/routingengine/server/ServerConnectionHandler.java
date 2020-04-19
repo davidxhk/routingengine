@@ -121,11 +121,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
             
             log("Server got request –> " + jsonRequest.toString());
             
-            if (jsonRequest.getMethod().matches("new_agent|new_support_request")) {
-                
-                if (!jsonRequest.hasArgument("address"))
-                    jsonRequest.setArgument("address", getAddress());
-            }
+            jsonRequest.setArgument("address", getAddress());
             
             int ticketNumber = TICKET_COUNTER.getAndIncrement();
             

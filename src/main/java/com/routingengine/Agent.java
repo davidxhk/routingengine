@@ -13,27 +13,38 @@ import com.google.gson.JsonObject;
 
 public class Agent extends InetEntity
 {
+    final String rainbowId;
     volatile Map<Type, Boolean> skills;
     volatile boolean activated;
     volatile boolean available;
     volatile boolean waiting;
     volatile SupportRequest assignedSupportRequest;
     
-    private Agent()
+    private Agent(String rainbowId)
     {
         super();
+        
+        if (rainbowId == null)
+            throw new IllegalArgumentException("rainbow id missing");
+        
+        this.rainbowId = rainbowId;
     }
     
-    private Agent(String address)
+    private Agent(String rainbowId, String address)
     {
-        super();
+        this(rainbowId);
         
         super.setAddress(address);
     }
     
-    private Agent(String uuid, String address)
+    private Agent(String rainbowId, String uuid, String address)
     {
         super(uuid, address);
+        
+        if (rainbowId == null)
+            throw new IllegalArgumentException("rainbow id missing");
+        
+        this.rainbowId = rainbowId;
     }
     
     private void initialize(AgentBuilder builder)
@@ -48,6 +59,11 @@ public class Agent extends InetEntity
         available = false;
         waiting = false;
         assignedSupportRequest = null;
+    }
+    
+    public String getRainbowId()
+    {
+        return rainbowId;
     }
     
     public synchronized boolean ableToService(Type requestType)
@@ -275,6 +291,8 @@ public class Agent extends InetEntity
     {
         JsonObject agentJsonObject = new JsonObject();
         
+        agentJsonObject.addProperty("rainbow_id", rainbowId);
+        
         agentJsonObject.addProperty("uuid", getUUID().toString());
         
         agentJsonObject.addProperty("address", getAddress().getHostAddress());
@@ -300,6 +318,10 @@ public class Agent extends InetEntity
             
             assignedSupportRequestJsonObject.addProperty("type", assignedSupportRequest.type.toString());
             
+            assignedSupportRequestJsonObject.addProperty("open", assignedSupportRequest.open);
+            
+            assignedSupportRequestJsonObject.addProperty("waiting", assignedSupportRequest.waiting);
+            
             assignedSupportRequestJsonObject.addProperty("priority", assignedSupportRequest.priority);
         }
         
@@ -318,6 +340,7 @@ public class Agent extends InetEntity
             skills.put(skill, true);
         
         Agent agent = builder()
+            .setRainbowId(getAsString(jsonObject, "rainbow_id"))
             .setUUID(getAsString(jsonObject, "uuid"))
             .setAddress(getAsString(jsonObject, "address"))
             .setSkills(skills)
@@ -349,15 +372,24 @@ public class Agent extends InetEntity
     
     public static class AgentBuilder
     {
+        private String rainbowId;
         private String uuid;
         private String address;
         private Map<String, Boolean> skills;
         
         public AgentBuilder()
         {
+            rainbowId = null;
             uuid = null;
             address = null;
             skills = new HashMap<>();
+        }
+        
+        public AgentBuilder setRainbowId(String rainbowIdString)
+        {
+            rainbowId = rainbowIdString;
+            
+            return this;
         }
         
         public AgentBuilder setUUID(String UUIDString)
@@ -411,13 +443,13 @@ public class Agent extends InetEntity
             Agent agent;
             
             if (uuid != null)
-                agent = new Agent(uuid, address);
+                agent = new Agent(rainbowId, uuid, address);
             
             else if (address != null)
-                agent = new Agent(address);
+                agent = new Agent(rainbowId, address);
             
             else
-                agent = new Agent();
+                agent = new Agent(rainbowId);
             
             agent.initialize(this);
             
