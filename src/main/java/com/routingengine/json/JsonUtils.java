@@ -267,7 +267,7 @@ public class JsonUtils
         }
         
         catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException(property + " " + exception.getMessage());
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
         }
     }
     
@@ -291,7 +291,7 @@ public class JsonUtils
         }
         
         catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException(property + " " + exception.getMessage());
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
         }
     }
     
@@ -315,7 +315,7 @@ public class JsonUtils
         }
         
         catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException(property + " " + exception.getMessage());
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
         }
     }
     
@@ -339,7 +339,7 @@ public class JsonUtils
         }
         
         catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException(property + " " + exception.getMessage());
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
         }
     }
     
@@ -363,7 +363,7 @@ public class JsonUtils
         }
         
         catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException(property + " " + exception.getMessage());
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
         }
     }
     
@@ -387,7 +387,7 @@ public class JsonUtils
         }
         
         catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException(property + " " + exception.getMessage());
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
         }
     }
     
@@ -411,7 +411,7 @@ public class JsonUtils
         }
         
         catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException(property + " " + exception.getMessage());
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
         }
     }
     
@@ -435,7 +435,7 @@ public class JsonUtils
         }
         
         catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException(property + " " + exception.getMessage());
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
         }
     }
     
@@ -459,7 +459,7 @@ public class JsonUtils
         }
         
         catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException(property + " " + exception.getMessage());
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
         }
     }
     
@@ -483,7 +483,7 @@ public class JsonUtils
         }
         
         catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException(property + " " + exception.getMessage());
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
         }
     }
     
@@ -507,7 +507,7 @@ public class JsonUtils
         }
         
         catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException(property + " " + exception.getMessage());
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
         }
     }
     
@@ -531,7 +531,7 @@ public class JsonUtils
         }
         
         catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException(property + " " + exception.getMessage());
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
         }
     }
     
@@ -757,5 +757,10 @@ public class JsonUtils
         String jsonString = new Gson().toJson(mapping);
         
         return JsonParser.parseString(jsonString);
+    }
+    
+    private static String sanitize(String argument)
+    {
+        return argument.replaceAll("_", " ");
     }
 }
