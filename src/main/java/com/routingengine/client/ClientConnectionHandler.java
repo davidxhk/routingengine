@@ -185,24 +185,24 @@ public abstract class ClientConnectionHandler extends AbstractClientConnectionHa
             .writeTo(jsonWriter);
     }
     
-    protected final void updateAgentSkillsWithUUID(String agentUUIDString, @SuppressWarnings("rawtypes") Map skills)
+    protected final void updateAgentSkillsWithUUID(String agentUUIDString, @SuppressWarnings("rawtypes") Map skillUpdate)
         throws IOException
     {
         new JsonRequest()
             .setMethod("update_agent_skills")
             .setArgument("uuid", agentUUIDString)
-            .setArgument("skills", skills)
+            .setArgument("skills", skillUpdate)
             .setArgument("admin_uuid", DEFAULT_ADMIN)
             .writeTo(jsonWriter);
     }
     
-    protected final void updateAgentSkillsWithRainbowId(String rainbowId, @SuppressWarnings("rawtypes") Map skills)
+    protected final void updateAgentSkillsWithRainbowId(String rainbowId, @SuppressWarnings("rawtypes") Map skillUpdate)
         throws IOException
     {
         new JsonRequest()
             .setMethod("update_agent_skills")
             .setArgument("rainbow_id", rainbowId)
-            .setArgument("skills", skills)
+            .setArgument("skills", skillUpdate)
             .setArgument("admin_uuid", DEFAULT_ADMIN)
             .writeTo(jsonWriter);
     }
