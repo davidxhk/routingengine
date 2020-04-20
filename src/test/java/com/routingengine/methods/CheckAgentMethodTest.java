@@ -426,7 +426,7 @@ public class CheckAgentMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 4.4.3 - Malformed arguments: numbers")
+    @DisplayName("Test 3.3.3 - Malformed arguments: numbers")
     void test16()
         throws IOException
     {
@@ -448,7 +448,7 @@ public class CheckAgentMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 4.4.4 - Malformed arguments: json array")
+    @DisplayName("Test 3.3.4 - Malformed arguments: json array")
     void test17()
         throws IOException
     {
@@ -470,7 +470,7 @@ public class CheckAgentMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 4.4.5 - Malformed arguments: invalid json object")
+    @DisplayName("Test 3.3.5 - Malformed arguments: invalid json object")
     void test18()
         throws IOException
     {
