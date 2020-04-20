@@ -315,7 +315,7 @@ public class TakeSupportRequestMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.2.1 - Unexpected arguments (valid uuid)")
+    @DisplayName("Test 3.2.1 - Unexpected arguments (using uuid)")
     void test12()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -360,7 +360,7 @@ public class TakeSupportRequestMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.2.2 - Unexpected arguments (valid rainbow id)")
+    @DisplayName("Test 3.2.2 - Unexpected arguments (using rainbow id)")
     void test13()
         throws IOException, InterruptedException, ExecutionException
     {

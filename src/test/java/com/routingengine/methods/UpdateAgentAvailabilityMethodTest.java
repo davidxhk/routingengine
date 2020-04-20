@@ -19,7 +19,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     protected static final String method = "update_agent_availability";
     
     @Test
-    @DisplayName("Test 1.1.1 - Available true (valid uuid)")
+    @DisplayName("Test 1.1.1 - Available true (using uuid)")
     void test01()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -52,7 +52,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 1.1.2 - Available true (valid rainbow id)")
+    @DisplayName("Test 1.1.2 - Available true (using rainbow id)")
     void test02()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -85,7 +85,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 1.2.1 - Available false (valid uuid)")
+    @DisplayName("Test 1.2.1 - Available false (using uuid)")
     void test03()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -118,7 +118,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 1.2.2 - Available false (valid rainbow id)")
+    @DisplayName("Test 1.2.2 - Available false (using rainbow id)")
     void test04()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -350,7 +350,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.1.1 - Missing available (valid uuid)")
+    @DisplayName("Test 3.1.1 - Missing available (using uuid)")
     void test13()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -382,7 +382,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.1.2 - Missing available (valid rainbow id)")
+    @DisplayName("Test 3.1.2 - Missing available (using rainbow id)")
     void test14()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -414,7 +414,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.2.1 - Invalid available: json array (valid uuid)")
+    @DisplayName("Test 3.2.1 - Invalid available: json array (using uuid)")
     void test15()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -447,7 +447,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.2.2 - Invalid available: json array (valid rainbow id)")
+    @DisplayName("Test 3.2.2 - Invalid available: json array (using rainbow id)")
     void test16()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -480,7 +480,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.2.3 - Invalid available: json object (valid uuid)")
+    @DisplayName("Test 3.2.3 - Invalid available: json object (using uuid)")
     void test17()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -513,7 +513,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.2.4 - Invalid available: json object (valid rainbow id)")
+    @DisplayName("Test 3.2.4 - Invalid available: json object (using rainbow id)")
     void test18()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -546,7 +546,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.2.5 - Invalid available: numbers (valid uuid)")
+    @DisplayName("Test 3.2.5 - Invalid available: numbers (using uuid)")
     void test19()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -579,7 +579,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.2.6 - Invalid available: numbers (valid rainbow id)")
+    @DisplayName("Test 3.2.6 - Invalid available: numbers (using rainbow id)")
     void test20()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -612,7 +612,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.2.7 - Invalid available: non-boolean string (valid uuid)")
+    @DisplayName("Test 3.2.7 - Invalid available: non-boolean string (using uuid)")
     void test21()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -645,7 +645,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.2.8 - Invalid available: non-boolean string (valid rainbow id)")
+    @DisplayName("Test 3.2.8 - Invalid available: non-boolean string (using rainbow id)")
     void test22()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -701,7 +701,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 4.2.1 - Unexpected arguments (valid uuid)")
+    @DisplayName("Test 4.2.1 - Unexpected arguments (using uuid)")
     void test24()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -739,7 +739,7 @@ public class UpdateAgentAvailabilityMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 4.2.2 - Unexpected arguments (valid rainbow id)")
+    @DisplayName("Test 4.2.2 - Unexpected arguments (using rainbow id)")
     void test25()
         throws IOException, InterruptedException, ExecutionException
     {

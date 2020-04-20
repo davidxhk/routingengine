@@ -401,7 +401,7 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.3.1 - Unexpected arguments (valid uuid)")
+    @DisplayName("Test 3.3.1 - Unexpected arguments (using uuid)")
     void test13()
         throws IOException, InterruptedException, ExecutionException
     {
@@ -467,7 +467,7 @@ public class RemoveAgentMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.3.2 - Unexpected arguments (valid rainbow id)")
+    @DisplayName("Test 3.3.2 - Unexpected arguments (using rainbow id)")
     void test14()
         throws IOException, InterruptedException, ExecutionException
     {
