@@ -10,7 +10,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import com.routingengine.Logger;
@@ -25,11 +24,12 @@ import com.routingengine.websocket.WebSocketJsonWriter;
 
 public abstract class AbstractClientConnectionHandler extends JsonConnectionHandler
 {
-    private static final int RESPONSE_BUFFER_SIZE = 100;
     private static final int THREAD_POOL_SIZE = 100;
+    private static final int RESPONSE_BUFFER_SIZE = 100;
+    private static final long PENDING_TIMEOUT = 10000L;
     private ExecutorService executorService = newFixedThreadPool(THREAD_POOL_SIZE);
-    private ConcurrentMap<Integer, PendingResponse> pendingResponses = new ConcurrentHashMap<>();
     private BlockingQueue<JsonResponse> responseBuffer = new ArrayBlockingQueue<>(RESPONSE_BUFFER_SIZE);
+    private ConcurrentMap<Integer, PendingResponse> pendingResponses = new ConcurrentHashMap<>();
     private Listener listener = new Listener();
     
     @Override
@@ -79,9 +79,7 @@ public abstract class AbstractClientConnectionHandler extends JsonConnectionHand
             
             while (true) {
                 try {
-                    response = pendingResponse
-                        .getFutureJsonResponse()
-                        .get(10, TimeUnit.SECONDS);
+                    response = pendingResponse.getFutureJsonResponse(PENDING_TIMEOUT);
                     
                     if (response.isPending()) {
                         pendingResponse.reset();
@@ -156,12 +154,14 @@ public abstract class AbstractClientConnectionHandler extends JsonConnectionHand
             return jsonResponse != null;
         }
         
-        public Future<JsonResponse> getFutureJsonResponse()
+        public JsonResponse getFutureJsonResponse(long timeoutMillis)
             throws ExecutionException, TimeoutException, InterruptedException
         {
             ensureNotRemoved();
             
-            return executorService.submit(() -> { return awaitJsonResponse(); });
+            return executorService
+                .submit(() -> { return awaitJsonResponse(); })
+                .get(timeoutMillis, TimeUnit.MILLISECONDS);
         }
         
         public synchronized JsonResponse awaitJsonResponse()

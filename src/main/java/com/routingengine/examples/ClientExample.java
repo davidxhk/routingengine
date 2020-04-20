@@ -51,13 +51,13 @@ public class ClientExample
                     newSupportRequest("bob", "bob@gmail.com", 1);
                     supportRequestUUIDs.add(getUUIDFromResponse(awaitResponse()));
                     
-                    newSupportRequest("bob", "bob@gmail.com", "GENERAL_ENQUIRY");
+                    newSupportRequest("amy", "amy@gmail.com", "GENERAL_ENQUIRY");
                     supportRequestUUIDs.add(getUUIDFromResponse(awaitResponse()));
                     
-                    newSupportRequest("bob", "bob@gmail.com", 1, "127.0.0.1");
+                    newSupportRequest("tom", "tom@gmail.com", 0);
                     supportRequestUUIDs.add(getUUIDFromResponse(awaitResponse()));
                     
-                    newSupportRequest("bob", "bob@gmail.com", "GENERAL_ENQUIRY", "127.0.0.1");
+                    newSupportRequest("kat", "kat@gmail.com", "CHECK_SUBSCRIPTION");
                     supportRequestUUIDs.add(getUUIDFromResponse(awaitResponse()));
                     
                     checkSupportRequest(supportRequestUUIDs.get(0));
@@ -75,25 +75,28 @@ public class ClientExample
                     removeSupportRequest(supportRequestUUIDs.get(3));
                     awaitResponse();
                     
-                    newAgent(Map.of(2, true));
+                    newAgent("rainbow_agent_1", Map.of(2, true));
                     agentUUIDs.add(getUUIDFromResponse(awaitResponse()));
                     
-                    newAgent(Map.of("CHECK_SUBSCRIPTION", true), "127.0.0.1");
+                    newAgent("rainbow_agent_2", Map.of("CHECK_SUBSCRIPTION", true));
                     agentUUIDs.add(getUUIDFromResponse(awaitResponse()));
                     
-                    checkAgent(agentUUIDs.get(0));
+                    checkAgentWithUUID(agentUUIDs.get(0));
                     awaitResponse();
                     
-                    updateAgentSkills(agentUUIDs.get(0), Map.of(1, true));
+                    checkAgentWithRainbowId("rainbow_agent_2");
                     awaitResponse();
                     
-                    updateAgentSkills(agentUUIDs.get(1), Map.of("GENERAL_ENQUIRY", true));
+                    updateAgentSkillsWithUUID(agentUUIDs.get(0), Map.of(1, true));
                     awaitResponse();
                     
-                    updateAgentAvailability(agentUUIDs.get(0), true);
+                    updateAgentSkillsWithRainbowId("rainbow_agent_2", Map.of("GENERAL_ENQUIRY", true));
                     awaitResponse();
                     
-                    updateAgentAvailability(agentUUIDs.get(1), true);
+                    updateAgentAvailabilityWithUUID(agentUUIDs.get(0), true);
+                    awaitResponse();
+                    
+                    updateAgentAvailabilityWithRainbowId(agentUUIDs.get(1), true);
                     awaitResponse();
                     
                     waitForAgent(supportRequestUUIDs.get(0));
@@ -102,19 +105,28 @@ public class ClientExample
                     waitForAgent(supportRequestUUIDs.get(1));
                     nextJsonResponse();
                     
-                    takeSupportRequest(agentUUIDs.get(0));
+                    takeSupportRequestWithUUID(agentUUIDs.get(0));
                     nextJsonResponse();
                     
-                    takeSupportRequest(agentUUIDs.get(1));
+                    takeSupportRequestWithRainbowId("rainbow_agent_2");
                     nextJsonResponse();
                     
-                    dropSupportRequest(agentUUIDs.get(0));
+                    dropSupportRequestWithUUID(agentUUIDs.get(0));
                     awaitResponse();
                     
-                    dropSupportRequest(agentUUIDs.get(0));
+                    dropSupportRequestWithRainbowId("rainbow_agent_2");
                     awaitResponse();
                     
-                    removeAgent(agentUUIDs.get(0));
+                    removeAgentWithUUID(agentUUIDs.get(0));
+                    awaitResponse();
+                    
+                    removeAgentWithRainbowId("rainbow_agent_2");
+                    awaitResponse();
+                    
+                    newAdmin();
+                    awaitResponse();
+                    
+                    newAdmin(agentUUIDs.get(1));
                     awaitResponse();
                     
                     getStatusOverview();

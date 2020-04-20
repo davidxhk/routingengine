@@ -1,5 +1,6 @@
 package com.routingengine.client;
 
+import static com.routingengine.RoutingEngine.DEFAULT_ADMIN;
 import static com.routingengine.json.JsonUtils.toJsonElement;
 import static com.routingengine.json.JsonProtocol.EXIT_COMMAND;
 import static com.routingengine.json.JsonProtocol.ExitConnectionException;
@@ -49,30 +50,6 @@ public abstract class ClientConnectionHandler extends AbstractClientConnectionHa
             .setArgument("name", name)
             .setArgument("email", email)
             .setArgument("type", requestTypeString)
-            .writeTo(jsonWriter);
-    }
-    
-    protected final void newSupportRequest(String name, String email, int requestTypeIndex, String address)
-        throws IOException
-    {
-        new JsonRequest()
-            .setMethod("new_support_request")
-            .setArgument("name", name)
-            .setArgument("email", email)
-            .setArgument("type", requestTypeIndex)
-            .setArgument("address", address)
-            .writeTo(jsonWriter);
-    }
-    
-    protected final void newSupportRequest(String name, String email, String requestTypeString, String address)
-        throws IOException
-    {
-        new JsonRequest()
-            .setMethod("new_support_request")
-            .setArgument("name", name)
-            .setArgument("email", email)
-            .setArgument("type", requestTypeString)
-            .setArgument("address", address)
             .writeTo(jsonWriter);
     }
     
@@ -129,51 +106,68 @@ public abstract class ClientConnectionHandler extends AbstractClientConnectionHa
         new JsonRequest()
             .setMethod("remove_support_request")
             .setArgument("uuid", supportRequestUUIDString)
+            .setArgument("admin_uuid", DEFAULT_ADMIN)
             .writeTo(jsonWriter);
     }
     
-    protected final void newAgent(@SuppressWarnings("rawtypes") Map skills)
-        throws IOException
-    {
-        new JsonRequest()
-        .setMethod("new_agent")
-        .setArgument("skills", toJsonElement(skills))
-        .writeTo(jsonWriter);
-    }
-    
-    protected final void newAgent(@SuppressWarnings("rawtypes") Map skills, String address)
+    protected final void newAgent(String rainbowId, @SuppressWarnings("rawtypes") Map skills)
         throws IOException
     {
         new JsonRequest()
             .setMethod("new_agent")
-            .setArgument("skills", skills)
-            .setArgument("address", address)
+            .setArgument("rainbow_id", rainbowId)
+            .setArgument("skills", toJsonElement(skills))
+            .setArgument("admin_uuid", DEFAULT_ADMIN)
             .writeTo(jsonWriter);
     }
     
-    protected final void activateAgent(String agentUUIDString, Boolean doActivate)
+    protected final void activateAgentWithUUID(String agentUUIDString, Boolean doActivate)
         throws IOException
     {
         new JsonRequest()
             .setMethod("activate_agent")
             .setArgument("uuid", agentUUIDString)
             .setArgument("activate", doActivate)
+            .setArgument("admin_uuid", DEFAULT_ADMIN)
             .writeTo(jsonWriter);
     }
     
-    protected final void activateAgent(String agentUUIDString)
+    protected final void activateAgentWithUUID(String agentUUIDString)
         throws IOException
     {
-        activateAgent(agentUUIDString, true);
+        activateAgentWithUUID(agentUUIDString, true);
     }
     
-    protected final void deactivateAgent(String agentUUIDString)
+    protected final void deactivateAgentWithUUID(String agentUUIDString)
         throws IOException
     {
-        activateAgent(agentUUIDString, false);
+        activateAgentWithUUID(agentUUIDString, false);
     }
     
-    protected final void checkAgent(String agentUUIDString)
+    protected final void activateAgentWithRainbowId(String rainbowId, Boolean doActivate)
+        throws IOException
+    {
+        new JsonRequest()
+            .setMethod("activate_agent")
+            .setArgument("rainbow_id", rainbowId)
+            .setArgument("activate", doActivate)
+            .setArgument("admin_uuid", DEFAULT_ADMIN)
+            .writeTo(jsonWriter);
+    }
+    
+    protected final void activateAgentWithRainbowId(String rainbowId)
+        throws IOException
+    {
+        activateAgentWithRainbowId(rainbowId, true);
+    }
+    
+    protected final void deactivateAgentWithRainbowId(String rainbowId)
+        throws IOException
+    {
+        activateAgentWithRainbowId(rainbowId, false);
+    }
+    
+    protected final void checkAgentWithUUID(String agentUUIDString)
         throws IOException
     {
         new JsonRequest()
@@ -182,17 +176,38 @@ public abstract class ClientConnectionHandler extends AbstractClientConnectionHa
             .writeTo(jsonWriter);
     }
     
-    protected final void updateAgentSkills(String agentUUIDString, @SuppressWarnings("rawtypes") Map skills)
+    protected final void checkAgentWithRainbowId(String rainbowId)
+        throws IOException
+    {
+        new JsonRequest()
+            .setMethod("check_agent")
+            .setArgument("rainbow_id", rainbowId)
+            .writeTo(jsonWriter);
+    }
+    
+    protected final void updateAgentSkillsWithUUID(String agentUUIDString, @SuppressWarnings("rawtypes") Map skills)
         throws IOException
     {
         new JsonRequest()
             .setMethod("update_agent_skills")
             .setArgument("uuid", agentUUIDString)
             .setArgument("skills", skills)
+            .setArgument("admin_uuid", DEFAULT_ADMIN)
             .writeTo(jsonWriter);
     }
     
-    protected final void updateAgentAvailability(String agentUUIDString, Boolean isAvailable)
+    protected final void updateAgentSkillsWithRainbowId(String rainbowId, @SuppressWarnings("rawtypes") Map skills)
+        throws IOException
+    {
+        new JsonRequest()
+            .setMethod("update_agent_skills")
+            .setArgument("rainbow_id", rainbowId)
+            .setArgument("skills", skills)
+            .setArgument("admin_uuid", DEFAULT_ADMIN)
+            .writeTo(jsonWriter);
+    }
+    
+    protected final void updateAgentAvailabilityWithUUID(String agentUUIDString, Boolean isAvailable)
         throws IOException
     {
         new JsonRequest()
@@ -202,7 +217,17 @@ public abstract class ClientConnectionHandler extends AbstractClientConnectionHa
             .writeTo(jsonWriter);
     }
     
-    protected final void takeSupportRequest(String agentUUIDString)
+    protected final void updateAgentAvailabilityWithRainbowId(String rainbowId, Boolean isAvailable)
+        throws IOException
+    {
+        new JsonRequest()
+            .setMethod("update_agent_availability")
+            .setArgument("rainbow_id", rainbowId)
+            .setArgument("available", isAvailable)
+            .writeTo(jsonWriter);
+    }
+    
+    protected final void takeSupportRequestWithUUID(String agentUUIDString)
         throws IOException
     {
         new JsonRequest()
@@ -211,7 +236,16 @@ public abstract class ClientConnectionHandler extends AbstractClientConnectionHa
             .writeTo(jsonWriter);
     }
     
-    protected final void dropSupportRequest(String agentUUIDString)
+    protected final void takeSupportRequestWithRainbowId(String rainbowId)
+        throws IOException
+    {
+        new JsonRequest()
+            .setMethod("take_support_request")
+            .setArgument("rainbow_id", rainbowId)
+            .writeTo(jsonWriter);
+    }
+    
+    protected final void dropSupportRequestWithUUID(String agentUUIDString)
         throws IOException
     {
         new JsonRequest()
@@ -220,12 +254,51 @@ public abstract class ClientConnectionHandler extends AbstractClientConnectionHa
             .writeTo(jsonWriter);
     }
     
-    protected final void removeAgent(String agentUUIDString)
+    protected final void dropSupportRequestWithRainbowId(String rainbowId)
+        throws IOException
+    {
+        new JsonRequest()
+            .setMethod("drop_support_request")
+            .setArgument("rainbow_id", rainbowId)
+            .writeTo(jsonWriter);
+    }
+    
+    protected final void removeAgentWithUUID(String agentUUIDString)
         throws IOException
     {
         new JsonRequest()
             .setMethod("remove_agent")
             .setArgument("uuid", agentUUIDString)
+            .setArgument("admin_uuid", DEFAULT_ADMIN)
+            .writeTo(jsonWriter);
+    }
+    
+    protected final void removeAgentWithRainbowId(String rainbowId)
+        throws IOException
+    {
+        new JsonRequest()
+            .setMethod("remove_agent")
+            .setArgument("rainbow_id", rainbowId)
+            .setArgument("admin_uuid", DEFAULT_ADMIN)
+            .writeTo(jsonWriter);
+    }
+    
+    protected final void newAdmin()
+        throws IOException
+    {
+        new JsonRequest()
+            .setMethod("new_admin")
+            .setArgument("admin_uuid", DEFAULT_ADMIN)
+            .writeTo(jsonWriter);
+    }
+    
+    protected final void newAdmin(String newAdminUUIDString)
+        throws IOException
+    {
+        new JsonRequest()
+            .setMethod("new_admin")
+            .setArgument("admin_uuid", DEFAULT_ADMIN)
+            .setArgument("new_admin_uuid", newAdminUUIDString)
             .writeTo(jsonWriter);
     }
     
@@ -234,6 +307,7 @@ public abstract class ClientConnectionHandler extends AbstractClientConnectionHa
     {
         new JsonRequest()
             .setMethod("get_status_overview")
+            .setArgument("admin_uuid", DEFAULT_ADMIN)
             .writeTo(jsonWriter);
     }
     
@@ -242,6 +316,7 @@ public abstract class ClientConnectionHandler extends AbstractClientConnectionHa
     {
         new JsonRequest()
             .setMethod("get_agent_status")
+            .setArgument("admin_uuid", DEFAULT_ADMIN)
             .writeTo(jsonWriter);
     }
     
@@ -250,6 +325,7 @@ public abstract class ClientConnectionHandler extends AbstractClientConnectionHa
     {
         new JsonRequest()
             .setMethod("get_support_request_status")
+            .setArgument("admin_uuid", DEFAULT_ADMIN)
             .writeTo(jsonWriter);
     }
     
@@ -258,6 +334,7 @@ public abstract class ClientConnectionHandler extends AbstractClientConnectionHa
     {
         new JsonRequest()
             .setMethod("get_queue_status")
+            .setArgument("admin_uuid", DEFAULT_ADMIN)
             .writeTo(jsonWriter);
     }
 }

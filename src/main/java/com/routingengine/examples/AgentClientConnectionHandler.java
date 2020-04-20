@@ -22,7 +22,7 @@ public class AgentClientConnectionHandler extends CustomerClientConnectionHandle
         randomSleep();
         
         log("creating new agent");
-        newAgent(Map.of(type, true));
+        newAgent("agent_" + id, Map.of(type, true));
         JsonResponse response = awaitResponse();
         
         String agentUUIDString = getUUID(response);
@@ -31,14 +31,14 @@ public class AgentClientConnectionHandler extends CustomerClientConnectionHandle
         randomSleep();
         
         log("updating availability");
-        updateAgentAvailability(agentUUIDString, true);
+        updateAgentAvailabilityWithUUID(agentUUIDString, true);
         awaitResponse();
         
         randomSleep();
         
         for (int i = 0; i < numberOfSupportRequestsToService; i++) {
             log("taking support request");
-            takeSupportRequest(agentUUIDString);
+            takeSupportRequestWithUUID(agentUUIDString);
             response = awaitResponse();
             
             if (!response.didSucceed()) {

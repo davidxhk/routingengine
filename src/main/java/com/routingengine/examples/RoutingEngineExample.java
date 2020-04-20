@@ -17,9 +17,9 @@ public class RoutingEngineExample
     {
         log("Start of Routing Engine Test");
         
-        final int DEFAULT_NUM_AGENTS = 13;
+        final int DEFAULT_NUM_AGENTS = 1;
         
-        final int DEFAULT_NUM_CUSTOMERS = 47;
+        final int DEFAULT_NUM_CUSTOMERS = 1;
         
         String hostname;
         
