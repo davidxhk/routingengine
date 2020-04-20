@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -34,11 +34,13 @@ import com.routingengine.websocket.WebSocketJsonWriter;
 public final class ServerConnectionHandler extends JsonConnectionHandler
     implements Runnable, Closeable
 {
-    private final MethodManager methodManager;
-    private final ExecutorService executorService;
-    private final Map<Integer, PendingMethod> pendingMethods;
     private static final int THREAD_POOL_SIZE = 100;
     private static final AtomicInteger TICKET_COUNTER = new AtomicInteger(1);
+    private static final long PENDING_TIMEOUT = 50L;
+    private static final long PENDING_DUE_TIMEOUT = Long.MAX_VALUE;
+    private final MethodManager methodManager;
+    private final ExecutorService executorService;
+    private final ConcurrentMap<Integer, PendingMethod> pendingMethods;
     
     ServerConnectionHandler(Socket socket, RoutingEngine routingEngine)
         throws IOException
@@ -51,7 +53,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
         
         executorService = newFixedThreadPool(THREAD_POOL_SIZE);
         
-        pendingMethods = new HashMap<>();
+        pendingMethods = new ConcurrentHashMap<>();
     }
     
     @Override
@@ -175,7 +177,9 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
         }
         
         catch (ExecutionException exception) {
-            log("Error while handling method: " + exception.getCause().getMessage());
+            log("Error while handling request: " + pendingMethod.getJsonRequest());
+            
+            exception.printStackTrace();
         }
     }
     
@@ -231,14 +235,15 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
     
     private class PendingMethod
     {
-        private static final long PENDING_TIMEOUT = 50L;
-        private static final long PENDING_DUE_TIMEOUT = Long.MAX_VALUE;
+        private JsonRequest jsonRequest;
         private JsonResponse pendingResponse;
         private Future<JsonResponse> futureResponse;
         private long lastTimestamp;
         
         private PendingMethod(JsonRequest jsonRequest, Integer ticketNumber)
         {
+            this.jsonRequest = jsonRequest;
+            
             futureResponse = executorService.submit(() -> {
                 JsonResponse response;
                 
@@ -277,6 +282,11 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
             }
             
             return false;
+        }
+        
+        private JsonRequest getJsonRequest()
+        {
+            return jsonRequest;
         }
         
         private JsonResponse getFutureJsonResponse()
