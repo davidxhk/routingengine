@@ -163,8 +163,37 @@ public class NewAgentMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.1 - Missing skills")
+    @DisplayName("Test 2.3 - Invalid rainbow id: already exists")
     void test06()
+        throws IOException, InterruptedException, ExecutionException
+    {
+        final String rainbowId = "rainbow_agent";
+        
+        final Map<Integer, Boolean> skills = Map.of(1, true, 2, true);
+        
+        final String agentUUIDString = generateNewAgent(rainbowId, skills);
+        
+        execute(new ClientConnectionHandler() {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException
+            {
+                newAgent(rainbowId, skills);
+                
+                JsonResponse response = awaitResponse();
+                
+                assertEquals(method, response.getMethod());
+                
+                assertResponseHasErrorPayload(response, "rainbow id already exists");
+            }
+        });
+        
+        agentGetsRemoved(agentUUIDString);
+    }
+    
+    @Test
+    @DisplayName("Test 3.1 - Missing skills")
+    void test07()
         throws IOException, InterruptedException, ExecutionException
     {
         final String rainbowId = "rainbow_agent";
@@ -191,7 +220,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 3.2.1 - Missing skill (using type index)")
-    void test07()
+    void test08()
         throws IOException, InterruptedException, ExecutionException
     {
         final String rainbowId = "rainbow_agent";
@@ -216,7 +245,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 3.2.2 - Missing skill (using type string)")
-    void test08()
+    void test09()
         throws IOException, InterruptedException, ExecutionException
     {
         final String rainbowId = "rainbow_agent";
@@ -241,7 +270,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 3.3.1 - Invalid skill ability (using type index)")
-    void test09()
+    void test10()
         throws IOException, InterruptedException, ExecutionException
     {
         final String rainbowId = "rainbow_agent";
@@ -266,7 +295,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 3.3.2 - Invalid skill ability (using type string)")
-    void test10()
+    void test11()
         throws IOException, InterruptedException, ExecutionException
     {
         final String rainbowId = "rainbow_agent";
@@ -291,7 +320,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 3.4 - Invalid new skills")
-    void test11()
+    void test12()
         throws IOException, InterruptedException, ExecutionException
     {
         final String rainbowId = "rainbow_agent";
@@ -316,7 +345,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 3.5.1 - Invalid skills: number")
-    void test12()
+    void test13()
         throws IOException, InterruptedException, ExecutionException
     {
         final String rainbowId = "rainbow_agent";
@@ -346,7 +375,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 3.5.2 - Invalid skills: string")
-    void test13()
+    void test14()
         throws IOException, InterruptedException, ExecutionException
     {
         final String rainbowId = "rainbow_agent";
@@ -376,7 +405,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 3.5.3 - Invalid skills: json array")
-    void test14()
+    void test15()
         throws IOException, InterruptedException, ExecutionException
     {
         final String rainbowId = "rainbow_agent";
@@ -406,7 +435,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 4.1 - Missing input")
-    void test15()
+    void test16()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -430,7 +459,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 4.2 - Missing admin uuid")
-    void test16()
+    void test17()
         throws IOException, InterruptedException, ExecutionException
     {
         final String rainbowId = "rainbow_agent";
@@ -459,7 +488,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 4.3 - Unexpected arguments")
-    void test17()
+    void test18()
         throws IOException, InterruptedException, ExecutionException
     {
         final String rainbowId = "rainbow_agent";
@@ -497,7 +526,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 4.4.1 - Malformed arguments: string")
-    void test18()
+    void test19()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -519,7 +548,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 4.4.2 - Malformed arguments: empty string")
-    void test19()
+    void test20()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -541,7 +570,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 4.4.3 - Malformed arguments: numbers")
-    void test20()
+    void test21()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -563,7 +592,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 4.4.4 - Malformed arguments: json array")
-    void test21()
+    void test22()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -580,12 +609,13 @@ public class NewAgentMethodTest extends AbstractMethodTest
                 
                 assertResponseHasErrorPayload(response, "malformed arguments");
             }
+        
         });
     }
     
     @Test
     @DisplayName("Test 4.4.5 - Malformed arguments: invalid json object")
-    void test22()
+    void test23()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
