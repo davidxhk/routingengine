@@ -717,7 +717,6 @@ public class ActivateAgentMethodTest extends AbstractMethodTest
         });
     }
     
-    
     @Test
     @DisplayName("Test 4.2 - Missing admin uuid")
     void test24()
