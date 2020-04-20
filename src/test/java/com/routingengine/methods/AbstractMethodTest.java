@@ -84,7 +84,7 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                connectionHandler.connect(this.socket);
+                connectionHandler.connect(socket);
                 
                 try {
                     connectionHandler.runMainLoop();
