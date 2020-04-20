@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.routingengine.Agent;
 
 
-public class UpdateAgentSkillsMethod extends CheckAgentMethod
+public class UpdateAgentSkillsMethod extends AbstractAgentAdminMethod
 {
     @Override
     public JsonElement handle(JsonObject arguments)

@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.routingengine.Agent;
 
 
-public class DropSupportRequestMethod extends CheckAgentMethod
+public class DropSupportRequestMethod extends AbstractAgentMethod
 {
     @Override
     public JsonElement handle(JsonObject arguments)

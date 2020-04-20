@@ -2,6 +2,7 @@ package com.routingengine;
 
 import static com.routingengine.RequestQueueManager.RequestQueue;
 import static com.routingengine.json.JsonConnectionHandler.SLEEP_MILLIS;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -13,14 +14,45 @@ public class RoutingEngine
 {
     private ConcurrentHashMap<UUID, SupportRequest> supportRequests;
     private ConcurrentHashMap<UUID, Agent> agents;
+    private Set<UUID> admins;
     private RequestQueueManager requestQueueManager;
+    public static final String DEFAULT_ADMIN = "ee462c1a-ba44-45c5-a4f7-f6eb7099d82a";
     public static final long TIMEOUT_MILLIS = 30000L;
     
     public RoutingEngine()
     {
         supportRequests = new ConcurrentHashMap<>();
         agents = new ConcurrentHashMap<>();
+        admins = ConcurrentHashMap.newKeySet();
         requestQueueManager = new RequestQueueManager();
+        
+        initialize();
+    }
+    
+    public void initialize()
+    {
+        admins.add(UUID.fromString(DEFAULT_ADMIN));
+    }
+    
+    public static String newUUID()
+    {
+        UUID newAdminUUID = UUID.randomUUID();
+        
+        return newAdminUUID.toString();
+    }
+    
+    public static UUID convertToUUID(String UUIDString)
+    {
+        if (UUIDString == null)
+            throw new IllegalArgumentException("uuid missing");
+        
+        try {
+            return UUID.fromString(UUIDString);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException("uuid invalid");
+        }
     }
     
     public void addSupportRequest(SupportRequest supportRequest)
@@ -28,28 +60,37 @@ public class RoutingEngine
         if (supportRequest == null)
             throw new IllegalArgumentException("support request missing");
         
+        try {
+            getSupportRequest(supportRequest.getUUID());
+            
+            throw new IllegalArgumentException("uuid already exists");
+        }
+        
+        catch (IllegalArgumentException exception) {
+            
+            if (!"uuid not found".equals(exception.getMessage()))
+                throw exception;
+        }
+        
         supportRequests.put(supportRequest.getUUID(), supportRequest);
+    }
+    
+    public SupportRequest getSupportRequest(UUID supportRequestUUID)
+    {
+        if (supportRequestUUID == null)
+            throw new IllegalArgumentException("uuid missing");
+        
+        if (!supportRequests.containsKey(supportRequestUUID))
+            throw new IllegalArgumentException("uuid not found");
+        
+        return supportRequests.get(supportRequestUUID);
     }
     
     public SupportRequest getSupportRequest(String supportRequestUUIDString)
     {
-        if (supportRequestUUIDString == null)
-            throw new IllegalArgumentException("uuid missing");
+        UUID supportRequestUUID = convertToUUID(supportRequestUUIDString);
         
-        UUID supportRequestUUID = null;
-        
-        try {
-            supportRequestUUID = UUID.fromString(supportRequestUUIDString);
-        }
-        
-        catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException("uuid invalid");
-        }
-        
-        if (supportRequestUUID == null || !supportRequests.containsKey(supportRequestUUID))
-            throw new IllegalArgumentException("uuid not found");
-        
-        return supportRequests.get(supportRequestUUID);
+        return getSupportRequest(supportRequestUUID);
     }
     
     public SupportRequest[] getSupportRequests()
@@ -57,58 +98,79 @@ public class RoutingEngine
         return supportRequests.values().toArray(SupportRequest[]::new);
     }
     
-    public SupportRequest removeSupportRequest(String supportRequestUUIDString)
+    public void removeSupportRequest(UUID supportRequestUUID)
     {
-        if (supportRequestUUIDString == null)
+        if (supportRequestUUID == null)
             throw new IllegalArgumentException("uuid missing");
         
-        UUID supportRequestUUID = null;
-        
-        try {
-            supportRequestUUID = UUID.fromString(supportRequestUUIDString);
-        }
-        
-        catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException("uuid invalid");
-        }
-        
-        if (supportRequestUUID == null || !supportRequests.containsKey(supportRequestUUID))
+        if (!supportRequests.containsKey(supportRequestUUID))
             throw new IllegalArgumentException("uuid not found");
         
-        SupportRequest supportRequest = supportRequests.get(supportRequestUUID);
-        
         supportRequests.remove(supportRequestUUID);
-        
-        return supportRequest;
     }
     
     public void addAgent(Agent agent)
     {
         if (agent == null)
-            throw new IllegalArgumentException("missing agent");
+            throw new IllegalArgumentException("agent missing");
+        
+        try {
+            getAgent(agent.getUUID());
+            
+            throw new IllegalArgumentException("uuid already exists");
+        }
+        
+        catch (IllegalArgumentException exception) {
+            
+            if (!"uuid not found".equals(exception.getMessage()))
+                throw exception;
+        }
+        
+        try {
+            getAgentFromRainbowId(agent.getRainbowId());
+            
+            throw new IllegalArgumentException("rainbow id already exists");
+        }
+        
+        catch (IllegalArgumentException exception) {
+            
+            if (!"rainbow id not found".equals(exception.getMessage()))
+                throw exception;
+        }
         
         agents.put(agent.getUUID(), agent);
     }
     
-    public Agent getAgent(String agentUUIDString)
+    public Agent getAgent(UUID agentUUID)
     {
-        if (agentUUIDString == null)
+        if (agentUUID == null)
             throw new IllegalArgumentException("uuid missing");
         
-        UUID agentUUID = null;
-        
-        try {
-            agentUUID = UUID.fromString(agentUUIDString);
-        }
-        
-        catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException("uuid invalid");
-        }
-        
-        if (agentUUID == null || !agents.containsKey(agentUUID))
+        if (!agents.containsKey(agentUUID))
             throw new IllegalArgumentException("uuid not found");
         
         return agents.get(agentUUID);
+    }
+    
+    public Agent getAgent(String agentUUIDString)
+    {
+        UUID agentUUID = convertToUUID(agentUUIDString);
+        
+        return getAgent(agentUUID);
+    }
+    
+    public Agent getAgentFromRainbowId(String rainbowIdString)
+    {
+        if (rainbowIdString == null)
+            throw new IllegalArgumentException("rainbow id missing");
+        
+        for (Agent agent : getAgents()) {
+            
+            if (rainbowIdString.equals(agent.getRainbowId()))
+                return agent;
+        }
+        
+        throw new IllegalArgumentException("rainbow id not found");
     }
     
     public Agent[] getAgents()
@@ -116,29 +178,15 @@ public class RoutingEngine
         return agents.values().toArray(Agent[]::new);
     }
     
-    public Agent removeAgent(String agentUUIDString)
+    public void removeAgent(UUID agentUUID)
     {
-        if (agentUUIDString == null)
+        if (agentUUID == null)
             throw new IllegalArgumentException("uuid missing");
         
-        UUID agentUUID = null;
-        
-        try {
-            agentUUID = UUID.fromString(agentUUIDString);
-        }
-        
-        catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException("uuid invalid");
-        }
-        
-        if (agentUUID == null || !agents.containsKey(agentUUID))
+        if (!agents.containsKey(agentUUID))
             throw new IllegalArgumentException("uuid not found");
         
-        Agent agent = agents.get(agentUUID);
-        
         agents.remove(agentUUID);
-        
-        return agent;
     }
     
     public void assignAgent(SupportRequest supportRequest)
@@ -195,6 +243,31 @@ public class RoutingEngine
         }
         
         agent.setAssignedSupportRequest(assignedSupportRequest);
+    }
+    
+    public void addAdmin(String adminUUIDString)
+    {
+        UUID adminUUID = convertToUUID(adminUUIDString);
+        
+        admins.add(adminUUID);
+    }
+    
+    public void verifyAdmin(String adminUUIDString)
+    {
+        UUID adminUUID;
+        
+        try {
+            adminUUID = convertToUUID(adminUUIDString);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            String error = "admin " + exception.getMessage();
+            
+            throw new IllegalArgumentException(error);
+        }
+        
+        if (!admins.contains(adminUUID))
+            throw new IllegalArgumentException("unauthorized access");
     }
     
     public int getQueueCount(Type requestType)

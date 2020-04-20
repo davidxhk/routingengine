@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.routingengine.SupportRequest;
 
 
-public class ChangeSupportRequestTypeMethod extends CheckSupportRequestMethod
+public class ChangeSupportRequestTypeMethod extends AbstractSupportRequestMethod
 {    
     @Override
     public JsonElement handle(JsonObject arguments)

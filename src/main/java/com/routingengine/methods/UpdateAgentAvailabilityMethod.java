@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.routingengine.Agent;
 
 
-public class UpdateAgentAvailabilityMethod extends CheckAgentMethod
+public class UpdateAgentAvailabilityMethod extends AbstractAgentMethod
 {
     @Override
     public JsonElement handle(JsonObject arguments)

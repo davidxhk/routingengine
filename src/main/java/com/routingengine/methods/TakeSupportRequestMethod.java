@@ -6,20 +6,13 @@ import com.google.gson.JsonObject;
 import com.routingengine.Agent;
 
 
-public class TakeSupportRequestMethod extends CheckAgentMethod
+public class TakeSupportRequestMethod extends AbstractAgentMethod
 {
     @Override
     public JsonElement handle(JsonObject arguments)
     {
         Agent agent = getAgent(arguments);
         
-        takeSupportRequest(agent);
-        
-        return agent.toJson();
-    }
-    
-    public void takeSupportRequest(Agent agent)
-    {
         if (agent.hasAssignedSupportRequest())
             throw new IllegalStateException("agent already has assigned support request");
         
@@ -47,5 +40,7 @@ public class TakeSupportRequestMethod extends CheckAgentMethod
         
         if (!agent.hasAssignedSupportRequest())
             throw new IllegalStateException("routing engine failed to assign support request");
+        
+        return agent.toJson();
     }
 }

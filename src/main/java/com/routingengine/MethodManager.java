@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.routingengine.methods.Method;
 
 
 public final class MethodManager
@@ -27,6 +28,7 @@ public final class MethodManager
             Map.entry("take_support_request",        "TakeSupportRequestMethod"),
             Map.entry("drop_support_request",        "DropSupportRequestMethod"),
             Map.entry("remove_agent",                "RemoveAgentMethod"),
+            Map.entry("new_admin",                   "NewAdminMethod"),
             Map.entry("get_status_overview",         "GetStatusOverviewMethod"),
             Map.entry("get_agent_status",            "GetAgentStatusMethod"),
             Map.entry("get_support_request_status",  "GetSupportRequestStatusMethod"),
@@ -37,13 +39,6 @@ public final class MethodManager
     public static final boolean supports(String method)
     {
         return methodClassNameMap.containsKey(method);
-    }
-    
-    public static abstract class Method
-    {
-        protected RoutingEngine routingEngine;
-        
-        public abstract JsonElement handle(JsonObject arguments);
     }
     
     private RoutingEngine routingEngine;
@@ -68,7 +63,7 @@ public final class MethodManager
                 .getConstructor()
                 .newInstance();
             
-            methodInstance.routingEngine = routingEngine;
+            methodInstance.setRoutingEngine(routingEngine);
             
             methodMap.put(method, methodInstance);
         }
@@ -95,7 +90,7 @@ public final class MethodManager
     {
         Method methodInstance = getMethod(method);
         
-        JsonElement payload = methodInstance.handle(arguments);
+        JsonElement payload = methodInstance.handleArguments(arguments);
         
         return payload;
     }

@@ -1,23 +1,15 @@
 package com.routingengine.methods;
 
-import static com.routingengine.MethodManager.Method;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.routingengine.Agent;
 import com.routingengine.SupportRequest;
 
 
-public class GetStatusOverviewMethod extends Method
+public class GetStatusOverviewMethod extends AbstractAdminMethod
 {
     @Override
     public JsonElement handle(JsonObject arguments)
-    {
-        JsonObject payload = getStatusOverview();
-        
-        return payload;
-    }
-    
-    public JsonObject getStatusOverview()
     {
         JsonObject status = new JsonObject();
         
@@ -97,5 +89,11 @@ public class GetStatusOverviewMethod extends Method
         status.add("queue", queueStatus);
         
         return status;
+    }
+    
+    @Override
+    protected boolean requiresAdminRights()
+    {
+        return true;
     }
 }

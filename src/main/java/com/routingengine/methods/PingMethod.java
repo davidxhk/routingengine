@@ -1,23 +1,21 @@
 package com.routingengine.methods;
 
-import static com.routingengine.MethodManager.Method;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 
-public class PingMethod extends Method
+public class PingMethod extends AbstractAdminMethod
 {
     @Override
     public JsonElement handle(JsonObject arguments)
     {
-        JsonElement payload = ping();
-        
-        return payload;
+        return new JsonPrimitive("pong");
     }
     
-    public JsonElement ping()
+    @Override
+    protected boolean requiresAdminRights()
     {
-        return new JsonPrimitive("pong");
+        return false;
     }
 }

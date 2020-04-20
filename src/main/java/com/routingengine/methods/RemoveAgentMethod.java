@@ -1,31 +1,22 @@
 package com.routingengine.methods;
 
-import static com.routingengine.json.JsonUtils.getAsString;
-import static com.routingengine.MethodManager.Method;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.routingengine.Agent;
 
 
-public class RemoveAgentMethod extends Method
+public class RemoveAgentMethod extends AbstractAgentAdminMethod
 {
     @Override
     public JsonElement handle(JsonObject arguments)
     {
-        Agent agent = removeAgent(arguments);
+        Agent agent = getAgent(arguments);
         
-        return agent.toJson();
-    }
-    
-    public Agent removeAgent(JsonObject arguments)
-    {
-        String agentUUIDString = getAsString(arguments, "uuid");
-        
-        Agent agent = routingEngine.removeAgent(agentUUIDString);
+        routingEngine.removeAgent(agent.getUUID());
         
         if (agent.isActivated())
             agent.deactivate();
         
-        return agent;
+        return agent.toJson();
     }
 }

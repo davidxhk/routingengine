@@ -6,20 +6,13 @@ import com.google.gson.JsonObject;
 import com.routingengine.SupportRequest;
 
 
-public class WaitForAgentMethod extends CheckSupportRequestMethod
+public class WaitForAgentMethod extends AbstractSupportRequestMethod
 {
     @Override
     public JsonElement handle(JsonObject arguments)
     {
         SupportRequest supportRequest = getSupportRequest(arguments);
         
-        waitForAgent(supportRequest);
-        
-        return supportRequest.toJson();
-    }
-    
-    public void waitForAgent(SupportRequest supportRequest)
-    {
         if (supportRequest.hasAssignedAgent())
             throw new IllegalStateException("support request already has assigned agent");
         
@@ -54,5 +47,7 @@ public class WaitForAgentMethod extends CheckSupportRequestMethod
             
             throw new IllegalStateException("routing engine failed to assign agent");
         }
+        
+        return supportRequest.toJson();
     }
 }
