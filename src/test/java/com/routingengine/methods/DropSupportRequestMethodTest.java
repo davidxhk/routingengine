@@ -73,9 +73,9 @@ public class DropSupportRequestMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -130,9 +130,9 @@ public class DropSupportRequestMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -405,9 +405,9 @@ public class DropSupportRequestMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -466,9 +466,9 @@ public class DropSupportRequestMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test

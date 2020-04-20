@@ -51,7 +51,7 @@ public class CheckSupportRequestMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
     }
     
     @Test
@@ -219,7 +219,7 @@ public class CheckSupportRequestMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
     }
     
     @Test

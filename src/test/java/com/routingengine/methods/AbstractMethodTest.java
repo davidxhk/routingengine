@@ -485,7 +485,7 @@ public abstract class AbstractMethodTest
         return didTake[0];
     }
     
-    protected static final void removeSupportRequest(String supportRequestUUIDString)
+    protected static final void supportRequestGetsRemoved(String supportRequestUUIDString)
         throws IOException, InterruptedException, ExecutionException
     {
         execute(new ClientConnectionHandler()
@@ -518,7 +518,7 @@ public abstract class AbstractMethodTest
         });
     }
     
-    protected static final void removeAgent(String agentUUIDString)
+    protected static final void agentGetsRemoved(String agentUUIDString)
         throws IOException, InterruptedException, ExecutionException
     {
         execute(new ClientConnectionHandler()

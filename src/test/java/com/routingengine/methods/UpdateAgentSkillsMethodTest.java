@@ -60,7 +60,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -102,7 +102,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -144,7 +144,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -186,7 +186,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -426,7 +426,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -459,7 +459,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -490,7 +490,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -521,7 +521,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -552,7 +552,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -583,7 +583,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -614,7 +614,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -645,7 +645,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -676,7 +676,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -707,7 +707,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -738,7 +738,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -769,7 +769,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -805,7 +805,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -841,7 +841,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -877,7 +877,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -913,7 +913,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -949,7 +949,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -985,7 +985,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -1044,7 +1044,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -1092,7 +1092,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -1140,7 +1140,7 @@ public class UpdateAgentSkillsMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test

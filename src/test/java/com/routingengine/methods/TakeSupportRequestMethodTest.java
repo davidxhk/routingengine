@@ -54,9 +54,9 @@ public class TakeSupportRequestMethodTest extends AbstractMethodTest
         
         assertTrue(agentDidTakeSupportRequest(agentUUIDString, supportRequestUUIDString));
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -95,9 +95,9 @@ public class TakeSupportRequestMethodTest extends AbstractMethodTest
         
         assertTrue(agentDidTakeSupportRequest(agentUUIDString, supportRequestUUIDString));
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -354,9 +354,9 @@ public class TakeSupportRequestMethodTest extends AbstractMethodTest
         
         assertTrue(agentDidTakeSupportRequest(agentUUIDString, supportRequestUUIDString));
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -399,9 +399,9 @@ public class TakeSupportRequestMethodTest extends AbstractMethodTest
         
         assertTrue(agentDidTakeSupportRequest(agentUUIDString, supportRequestUUIDString));
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test

@@ -51,7 +51,7 @@ public class CheckAgentMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -86,7 +86,7 @@ public class CheckAgentMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -339,7 +339,7 @@ public class CheckAgentMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -378,7 +378,7 @@ public class CheckAgentMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test

@@ -50,7 +50,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agent[0].getUUID().toString());
+        agentGetsRemoved(agent[0].getUUID().toString());
     }
     
     @Test
@@ -82,7 +82,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agent[0].getUUID().toString());
+        agentGetsRemoved(agent[0].getUUID().toString());
     }
     
     @Test
@@ -492,7 +492,7 @@ public class NewAgentMethodTest extends AbstractMethodTest
             }
         });
         
-        removeAgent(agent[0].getUUID().toString());
+        agentGetsRemoved(agent[0].getUUID().toString());
     }
     
     @Test

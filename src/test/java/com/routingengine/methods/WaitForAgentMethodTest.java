@@ -25,7 +25,7 @@ public class WaitForAgentMethodTest extends AbstractMethodTest
     {
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", 1);
         
-        final String agentUUIDString = generateNewAgent(Map.of(1, true));
+        final String agentUUIDString = generateNewAgent("rainbow_agent", Map.of(1, true));
         
         agentUpdatesAvailability(agentUUIDString, true);
         
@@ -50,9 +50,9 @@ public class WaitForAgentMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test
@@ -190,7 +190,7 @@ public class WaitForAgentMethodTest extends AbstractMethodTest
     {
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", 1);
         
-        final String agentUUIDString = generateNewAgent(Map.of(1, true));
+        final String agentUUIDString = generateNewAgent("rainbow_agent", Map.of(1, true));
         
         agentUpdatesAvailability(agentUUIDString, true);
         
@@ -219,9 +219,9 @@ public class WaitForAgentMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
         
-        removeAgent(agentUUIDString);
+        agentGetsRemoved(agentUUIDString);
     }
     
     @Test

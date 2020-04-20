@@ -46,7 +46,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
     }
     
     @Test
@@ -77,7 +77,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
     }
     
     @Test
@@ -214,7 +214,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
     }
     
     @Test
@@ -245,7 +245,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
     }
     
     @Test
@@ -276,7 +276,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
     }
     
     @Test
@@ -307,7 +307,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
     }
     
     @Test
@@ -338,7 +338,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
     }
     
         
@@ -400,7 +400,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
             }
         });
         
-        removeSupportRequest(supportRequestUUIDString);
+        supportRequestGetsRemoved(supportRequestUUIDString);
     }
     
     @Test
