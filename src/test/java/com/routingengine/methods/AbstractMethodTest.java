@@ -101,8 +101,16 @@ public abstract class AbstractMethodTest
     
     protected static final void assumeResponseDidSucceed(JsonResponse response)
     {
-        if (!response.didSucceed())
-            assumeTrue("assumed " + response.getMethod() + " would succeed, instead got " + response.getPayload(), false);
+        String error = "assumed " + response.getMethod() + " would succeed, instead got " + response.getPayload();
+        
+        assumeTrue(error, response.didSucceed());
+    }
+    
+    protected static final void assumeResponseDidNotSucceed(JsonResponse response)
+    {
+        String error = "assumed " + response.getMethod() + " would not succeed, instead got " + response.getPayload();
+        
+        assumeFalse(error, response.didSucceed());
     }
     
     protected static final Agent assumeResponseHasAgentPayload(JsonResponse response)
@@ -113,7 +121,7 @@ public abstract class AbstractMethodTest
         
         try {
             JsonObject payload = castToJsonObject(response.getPayload());
-                
+            
             agent = Agent.fromJson(payload);
         }
         
@@ -134,7 +142,7 @@ public abstract class AbstractMethodTest
         
         try {
             JsonObject payload = castToJsonObject(response.getPayload());
-                
+            
             supportRequest = SupportRequest.fromJson(payload);
         }
         
@@ -147,52 +155,29 @@ public abstract class AbstractMethodTest
         return supportRequest;
     }
     
+    protected static final void assumeResponseHasErrorPayload(JsonResponse response, String error)
+    {
+        assumeResponseDidNotSucceed(response);
+        
+        String payload = null;
+        
+        try {
+            payload = castToString(response.getPayload());
+        }
+        
+        catch (IllegalArgumentException exception) {
+            assumeNoException(exception);
+        }
+        
+        assumeNotNull(payload);
+        
+        assumeTrue(error.equals(payload));
+    }
+    
     protected static final void assertResponseDidSucceed(JsonResponse response)
     {
         if (!response.didSucceed())
-            fail("expected " + response.getMethod() + " to fail, instead got " + response.getPayload());
-    }
-    
-    protected static final Agent assertResponseHasAgentPayload(JsonResponse response)
-    {
-        assumeResponseDidSucceed(response);
-        
-        Agent agent = null;
-        
-        try {
-            JsonObject payload = castToJsonObject(response.getPayload());
-                
-            agent = Agent.fromJson(payload);
-        }
-        
-        catch (IllegalArgumentException exception) {
-            fail(exception);
-        }
-        
-        assumeNotNull(agent);
-        
-        return agent;
-    }
-    
-    protected static final SupportRequest assertResponseHasSupportRequestPayload(JsonResponse response)
-    {
-        assumeResponseDidSucceed(response);
-        
-        SupportRequest supportRequest = null;
-        
-        try {
-            JsonObject payload = castToJsonObject(response.getPayload());
-                
-            supportRequest = SupportRequest.fromJson(payload);
-        }
-        
-        catch (IllegalArgumentException exception) {
-            fail(exception);
-        }
-        
-        assumeNotNull(supportRequest);
-        
-        return supportRequest;
+            fail("expected " + response.getMethod() + " to succeed, instead got " + response.getPayload());
     }
     
     protected static final void assertResponseDidNotSucceed(JsonResponse response)
@@ -201,10 +186,64 @@ public abstract class AbstractMethodTest
             fail("expected " + response.getMethod() + " to fail, instead got " + response.getPayload());
     }
     
+    protected static final Agent assertResponseHasAgentPayload(JsonResponse response)
+    {
+        assertResponseDidSucceed(response);
+        
+        Agent agent = null;
+        
+        try {
+            JsonObject payload = castToJsonObject(response.getPayload());
+            
+            agent = Agent.fromJson(payload);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            fail(exception);
+        }
+        
+        assertNotNull(agent);
+        
+        return agent;
+    }
+    
+    protected static final SupportRequest assertResponseHasSupportRequestPayload(JsonResponse response)
+    {
+        assertResponseDidSucceed(response);
+        
+        SupportRequest supportRequest = null;
+        
+        try {
+            JsonObject payload = castToJsonObject(response.getPayload());
+            
+            supportRequest = SupportRequest.fromJson(payload);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            fail(exception);
+        }
+        
+        assertNotNull(supportRequest);
+        
+        return supportRequest;
+    }
+    
     protected static final void assertResponseHasErrorPayload(JsonResponse response, String error)
     {
-        String payload = castToString(response.getPayload());
-                
+        assertResponseDidNotSucceed(response);
+        
+        String payload = null;
+        
+        try {
+            payload = castToString(response.getPayload());
+        }
+        
+        catch (IllegalArgumentException exception) {
+            fail(exception);
+        }
+        
+        assertNotNull(payload);
+        
         assertEquals(error, payload);
     }
     
@@ -223,9 +262,7 @@ public abstract class AbstractMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assumeResponseDidSucceed(response);
-                
-                SupportRequest supportRequest = SupportRequest.fromJson(castToJsonObject(response.getPayload()));
+                SupportRequest supportRequest = assumeResponseHasSupportRequestPayload(response);
                 
                 supportRequestUUIDString[0] = supportRequest.getUUID().toString();
             }
@@ -251,9 +288,7 @@ public abstract class AbstractMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assumeResponseDidSucceed(response);
-                
-                SupportRequest supportRequest = SupportRequest.fromJson(castToJsonObject(response.getPayload()));
+                SupportRequest supportRequest = assumeResponseHasSupportRequestPayload(response);
                 
                 supportRequestUUIDString[0] = supportRequest.getUUID().toString();
             }
@@ -264,7 +299,7 @@ public abstract class AbstractMethodTest
         return supportRequestUUIDString[0];
     }
     
-    protected static final String generateNewAgent(@SuppressWarnings("rawtypes") Map skills)
+    protected static final String generateNewAgent(String rainbowId, @SuppressWarnings("rawtypes") Map skills)
         throws IOException, InterruptedException, ExecutionException
     {
         String[] agentUUIDString = new String[] {null};
@@ -275,13 +310,11 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                newAgent(skills);
+                newAgent(rainbowId, skills);
                 
                 JsonResponse response = awaitResponse();
                 
-                assumeResponseDidSucceed(response);
-                
-                Agent agent = Agent.fromJson(castToJsonObject(response.getPayload()));
+                Agent agent = assumeResponseHasAgentPayload(response);
                 
                 agentUUIDString[0] = agent.getUUID().toString();
             }
@@ -305,9 +338,7 @@ public abstract class AbstractMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assumeResponseDidSucceed(response);
-                
-                SupportRequest supportRequest = SupportRequest.fromJson(castToJsonObject(response.getPayload()));
+                SupportRequest supportRequest = assumeResponseHasSupportRequestPayload(response);
                 
                 assumeFalse("support request already has assigned agent", supportRequest.hasAssignedAgent());
                 
@@ -324,6 +355,8 @@ public abstract class AbstractMethodTest
                 throws IOException, InterruptedException
             {
                 waitForAgent(supportRequestUUIDString);
+                
+                awaitResponse();
             }
         });
     }
@@ -337,13 +370,11 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                activateAgent(agentUUIDString, isActivated);
+                activateAgentWithUUID(agentUUIDString, isActivated);
                 
                 JsonResponse response = awaitResponse();
                 
-                assumeResponseDidSucceed(response);
-                
-                Agent agent = Agent.fromJson(castToJsonObject(response.getPayload()));
+                Agent agent = assumeResponseHasAgentPayload(response);
                 
                 assumeTrue(isActivated.equals(agent.isActivated()));
             }
@@ -359,13 +390,11 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                updateAgentAvailability(agentUUIDString, isAvailable);
+                updateAgentAvailabilityWithUUID(agentUUIDString, isAvailable);
                 
                 JsonResponse response = awaitResponse();
                 
-                assumeResponseDidSucceed(response);
-                
-                Agent agent = Agent.fromJson(castToJsonObject(response.getPayload()));
+                Agent agent = assumeResponseHasAgentPayload(response);
                 
                 assumeTrue(isAvailable.equals(agent.isAvailable()));
             }
@@ -381,13 +410,11 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                checkAgent(agentUUIDString);
+                checkAgentWithUUID(agentUUIDString);
                 
                 JsonResponse response = awaitResponse();
                 
-                assumeResponseDidSucceed(response);
-                
-                Agent agent = Agent.fromJson(castToJsonObject(response.getPayload()));
+                Agent agent = assumeResponseHasAgentPayload(response);
                 
                 assumeFalse("agent already has assigned support request", agent.hasAssignedSupportRequest());
                 
@@ -405,7 +432,9 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                takeSupportRequest(agentUUIDString);
+                takeSupportRequestWithUUID(agentUUIDString);
+                
+                awaitResponse();
             }
         });
     }
@@ -421,13 +450,11 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                checkAgent(agentUUIDString);
+                checkAgentWithUUID(agentUUIDString);
                 
                 JsonResponse response = awaitResponse();
                 
-                assumeResponseDidSucceed(response);
-                
-                Agent agent = Agent.fromJson(castToJsonObject(response.getPayload()));
+                Agent agent = assumeResponseHasAgentPayload(response);
                 
                 assumeTrue("agent not activated", agent.isActivated());
                 
@@ -441,9 +468,7 @@ public abstract class AbstractMethodTest
                 
                 response = awaitResponse();
                 
-                assumeResponseDidSucceed(response);
-                
-                SupportRequest supportRequest = SupportRequest.fromJson(castToJsonObject(response.getPayload()));
+                SupportRequest supportRequest = assumeResponseHasSupportRequestPayload(response);
                 
                 assumeTrue("support request is closed", supportRequest.isOpen());
                 
@@ -473,7 +498,22 @@ public abstract class AbstractMethodTest
                 
                 JsonResponse response = awaitResponse();
                 
-                assumeResponseDidSucceed(response);
+                SupportRequest supportRequest = assumeResponseHasSupportRequestPayload(response);
+                
+                assumeFalse("support request is not closed", supportRequest.isOpen());
+                
+                assumeFalse("support request is still waiting", supportRequest.isWaiting());
+                
+                assumeFalse("support request is still assigned an agent", supportRequest.hasAssignedAgent());
+                
+                checkSupportRequest(supportRequestUUIDString);
+                
+                response = awaitResponse();
+                
+                assumeResponseDidNotSucceed(response);
+                
+                assumeResponseHasErrorPayload(response, "uuid not found");
+                
             }
         });
     }
@@ -487,11 +527,27 @@ public abstract class AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                removeAgent(agentUUIDString);
+                removeAgentWithUUID(agentUUIDString);
                 
                 JsonResponse response = awaitResponse();
                 
-                assertResponseDidSucceed(response);
+                Agent agent = assumeResponseHasAgentPayload(response);
+                
+                assumeFalse("agent is still activated", agent.isActivated());
+                
+                assumeFalse("agent is still waiting", agent.isWaiting());
+                
+                assumeFalse("agent is still assigned a support request", agent.isAvailable());
+                
+                assumeFalse("agent is still available", agent.hasAssignedSupportRequest());
+                
+                checkAgentWithUUID(agentUUIDString);
+                
+                response = awaitResponse();
+                
+                assumeResponseDidNotSucceed(response);
+                
+                assumeResponseHasErrorPayload(response, "uuid not found");
             }
         });
     }
