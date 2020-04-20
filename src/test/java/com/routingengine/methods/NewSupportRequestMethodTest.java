@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.routingengine.SupportRequest;
@@ -20,114 +21,80 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
     @Test
     @DisplayName("Test 1.1 - Name, email, and type index")
     void test01()
-        throws IOException
+        throws IOException, InterruptedException, ExecutionException
     {
+        final String name = "bob";
+        
+        final String email = "bob@abc.com";
+        
+        final int type = 1;
+        
+        SupportRequest[] supportRequest = new SupportRequest[1];
+        
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                String name = "bob";
-                String email = "bob@abc.com";
-                int type = 1;
-                
                 newSupportRequest(name, email, type);
                 
                 JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidSucceed(response);
+                supportRequest[0] = assertResponseHasSupportRequestPayload(response);
                 
-                SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
+                assertEquals(name, supportRequest[0].getUser().getName());
                 
-                assertEquals(name, supportRequest.getUser().getName());
+                assertEquals(email, supportRequest[0].getUser().getEmail());
                 
-                assertEquals(email, supportRequest.getUser().getEmail());
-                
-                assertEquals(Type.of(type), supportRequest.getType());
-                
-                removeSupportRequest(supportRequest.getUUID().toString());
+                assertEquals(Type.of(type), supportRequest[0].getType());
             }
         });
+        
+        supportRequestGetsRemoved(supportRequest[0].getUUID().toString());
     }
     
     @Test
     @DisplayName("Test 1.2 - Name, email, and type string")
     void test02()
-        throws IOException
+        throws IOException, InterruptedException, ExecutionException
     {
+        final String name = "bob";
+        
+        final String email = "bob@abc.com";
+        
+        final String type = "GENERAL_ENQUIRY";
+        
+        SupportRequest[] supportRequest = new SupportRequest[1];
+        
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                String name = "bob";
-                String email = "bob@abc.com";
-                String type = "GENERAL_ENQUIRY";
-                
                 newSupportRequest(name, email, type);
                 
                 JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidSucceed(response);
+                supportRequest[0] = assertResponseHasSupportRequestPayload(response);
                 
-                SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
+                assertEquals(name, supportRequest[0].getUser().getName());
                 
-                assertEquals(name, supportRequest.getUser().getName());
+                assertEquals(email, supportRequest[0].getUser().getEmail());
                 
-                assertEquals(email, supportRequest.getUser().getEmail());
-                
-                assertEquals(Type.of(type), supportRequest.getType());
-                
-                removeSupportRequest(supportRequest.getUUID().toString());
+                assertEquals(Type.of(type), supportRequest[0].getType());
             }
         });
-    }
-    
-    @Test
-    @DisplayName("Test 1.3 - Name, email, type and address")
-    void test03()
-        throws IOException
-    {
-        execute(new ClientConnectionHandler() {
-            @Override
-            public void runMainLoop()
-                throws IOException, InterruptedException
-            {
-                String name = "bob";
-                String email = "bob@abc.com";
-                String type = "GENERAL_ENQUIRY";
-                String address = "127.0.0.1";
-                
-                newSupportRequest(name, email, type, address);
-                
-                JsonResponse response = awaitResponse();
-                
-                assertEquals(method, response.getMethod());
-                
-                assertResponseDidSucceed(response);
-                
-                SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
-                
-                assertEquals(name, supportRequest.getUser().getName());
-                
-                assertEquals(email, supportRequest.getUser().getEmail());
-                
-                assertEquals(Type.of(type), supportRequest.getType());
-                
-                assertEquals(address, supportRequest.getAddress().getHostAddress().toString());
-                
-                removeSupportRequest(supportRequest.getUUID().toString());
-            }
-        });
+        
+        supportRequestGetsRemoved(supportRequest[0].getUUID().toString());
     }
     
     @Test
     @DisplayName("Test 2.1 - Missing name")
-    void test04()
+    void test03()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -145,16 +112,14 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "name missing");
             }
         });
     }
     
     @Test
-    @DisplayName("Test 2.2.1 - Invalid name case 1")
-    void test05()
+    @DisplayName("Test 2.2.1 - Invalid name: json array")
+    void test04()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -173,16 +138,14 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "name invalid");
             }
         });
     }
     
     @Test
-    @DisplayName("Test 2.2.2 - Invalid name case 2")
-    void test06()
+    @DisplayName("Test 2.2.2 - Invalid name: json object")
+    void test05()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -201,8 +164,6 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "name invalid");
             }
         });
@@ -210,7 +171,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 3.1 - Missing email")
-    void test07()
+    void test06()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -228,16 +189,14 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "email missing");
             }
         });
     }
     
     @Test
-    @DisplayName("Test 3.2.1 - Invalid email case 1")
-    void test08()
+    @DisplayName("Test 3.2.1 - Invalid email: json array")
+    void test07()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -256,16 +215,14 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "email invalid");
             }
         });
     }
     
     @Test
-    @DisplayName("Test 3.2.2 - Invalid email case 2")
-    void test09()
+    @DisplayName("Test 3.2.2 - Invalid email: json object")
+    void test08()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -284,8 +241,6 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "email invalid");
             }
         });
@@ -293,7 +248,7 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 4.1 - Missing type")
-    void test10()
+    void test09()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -311,16 +266,14 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "type missing");
             }
         });
     }
     
     @Test
-    @DisplayName("Test 4.2.1 - Invalid type case 1")
-    void test11()
+    @DisplayName("Test 4.2.1 - Invalid type: json array")
+    void test10()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -339,16 +292,14 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "type invalid");
             }
         });
     }
     
     @Test
-    @DisplayName("Test 4.2.2 - Invalid type case 2")
-    void test12()
+    @DisplayName("Test 4.2.2 - Invalid type: json object")
+    void test11()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -367,16 +318,14 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "type invalid");
             }
         });
     }
     
     @Test
-    @DisplayName("Test 4.3 - Invalid type case 3")
-    void test13()
+    @DisplayName("Test 4.3 - Invalid type: index out of bounds")
+    void test12()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -395,16 +344,14 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "type index out of bounds");
             }
         });
     }
     
     @Test
-    @DisplayName("Test 4.4 - Invalid type case 4")
-    void test14()
+    @DisplayName("Test 4.4 - Invalid type: invalid string")
+    void test13()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -423,132 +370,14 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "type string invalid");
             }
         });
     }
     
     @Test
-    @DisplayName("Test 5.1.1 - Invalid address case 1")
-    void test15()
-        throws IOException
-    {
-        execute(new ClientConnectionHandler() {
-            @Override
-            public void runMainLoop()
-                throws IOException, InterruptedException
-            {
-                new JsonRequest()
-                    .setMethod(method)
-                    .setArgument("name", "bob")
-                    .setArgument("email", "bob@abc.com")
-                    .setArgument("type", 1)
-                    .setArgument("address", new ArrayList<>())
-                    .writeTo(jsonWriter);
-                
-                JsonResponse response = awaitResponse();
-                
-                assertEquals(method, response.getMethod());
-                
-                assertResponseDidNotSucceed(response);
-                
-                assertResponseHasErrorPayload(response, "address invalid");
-            }
-        });
-    }
-    
-    @Test
-    @DisplayName("Test 5.1.2 - Invalid address case 2")
-    void test16()
-        throws IOException
-    {
-        execute(new ClientConnectionHandler() {
-            @Override
-            public void runMainLoop()
-                throws IOException, InterruptedException
-            {
-                new JsonRequest()
-                    .setMethod(method)
-                    .setArgument("name", "bob")
-                    .setArgument("email", "bob@abc.com")
-                    .setArgument("type", 1)
-                    .setArgument("address", new HashMap<>())
-                    .writeTo(jsonWriter);
-                
-                JsonResponse response = awaitResponse();
-                
-                assertEquals(method, response.getMethod());
-                
-                assertResponseDidNotSucceed(response);
-                
-                assertResponseHasErrorPayload(response, "address invalid");
-            }
-        });
-    }
-    
-    @Test
-    @DisplayName("Test 5.1.3 - Invalid address case 3")
-    void test17()
-        throws IOException
-    {
-        execute(new ClientConnectionHandler() {
-            @Override
-            public void runMainLoop()
-                throws IOException, InterruptedException
-            {
-                new JsonRequest()
-                    .setMethod(method)
-                    .setArgument("name", "bob")
-                    .setArgument("email", "bob@abc.com")
-                    .setArgument("type", 1)
-                    .setArgument("address", "adsflasdfmlsdf")
-                    .writeTo(jsonWriter);
-                
-                JsonResponse response = awaitResponse();
-                
-                assertEquals(method, response.getMethod());
-                
-                assertResponseDidNotSucceed(response);
-                
-                assertResponseHasErrorPayload(response, "address invalid");
-            }
-        });
-    }
-    
-    @Test
-    @DisplayName("Test 5.1.4 - Invalid address case 4")
-    void test18()
-        throws IOException
-    {
-        execute(new ClientConnectionHandler() {
-            @Override
-            public void runMainLoop()
-                throws IOException, InterruptedException
-            {
-                new JsonRequest()
-                    .setMethod(method)
-                    .setArgument("name", "bob")
-                    .setArgument("email", "bob@abc.com")
-                    .setArgument("type", 1)
-                    .setArgument("address", "999.999.999.999")
-                    .writeTo(jsonWriter);
-                
-                JsonResponse response = awaitResponse();
-                
-                assertEquals(method, response.getMethod());
-                
-                assertResponseDidNotSucceed(response);
-                
-                assertResponseHasErrorPayload(response, "address invalid");
-            }
-        });
-    }
-    
-    @Test
-    @DisplayName("Test 6.1 - Missing input")
-    void test19()
+    @DisplayName("Test 5.1 - Missing input")
+    void test14()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -563,8 +392,6 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
-                
-                assertResponseDidNotSucceed(response);
                 
                 assertResponseHasErrorPayload(response, "name missing");
             }
@@ -572,24 +399,28 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 6.2 - Unexpected arguments")
-    void test20()
-        throws IOException
+    @DisplayName("Test 5.2 - Unexpected arguments")
+    void test15()
+        throws IOException, InterruptedException, ExecutionException
     {
+        final String name = "bob";
+        
+        final String email = "bob@abc.com";
+        
+        final int type = 1;
+        
+        SupportRequest[] supportRequest = new SupportRequest[1];
+                
         execute(new ClientConnectionHandler() {
             @Override
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                String name = "bob";
-                String email = "bob@abc.com";
-                int type = 1;
-                
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("name", name)
                     .setArgument("email", email)
-                    .setArgument("type", 1)
+                    .setArgument("type", type)
                     .setArgument("something", "something?")
                     .writeTo(jsonWriter);
                 
@@ -597,22 +428,23 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidSucceed(response);
+                supportRequest[0] = assertResponseHasSupportRequestPayload(response);
                 
-                SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
+                assertEquals(name, supportRequest[0].getUser().getName());
                 
-                assertEquals(name, supportRequest.getUser().getName());
+                assertEquals(email, supportRequest[0].getUser().getEmail());
                 
-                assertEquals(email, supportRequest.getUser().getEmail());
-                
-                assertEquals(Type.of(type), supportRequest.getType());
+                assertEquals(Type.of(type), supportRequest[0].getType());
             }
         });
+        
+        supportRequestGetsRemoved(supportRequest[0].getUUID().toString());
     }
     
+    
     @Test
-    @DisplayName("Test 6.3.1 - Malformed arguments case 1")
-    void test21()
+    @DisplayName("Test 5.3.1 - Malformed arguments: string")
+    void test16()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -627,7 +459,27 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
+                assertResponseHasErrorPayload(response, "malformed arguments");
+            }
+        });
+    }
+    
+    @Test
+    @DisplayName("Test 5.3.2 - Malformed arguments: empty string")
+    void test17()
+        throws IOException
+    {
+        execute(new ClientConnectionHandler() {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException
+            {
+                jsonWriter.writeString(method + "");
+                jsonWriter.flush();
+                
+                JsonResponse response = awaitResponse();
+                
+                assertEquals(method, response.getMethod());
                 
                 assertResponseHasErrorPayload(response, "malformed arguments");
             }
@@ -635,8 +487,30 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 6.3.2 - Malformed arguments case 2")
-    void test22()
+    @DisplayName("Test 5.3.3 - Malformed arguments: numbers")
+    void test18()
+        throws IOException
+    {
+        execute(new ClientConnectionHandler() {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException
+            {
+                jsonWriter.writeString(method + " 1234");
+                jsonWriter.flush();
+                
+                JsonResponse response = awaitResponse();
+                
+                assertEquals(method, response.getMethod());
+                
+                assertResponseHasErrorPayload(response, "malformed arguments");
+            }
+        });
+    }
+    
+    @Test
+    @DisplayName("Test 5.3.4 - Malformed arguments: json array")
+    void test19()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -651,16 +525,14 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
     
     @Test
-    @DisplayName("Test 6.3.3 - Malformed arguments case 3")
-    void test23()
+    @DisplayName("Test 5.3.5 - Malformed arguments: invalid json object")
+    void test20()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -668,38 +540,12 @@ public class NewSupportRequestMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                jsonWriter.writeString(method + " ;!/");
+                jsonWriter.writeString(method + " {{{{");
                 jsonWriter.flush();
                 
                 JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
-                
-                assertResponseDidNotSucceed(response);
-                
-                assertResponseHasErrorPayload(response, "malformed arguments");
-            }
-        });
-    }
-    
-    @Test
-    @DisplayName("Test 6.3.4 - Malformed arguments case 4")
-    void test24()
-        throws IOException
-    {
-        execute(new ClientConnectionHandler() {
-            @Override
-            public void runMainLoop()
-                throws IOException, InterruptedException
-            {
-                jsonWriter.writeString(method + " }}}}");
-                jsonWriter.flush();
-                
-                JsonResponse response = awaitResponse();
-                
-                assertEquals(method, response.getMethod());
-                
-                assertResponseDidNotSucceed(response);
                 
                 assertResponseHasErrorPayload(response, "malformed arguments");
             }
