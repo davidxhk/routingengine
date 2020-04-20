@@ -147,7 +147,6 @@ public class ActivateAgentMethodTest extends AbstractMethodTest
         removeAgent(agentUUIDString);
     }
     
-    
     @Test
     @DisplayName("Test 2.1 - Missing uuid or rainbow id")
     void test05()
