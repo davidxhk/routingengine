@@ -1,6 +1,5 @@
 package com.routingengine.methods;
 
-import static com.routingengine.SupportRequest.Type;
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,6 +8,7 @@ import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.routingengine.SupportRequest;
+import com.routingengine.SupportRequest.Type;
 import com.routingengine.client.ClientConnectionHandler;
 import com.routingengine.json.JsonRequest;
 import com.routingengine.json.JsonResponse;
@@ -24,7 +24,9 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         throws IOException, InterruptedException, ExecutionException
     {
         final int oldType = 0;
+        
         final int newType = 1;
+        
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", oldType);
         
         execute(new ClientConnectionHandler() {
@@ -37,8 +39,6 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
                 JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
-                
-                assertResponseDidSucceed(response);
                 
                 SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
                 
@@ -55,7 +55,9 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         throws IOException, InterruptedException, ExecutionException
     {
         final String oldType = "CHECK_BILL";
+        
         final String newType = "GENERAL_ENQUIRY";
+        
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", oldType);
         
         execute(new ClientConnectionHandler() {
@@ -68,8 +70,6 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
                 JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
-                
-                assertResponseDidSucceed(response);
                 
                 SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
                 
@@ -92,14 +92,11 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
             {
                 new JsonRequest()
                     .setMethod(method)
-                    .setArgument("type", 1)
                     .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
-                
-                assertResponseDidNotSucceed(response);
                 
                 assertResponseHasErrorPayload(response, "uuid missing");
             }
@@ -107,7 +104,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 2.2.1 - Invalid uuid case 1")
+    @DisplayName("Test 2.2.1 - Invalid uuid: json array")
     void test04()
         throws IOException
     {
@@ -119,14 +116,11 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", new ArrayList<>())
-                    .setArgument("type", 1)
                     .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
-                
-                assertResponseDidNotSucceed(response);
                 
                 assertResponseHasErrorPayload(response, "uuid invalid");
             }
@@ -134,7 +128,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 2.2.2 - Invalid uuid case 2")
+    @DisplayName("Test 2.2.2 - Invalid uuid: json object")
     void test05()
         throws IOException
     {
@@ -146,14 +140,11 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", new HashMap<>())
-                    .setArgument("type", 1)
                     .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
-                
-                assertResponseDidNotSucceed(response);
                 
                 assertResponseHasErrorPayload(response, "uuid invalid");
             }
@@ -161,7 +152,7 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 2.2.3 - Invalid uuid case 3")
+    @DisplayName("Test 2.2.3 - Invalid uuid: non-conforming string")
     void test06()
         throws IOException
     {
@@ -173,14 +164,11 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
                 new JsonRequest()
                     .setMethod(method)
                     .setArgument("uuid", "hahaha test test")
-                    .setArgument("type", 1)
                     .writeTo(jsonWriter);
                 
                 JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
-                
-                assertResponseDidNotSucceed(response);
                 
                 assertResponseHasErrorPayload(response, "uuid invalid");
             }
@@ -188,8 +176,32 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.1 - Missing type")
+    @DisplayName("Test 2.2.4 - Invalid uuid: unknown uuid")
     void test07()
+        throws IOException
+    {
+        execute(new ClientConnectionHandler() {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException
+            {
+                new JsonRequest()
+                    .setMethod(method)
+                    .setArgument("uuid", "b50544fc-c7db-4c84-ae49-297c3676c796")
+                    .writeTo(jsonWriter);
+                
+                JsonResponse response = awaitResponse();
+                
+                assertEquals(method, response.getMethod());
+                
+                assertResponseHasErrorPayload(response, "uuid not found");
+            }
+        });
+    }
+    
+    @Test
+    @DisplayName("Test 3.1 - Missing type")
+    void test08()
         throws IOException, InterruptedException, ExecutionException
     {
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", 1);
@@ -208,8 +220,6 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "type missing");
             }
         });
@@ -218,8 +228,8 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.2.1 - Invalid type case 1")
-    void test08()
+    @DisplayName("Test 3.2.1 - Invalid type: json array")
+    void test09()
         throws IOException, InterruptedException, ExecutionException
     {
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", 1);
@@ -239,8 +249,6 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "type invalid");
             }
         });
@@ -248,9 +256,9 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         supportRequestGetsRemoved(supportRequestUUIDString);
     }
     
-    @Test
-    @DisplayName("Test 3.2.2 - Invalid type case 2")
-    void test09()
+   @Test
+    @DisplayName("Test 3.2.2 - Invalid type: json object")
+    void test10()
         throws IOException, InterruptedException, ExecutionException
     {
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", 1);
@@ -270,8 +278,6 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "type invalid");
             }
         });
@@ -280,8 +286,8 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.3 - Invalid type case 3")
-    void test10()
+    @DisplayName("Test 3.3 - Invalid type: index out of bounds")
+    void test11()
         throws IOException, InterruptedException, ExecutionException
     {
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", 1);
@@ -301,8 +307,6 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "type index out of bounds");
             }
         });
@@ -311,8 +315,8 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 3.4 - Invalid type case 4")
-    void test11()
+    @DisplayName("Test 3.4 - Invalid type: invalid string")
+    void test12()
         throws IOException, InterruptedException, ExecutionException
     {
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", 1);
@@ -332,8 +336,6 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "type string invalid");
             }
         });
@@ -341,10 +343,9 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
         supportRequestGetsRemoved(supportRequestUUIDString);
     }
     
-        
     @Test
     @DisplayName("Test 4.1 - Missing input")
-    void test12()
+    void test13()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -360,8 +361,6 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "uuid missing");
             }
         });
@@ -369,11 +368,13 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
     
     @Test
     @DisplayName("Test 4.2 - Unexpected arguments")
-    void test13()
+    void test14()
         throws IOException, InterruptedException, ExecutionException
     {
         final int oldType = 0;
+        
         final int newType = 1;
+        
         final String supportRequestUUIDString = generateNewSupportRequest("bob", "bob@abc.com", oldType);
         
         execute(new ClientConnectionHandler() {
@@ -392,8 +393,6 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidSucceed(response);
-                
                 SupportRequest supportRequest = assertResponseHasSupportRequestPayload(response);
                 
                 assertEquals(Type.of(newType), supportRequest.getType());
@@ -404,8 +403,8 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 4.3.1 - Malformed arguments case 1")
-    void test14()
+    @DisplayName("Test 4.3.1 - Malformed arguments: string")
+    void test15()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -420,7 +419,27 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
+                assertResponseHasErrorPayload(response, "malformed arguments");
+            }
+        });
+    }
+    
+    @Test
+    @DisplayName("Test 4.3.2 - Malformed arguments: empty string")
+    void test16()
+        throws IOException
+    {
+        execute(new ClientConnectionHandler() {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException
+            {
+                jsonWriter.writeString(method + "");
+                jsonWriter.flush();
+                
+                JsonResponse response = awaitResponse();
+                
+                assertEquals(method, response.getMethod());
                 
                 assertResponseHasErrorPayload(response, "malformed arguments");
             }
@@ -428,8 +447,30 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
     }
     
     @Test
-    @DisplayName("Test 4.3.2 - Malformed arguments case 2")
-    void test15()
+    @DisplayName("Test 4.3.3 - Malformed arguments: numbers")
+    void test17()
+        throws IOException
+    {
+        execute(new ClientConnectionHandler() {
+            @Override
+            public void runMainLoop()
+                throws IOException, InterruptedException
+            {
+                jsonWriter.writeString(method + " 1234");
+                jsonWriter.flush();
+                
+                JsonResponse response = awaitResponse();
+                
+                assertEquals(method, response.getMethod());
+                
+                assertResponseHasErrorPayload(response, "malformed arguments");
+            }
+        });
+    }
+    
+    @Test
+    @DisplayName("Test 4.3.4 - Malformed arguments: json array")
+    void test18()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -444,16 +485,14 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
                 
                 assertEquals(method, response.getMethod());
                 
-                assertResponseDidNotSucceed(response);
-                
                 assertResponseHasErrorPayload(response, "malformed arguments");
             }
         });
     }
     
     @Test
-    @DisplayName("Test 4.3.3 - Malformed arguments case 3")
-    void test16()
+    @DisplayName("Test 4.3.5 - Malformed arguments: invalid json object")
+    void test19()
         throws IOException
     {
         execute(new ClientConnectionHandler() {
@@ -461,38 +500,12 @@ public class ChangeSupportRequestTypeMethodTest extends AbstractMethodTest
             public void runMainLoop()
                 throws IOException, InterruptedException
             {
-                jsonWriter.writeString(method + " ;!/");
+                jsonWriter.writeString(method + " {{{{");
                 jsonWriter.flush();
                 
                 JsonResponse response = awaitResponse();
                 
                 assertEquals(method, response.getMethod());
-                
-                assertResponseDidNotSucceed(response);
-                
-                assertResponseHasErrorPayload(response, "malformed arguments");
-            }
-        });
-    }
-    
-    @Test
-    @DisplayName("Test 4.3.4 - Malformed arguments case 4")
-    void test17()
-        throws IOException
-    {
-        execute(new ClientConnectionHandler() {
-            @Override
-            public void runMainLoop()
-                throws IOException, InterruptedException
-            {
-                jsonWriter.writeString(method + " }}}}");
-                jsonWriter.flush();
-                
-                JsonResponse response = awaitResponse();
-                
-                assertEquals(method, response.getMethod());
-                
-                assertResponseDidNotSucceed(response);
                 
                 assertResponseHasErrorPayload(response, "malformed arguments");
             }
