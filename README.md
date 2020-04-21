@@ -1,6 +1,6 @@
 # Setup
 
-To install `RoutingEngine`, run the following commands:
+To install `RoutingEngine`, run the following commands on your Unix machine (e.g. MacOS) or on Windows with [Git Bash][git_bash]:
 
     git clone https://github.com/han-keong/routingengine
     
@@ -235,6 +235,7 @@ Lastly, if the administrator would just like to have a summary of all the number
 [get_agent_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_agent_status_tests.md
 [get_queue_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_queue_status_tests.md
 [get_status_overview]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_status_overview_tests.md
+
 
 
 
