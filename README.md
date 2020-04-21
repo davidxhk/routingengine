@@ -13,40 +13,43 @@ To install `RoutingEngine`, run the following commands on your Unix machine (e.g
 * To see a demonstration of the routing engine, run the following command:
 
   - On your Unix machine (e.g. MacOS)
-  ```
-  java -cp "bin:lib/*" com.routingengine.examples.RoutingEngineExample 50000
-  ```
+    ```
+    java -cp "bin:lib/*" com.routingengine.examples.RoutingEngineExample 50000
+    ```
 
   - On Windows with [Git Bash][git_bash]
-  ```
-  java -cp "bin\;lib/*" com.routingengine.examples.RoutingEngineExample 50000
-  ```
+    ```
+    java -cp "bin\;lib/*" com.routingengine.examples.RoutingEngineExample 50000
+    ```
 
 
 * To run the server, run the following command:
 
   - On your Unix machine (e.g. MacOS)
-  ```
-  java -cp "bin:lib/*" com.routingengine.server.Server 50000
-  ```
+    ```
+    java -cp "bin:lib/*" com.routingengine.server.Server 50000
+    ```
 
   - On Windows with [Git Bash][git_bash]
-  ```
-  java -cp "bin\;lib/*" com.routingengine.server.Server 50000
-  ```
+    ```
+    java -cp "bin\;lib/*" com.routingengine.server.Server 50000
+     ```
 
 
-* To see a demonstration of the client, start the server (see above) and run the following command:
+* To see a demonstration of the client, do the following:
 
-  - On your Unix machine (e.g. MacOS)
-  ```
-  java -cp "bin:lib/*" com.routingengine.examples.ClientExample 50000
-  ```
+  1. Ensure that the server is running in a separate terminal (see above on how to start the server)
+  
+  2. Run the following command:
+    - On your Unix machine (e.g. MacOS)
+      ```
+      java -cp "bin:lib/*" com.routingengine.examples.ClientExample 50000
+      ```
 
-  - On Windows with [Git Bash][git_bash]
-  ```
-  java -cp "bin\;lib/*" com.routingengine.examples.ClientExample 50000
-  ```
+    - On Windows with [Git Bash][git_bash]
+      ```
+      java -cp "bin\;lib/*" com.routingengine.examples.ClientExample 50000
+      ```
 
 * After running each of the above commands, you can examine the output again by opening `logfile.txt` in the project root folder.
 
@@ -235,6 +238,11 @@ Lastly, if the administrator would just like to have a summary of all the number
 [get_agent_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_agent_status_tests.md
 [get_queue_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_queue_status_tests.md
 [get_status_overview]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_status_overview_tests.md
+
+
+
+
+
 
 
 
