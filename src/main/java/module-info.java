@@ -15,4 +15,6 @@ module com.routingengine
     requires org.junit.jupiter.api;
     requires org.junit.platform.runner;
     requires org.junit.platform.suite.api;
+    
+    opens com.routingengine.methods;
 }
