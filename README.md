@@ -73,7 +73,7 @@ The JSON protocol has been designed for three kinds of users:
   2. [*Agents*](#agent-methods)
   3. [*Admins*](#admin-methods) (administrators)
 
-This protocol has a total of [19 methods][docs], which can be categorised by their intended users.
+This protocol has a total of [20 methods][docs], which can be categorised by their intended users.
 
 The following sections detail how the routing engine protocol works by explaining the purpose of each method to their respective users.
 
@@ -245,6 +245,7 @@ Lastly, if the administrator would just like to have a summary of all the number
 [get_agent_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_agent_status_tests.md
 [get_queue_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_queue_status_tests.md
 [get_status_overview]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_status_overview_tests.md
+
 
 
 
