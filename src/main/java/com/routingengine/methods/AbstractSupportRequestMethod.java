@@ -1,19 +1,19 @@
 package com.routingengine.methods;
 
 import static com.routingengine.json.JsonUtils.getAsString;
-import com.google.gson.JsonObject;
 import com.routingengine.SupportRequest;
+import com.routingengine.json.JsonRequest;
 
 
 public abstract class AbstractSupportRequestMethod extends AbstractAdminMethod
 {
-    protected final SupportRequest getSupportRequest(JsonObject arguments)
+    protected final SupportRequest getSupportRequest(JsonRequest request)
     {
-        String supportRequestUUIDString = getAsString(arguments, "uuid");
+        String supportRequestUUIDString = getAsString(request, "uuid");
         
         SupportRequest supportRequest = routingEngine.getSupportRequest(supportRequestUUIDString);
         
-        updateAddress(supportRequest, arguments);
+        updateAddress(supportRequest, request);
         
         return supportRequest;
     }

@@ -1,17 +1,17 @@
 package com.routingengine.methods;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.routingengine.SupportRequest;
+import com.routingengine.json.JsonRequest;
+import com.routingengine.json.JsonResponse;
 
 
 public class CheckSupportRequestMethod extends AbstractSupportRequestMethod
 {
     @Override
-    public JsonElement handle(JsonObject arguments)
+    public JsonResponse handle(JsonRequest request)
     {
-        SupportRequest supportRequest = getSupportRequest(arguments);
+        SupportRequest supportRequest = getSupportRequest(request);
         
-        return supportRequest.toJson();
+        return JsonResponse.success(request, supportRequest.toJson());
     }
 }

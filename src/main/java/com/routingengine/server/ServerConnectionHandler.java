@@ -18,7 +18,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
-import com.google.gson.JsonElement;
 import com.routingengine.MethodManager;
 import com.routingengine.RoutingEngine;
 import com.routingengine.json.JsonConnectionHandler;
@@ -40,7 +39,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
     private static final long PENDING_DUE_TIMEOUT = Long.MAX_VALUE;
     private final MethodManager methodManager;
     private final ExecutorService executorService;
-    private final ConcurrentMap<Integer, PendingMethod> pendingMethods;
+    private final ConcurrentMap<Integer, PendingRequest> pendingRequests;
     
     ServerConnectionHandler(Socket socket, RoutingEngine routingEngine)
         throws IOException
@@ -53,7 +52,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
         
         executorService = newFixedThreadPool(THREAD_POOL_SIZE);
         
-        pendingMethods = new ConcurrentHashMap<>();
+        pendingRequests = new ConcurrentHashMap<>();
     }
     
     @Override
@@ -88,7 +87,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
                 boolean inputReceived = false;
                 
                 while (!inputReceived) {
-                    checkPendingMethods();
+                    checkPendingRequests();
                     
                     inputReceived = waitForInput();
                 }
@@ -127,57 +126,57 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
             
             int ticketNumber = TICKET_COUNTER.getAndIncrement();
             
-            PendingMethod pendingMethod = new PendingMethod(jsonRequest, ticketNumber);
+            PendingRequest pendingRequest = new PendingRequest(jsonRequest, ticketNumber);
             
             try {
-                handlePendingMethod(pendingMethod);
+                handlePendingRequest(pendingRequest);
             }
             
             catch (TimeoutException exception) {
-                pendingMethods.put(ticketNumber, pendingMethod);
+                pendingRequests.put(ticketNumber, pendingRequest);
                 
-                pendingMethod
+                pendingRequest
                     .getPendingResponse()
                     .writeTo(jsonWriter);
             }
         }
     }
     
-    private final void checkPendingMethods()
+    private final void checkPendingRequests()
         throws IOException, InterruptedException
     {
-        for (Integer ticketNumber : pendingMethods.keySet()) {
-            PendingMethod pendingMethod = pendingMethods.get(ticketNumber);
+        for (Integer ticketNumber : pendingRequests.keySet()) {
+            PendingRequest pendingRequest = pendingRequests.get(ticketNumber);
             
             try {
-                handlePendingMethod(pendingMethod);
+                handlePendingRequest(pendingRequest);
                 
-                pendingMethods.remove(ticketNumber);
+                pendingRequests.remove(ticketNumber);
                 
                 continue;
             }
             
             catch (TimeoutException exception) {
                 
-                if (pendingMethod.isDue())
-                    pendingMethod
+                if (pendingRequest.isDue())
+                    pendingRequest
                         .getPendingResponse()
                         .writeTo(jsonWriter);
             }
         }
     }
     
-    private final void handlePendingMethod(PendingMethod pendingMethod)
+    private final void handlePendingRequest(PendingRequest pendingRequest)
         throws IOException, TimeoutException, InterruptedException
     {
         try {
-            JsonResponse response = pendingMethod.getFutureJsonResponse();
+            JsonResponse response = pendingRequest.getFutureJsonResponse();
             
             response.writeTo(jsonWriter);
         }
         
         catch (ExecutionException exception) {
-            log("Error while handling request: " + pendingMethod.getJsonRequest());
+            log("Error while handling request: " + pendingRequest.getJsonRequest());
             
             exception.printStackTrace();
         }
@@ -233,30 +232,26 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
         log("Server connection closed");
     }
     
-    private class PendingMethod
+    private class PendingRequest
     {
         private JsonRequest jsonRequest;
         private JsonResponse pendingResponse;
         private Future<JsonResponse> futureResponse;
         private long lastTimestamp;
         
-        private PendingMethod(JsonRequest jsonRequest, Integer ticketNumber)
+        private PendingRequest(JsonRequest request, Integer ticketNumber)
         {
-            this.jsonRequest = jsonRequest;
+            this.jsonRequest = request;
             
             futureResponse = executorService.submit(() -> {
                 JsonResponse response;
                 
                 try {
-                    JsonElement payload = methodManager.handle(
-                        jsonRequest.getMethod(),
-                        jsonRequest.getArguments());
-                    
-                    response = JsonResponse.success(jsonRequest, payload);
+                    response = methodManager.handle(request);
                 }
                 
                 catch (IllegalArgumentException | IllegalStateException exception) {
-                    response = JsonResponse.failure(jsonRequest, exception);
+                    response = JsonResponse.failure(request, exception);
                 }
                 
                 response.setTicketNumber(ticketNumber);
@@ -265,7 +260,7 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
             });
             
             pendingResponse = JsonResponse
-                .pending(jsonRequest)
+                .pending(request)
                 .setTicketNumber(ticketNumber);
             
             lastTimestamp = System.currentTimeMillis();

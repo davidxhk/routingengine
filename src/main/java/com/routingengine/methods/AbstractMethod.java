@@ -1,10 +1,10 @@
 package com.routingengine.methods;
 
 import static com.routingengine.json.JsonUtils.getAsString;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.routingengine.InetEntity;
 import com.routingengine.RoutingEngine;
+import com.routingengine.json.JsonRequest;
+import com.routingengine.json.JsonResponse;
 
 
 public abstract class AbstractMethod
@@ -19,26 +19,22 @@ public abstract class AbstractMethod
     }
     
     @Override
-    public final JsonElement handleArguments(JsonObject arguments)
+    public final JsonResponse handleRequest(JsonRequest request)
     {
-        arguments = beforeHandle(arguments);
+        beforeHandle(request);
         
-        JsonElement payload = handle(arguments);
+        JsonResponse response = handle(request);
         
-        return afterHandle(arguments, payload);
+        afterHandle(request, response);
+        
+        return response;
     }
     
-    protected JsonObject beforeHandle(JsonObject arguments)
-    {
-        return arguments;
-    }
+    protected void beforeHandle(JsonRequest request) { }
     
-    protected abstract JsonElement handle(JsonObject arguments);
+    protected abstract JsonResponse handle(JsonRequest request);
     
-    protected JsonElement afterHandle(JsonObject arguments, JsonElement payload)
-    {
-        return payload;
-    }
+    protected void afterHandle(JsonRequest request, JsonResponse response) { }
     
     protected static final void ensureMissingException(IllegalArgumentException exception)
     {
@@ -48,9 +44,9 @@ public abstract class AbstractMethod
             throw exception;
     }
     
-    protected static final void updateAddress(InetEntity entity, JsonObject arguments)
+    protected static final void updateAddress(InetEntity entity, JsonRequest request)
     {
-        String address = getAsString(arguments, "address");
+        String address = getAsString(request, "address");
         
         entity.setAddress(address);
     }

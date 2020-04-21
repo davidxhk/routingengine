@@ -1,15 +1,16 @@
 package com.routingengine.methods;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.routingengine.Agent;
+import com.routingengine.json.JsonRequest;
+import com.routingengine.json.JsonResponse;
 
 
 public class GetAgentStatusMethod extends AbstractAdminMethod
 {
     @Override
-    public JsonElement handle(JsonObject arguments)
+    public JsonResponse handle(JsonRequest request)
     {
         Agent[] agents = routingEngine.getAgents();
         
@@ -89,7 +90,7 @@ public class GetAgentStatusMethod extends AbstractAdminMethod
         
         agentStatus.addProperty("total", totalAgentCount);
         
-        return agentStatus;
+        return JsonResponse.success(request, agentStatus);
     }
     
     @Override

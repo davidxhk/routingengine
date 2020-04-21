@@ -1,17 +1,17 @@
 package com.routingengine.methods;
 
 import java.util.concurrent.TimeoutException;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.routingengine.SupportRequest;
+import com.routingengine.json.JsonRequest;
+import com.routingengine.json.JsonResponse;
 
 
 public class WaitForAgentMethod extends AbstractSupportRequestMethod
 {
     @Override
-    public JsonElement handle(JsonObject arguments)
+    public JsonResponse handle(JsonRequest request)
     {
-        SupportRequest supportRequest = getSupportRequest(arguments);
+        SupportRequest supportRequest = getSupportRequest(request);
         
         if (supportRequest.hasAssignedAgent())
             throw new IllegalStateException("support request already has assigned agent");
@@ -48,6 +48,6 @@ public class WaitForAgentMethod extends AbstractSupportRequestMethod
             throw new IllegalStateException("routing engine failed to assign agent");
         }
         
-        return supportRequest.toJson();
+        return JsonResponse.success(request, supportRequest.toJson());
     }
 }

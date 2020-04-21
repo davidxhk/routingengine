@@ -1,15 +1,16 @@
 package com.routingengine.methods;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.routingengine.Agent;
 import com.routingengine.SupportRequest;
+import com.routingengine.json.JsonRequest;
+import com.routingengine.json.JsonResponse;
 
 
 public class GetStatusOverviewMethod extends AbstractAdminMethod
 {
     @Override
-    public JsonElement handle(JsonObject arguments)
+    public JsonResponse handle(JsonRequest request)
     {
         JsonObject status = new JsonObject();
         
@@ -84,11 +85,10 @@ public class GetStatusOverviewMethod extends AbstractAdminMethod
         
         JsonObject queueStatus = new JsonObject();
         for (SupportRequest.Type requestType : SupportRequest.Type.values())
-            queueStatus.addProperty(requestType.toString(),
-                    routingEngine.getQueueCount(requestType));
+            queueStatus.addProperty(requestType.toString(), routingEngine.getQueueCount(requestType));
         status.add("queue", queueStatus);
         
-        return status;
+        return JsonResponse.success(request, status);
     }
     
     @Override

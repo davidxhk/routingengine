@@ -1,15 +1,16 @@
 package com.routingengine.methods;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.routingengine.SupportRequest;
+import com.routingengine.json.JsonRequest;
+import com.routingengine.json.JsonResponse;
 
 
 public class GetSupportRequestStatusMethod extends AbstractAdminMethod
 {
     @Override
-    public JsonElement handle(JsonObject arguments)
+    public JsonResponse handle(JsonRequest request)
     {
         SupportRequest[] supportRequests = routingEngine.getSupportRequests();
         
@@ -76,7 +77,7 @@ public class GetSupportRequestStatusMethod extends AbstractAdminMethod
         
         supportRequestStatus.addProperty("total", totalSupportRequestCount);
         
-        return supportRequestStatus;
+        return JsonResponse.success(request, supportRequestStatus);
     }
     
     @Override

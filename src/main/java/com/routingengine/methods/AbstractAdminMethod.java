@@ -1,21 +1,19 @@
 package com.routingengine.methods;
 
 import static com.routingengine.json.JsonUtils.getAsString;
-import com.google.gson.JsonObject;
+import com.routingengine.json.JsonRequest;
 
 
 public abstract class AbstractAdminMethod extends AbstractMethod
 {
     @Override
-    protected JsonObject beforeHandle(JsonObject arguments)
+    protected void beforeHandle(JsonRequest request)
     {
         if (requiresAdminRights()) {
-            String adminUUIDString = getAsString(arguments, "admin_uuid");
+            String adminUUIDString = getAsString(request, "admin_uuid");
             
             routingEngine.verifyAdmin(adminUUIDString);
         }
-        
-        return arguments;
     }
     
     protected abstract boolean requiresAdminRights();

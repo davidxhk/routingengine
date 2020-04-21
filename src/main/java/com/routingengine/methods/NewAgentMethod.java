@@ -2,29 +2,29 @@ package com.routingengine.methods;
 
 import static com.routingengine.json.JsonUtils.getAsBooleanMap;
 import static com.routingengine.json.JsonUtils.getAsString;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.routingengine.Agent;
+import com.routingengine.json.JsonRequest;
+import com.routingengine.json.JsonResponse;
 
 
 public class NewAgentMethod extends AbstractAgentAdminMethod
 {
     @Override
-    public JsonElement handle(JsonObject arguments)
+    public JsonResponse handle(JsonRequest request)
     {
-        Agent agent = newAgent(arguments);
+        Agent agent = newAgent(request);
         
         routingEngine.addAgent(agent);
         
-        return agent.toJson();
+        return JsonResponse.success(request, agent.toJson());
     }
     
-    public Agent newAgent(JsonObject arguments)
+    public Agent newAgent(JsonRequest request)
     {
         return Agent.builder()
-            .setRainbowId(getAsString(arguments, "rainbow_id"))
-            .setAddress(getAsString(arguments, "address"))
-            .setSkills(getAsBooleanMap(arguments, "skills"))
+            .setRainbowId(getAsString(request, "rainbow_id"))
+            .setAddress(getAsString(request, "address"))
+            .setSkills(getAsBooleanMap(request, "skills"))
             .build();
     }
 }

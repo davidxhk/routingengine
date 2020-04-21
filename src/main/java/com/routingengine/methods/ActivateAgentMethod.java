@@ -1,19 +1,19 @@
 package com.routingengine.methods;
 
 import static com.routingengine.json.JsonUtils.getAsBoolean;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.routingengine.Agent;
+import com.routingengine.json.JsonRequest;
+import com.routingengine.json.JsonResponse;
 
 
 public class ActivateAgentMethod extends AbstractAgentAdminMethod
 {
     @Override
-    public JsonElement handle(JsonObject arguments)
+    public JsonResponse handle(JsonRequest request)
     {
-        Agent agent = getAgent(arguments);
+        Agent agent = getAgent(request);
         
-        Boolean doActivate = getAsBoolean(arguments, "activate");
+        Boolean doActivate = getAsBoolean(request, "activate");
         
         if (doActivate == null)
             throw new IllegalArgumentException("activate missing");
@@ -24,6 +24,6 @@ public class ActivateAgentMethod extends AbstractAgentAdminMethod
         else
             agent.deactivate();
         
-        return agent.toJson();
+        return JsonResponse.success(request, agent.toJson());
     }
 }

@@ -2,22 +2,22 @@ package com.routingengine.methods;
 
 import static com.routingengine.json.JsonUtils.getAsBooleanMap;
 import java.util.Map;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.routingengine.Agent;
+import com.routingengine.json.JsonRequest;
+import com.routingengine.json.JsonResponse;
 
 
 public class UpdateAgentSkillsMethod extends AbstractAgentAdminMethod
 {
     @Override
-    public JsonElement handle(JsonObject arguments)
+    public JsonResponse handle(JsonRequest request)
     {
-        Agent agent = getAgent(arguments);
+        Agent agent = getAgent(request);
         
-        Map<String, Boolean> skills = getAsBooleanMap(arguments, "skills");
+        Map<String, Boolean> skills = getAsBooleanMap(request, "skills");
         
         agent.setSkills(skills);
         
-        return agent.toJson();
+        return JsonResponse.success(request, agent.toJson());
     }
 }

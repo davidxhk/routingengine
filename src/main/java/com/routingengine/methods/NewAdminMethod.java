@@ -2,26 +2,22 @@ package com.routingengine.methods;
 
 import static com.routingengine.json.JsonUtils.getAsString;
 import static com.routingengine.RoutingEngine.newUUID;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.routingengine.json.JsonRequest;
+import com.routingengine.json.JsonResponse;
 
 
 public class NewAdminMethod extends AbstractAdminMethod
 {
     @Override
-    protected JsonElement handle(JsonObject arguments)
+    public JsonResponse handle(JsonRequest request)
     {
         String newAdminUUIDString;
         
-        try {
-            newAdminUUIDString = getAsString(arguments, "new_admin_uuid");
-        }
+        newAdminUUIDString = getAsString(request, "new_admin_uuid");
         
-        catch (IllegalArgumentException exception) {
-            ensureMissingException(exception);
-            
+        if (newAdminUUIDString == null)
             newAdminUUIDString = newUUID();
-        }
         
         routingEngine.addAdmin(newAdminUUIDString);
         
@@ -29,7 +25,7 @@ public class NewAdminMethod extends AbstractAdminMethod
         
         payload.addProperty("new_admin_uuid", newAdminUUIDString);
         
-        return payload;
+        return JsonResponse.success(request, payload);
     }
     
     @Override

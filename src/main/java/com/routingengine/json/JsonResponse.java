@@ -301,31 +301,31 @@ public class JsonResponse
         }
     }
     
-    public static JsonResponse success(JsonRequest jsonRequest, JsonElement payload)
+    public static JsonResponse success(JsonRequest request, JsonElement payload)
     {
         return new JsonResponse()
-            .setMethod(jsonRequest.getMethod())
+            .setMethod(request.getMethod())
             .setSucceed()
             .setPayload(payload);
     }
     
-    public static JsonResponse pending(JsonRequest jsonRequest)
+    public static JsonResponse pending(JsonRequest request)
     {
         return new JsonResponse()
-            .setMethod(jsonRequest.getMethod())
+            .setMethod(request.getMethod())
             .setPending()
             .setNullPayload();
     }
     
-    public static JsonResponse failure(JsonRequest jsonRequest, Exception exception)
+    public static JsonResponse failure(JsonRequest request, Exception exception)
     {
-        return failure(jsonRequest, exception.getMessage());
+        return failure(request, exception.getMessage());
     }
     
-    public static JsonResponse failure(JsonRequest jsonRequest, String errorMessage)
+    public static JsonResponse failure(JsonRequest request, String errorMessage)
     {
         return new JsonResponse()
-            .setMethod(jsonRequest.getMethod())
+            .setMethod(request.getMethod())
             .setFail()
             .setPayload(errorMessage);
     }

@@ -1,25 +1,25 @@
 package com.routingengine.methods;
 
 import static com.routingengine.json.JsonUtils.getAsString;
-import com.google.gson.JsonObject;
 import com.routingengine.Agent;
+import com.routingengine.json.JsonRequest;
 
 
 public abstract class AbstractAgentMethod extends AbstractAdminMethod
 {
-    protected final Agent getAgent(JsonObject arguments)
+    protected final Agent getAgent(JsonRequest request)
     {
         Agent agent;
         
         try {
-            agent = getAgentWithUUID(arguments);
+            agent = getAgentWithUUID(request);
         }
         
         catch (IllegalArgumentException exception) {
             ensureMissingException(exception);
             
             try {
-                agent = getAgentWithRainbowId(arguments);
+                agent = getAgentWithRainbowId(request);
             }
             
             catch (IllegalArgumentException exception2) {
@@ -29,21 +29,21 @@ public abstract class AbstractAgentMethod extends AbstractAdminMethod
             }
         }
         
-        updateAddress(agent, arguments);
+        updateAddress(agent, request);
         
         return agent;
     }
     
-    private final Agent getAgentWithUUID(JsonObject arguments)
+    private final Agent getAgentWithUUID(JsonRequest request)
     {
-        String agentUUIDString = getAsString(arguments, "uuid");
+        String agentUUIDString = getAsString(request, "uuid");
         
         return routingEngine.getAgent(agentUUIDString);
     }
     
-    private final Agent getAgentWithRainbowId(JsonObject arguments)
+    private final Agent getAgentWithRainbowId(JsonRequest request)
     {
-        String rainbowIdString = getAsString(arguments, "rainbow_id");
+        String rainbowIdString = getAsString(request, "rainbow_id");
         
         return routingEngine.getAgentFromRainbowId(rainbowIdString);
     }

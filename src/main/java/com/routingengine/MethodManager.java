@@ -2,8 +2,8 @@ package com.routingengine;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.routingengine.json.JsonRequest;
+import com.routingengine.json.JsonResponse;
 import com.routingengine.methods.Method;
 
 
@@ -86,12 +86,12 @@ public final class MethodManager
         return methodInstance;
     }
     
-    public final JsonElement handle(String method, JsonObject arguments)
+    public final JsonResponse handle(JsonRequest request)
     {
-        Method methodInstance = getMethod(method);
+        Method methodInstance = getMethod(request.getMethod());
         
-        JsonElement payload = methodInstance.handleArguments(arguments);
+        JsonResponse response = methodInstance.handleRequest(request);
         
-        return payload;
+        return response;
     }
 }

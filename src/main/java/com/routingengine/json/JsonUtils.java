@@ -255,14 +255,30 @@ public class JsonUtils
         return mapFromJson;
     }
     
+    public static JsonPrimitive getAsJsonPrimitive(JsonRequest request, String property)
+    {
+        if (request == null || property == null || !request.hasArgument(property))
+            return null;
+        
+        JsonElement jsonElement = request.getArgument(property);
+        
+        try {
+            return castToJsonPrimitive(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static JsonPrimitive getAsJsonPrimitive(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
             return null;
         
+        JsonElement jsonElement = jsonObject.get(property);
+        
         try {
-            JsonElement jsonElement = jsonObject.get(property);
-            
             return castToJsonPrimitive(jsonElement);
         }
         
@@ -279,14 +295,30 @@ public class JsonUtils
         return getAsJsonPrimitive(castToJsonObject(jsonElement), property);
     }
     
+    public static JsonObject getAsJsonObject(JsonRequest request, String property)
+    {
+        if (request == null || property == null || !request.hasArgument(property))
+            return null;
+        
+        JsonElement jsonElement = request.getArgument(property);
+        
+        try {
+            return castToJsonObject(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static JsonObject getAsJsonObject(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
             return null;
         
+        JsonElement jsonElement = jsonObject.get(property);
+        
         try {
-            JsonElement jsonElement = jsonObject.get(property);
-            
             return castToJsonObject(jsonElement);
         }
         
@@ -303,14 +335,30 @@ public class JsonUtils
         return getAsJsonObject(castToJsonObject(jsonElement), property);
     }
     
+    public static JsonArray getAsJsonArray(JsonRequest request, String property)
+    {
+        if (request == null || property == null || !request.hasArgument(property))
+            return null;
+        
+        JsonElement jsonElement = request.getArgument(property);
+        
+        try {
+            return castToJsonArray(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static JsonArray getAsJsonArray(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
             return null;
         
+        JsonElement jsonElement = jsonObject.get(property);
+        
         try {
-            JsonElement jsonElement = jsonObject.get(property);
-            
             return castToJsonArray(jsonElement);
         }
         
@@ -327,15 +375,31 @@ public class JsonUtils
         return getAsJsonArray(castToJsonObject(jsonElement), property);
     }
     
+    public static String getAsString(JsonRequest request, String property)
+    {
+        if (request == null || property == null || !request.hasArgument(property))
+            return null;
+        
+        JsonElement jsonElement = request.getArgument(property);
+        
+        try {
+            return castToString(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static String getAsString(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
             return null;
         
-        JsonPrimitive jsonPrimitive = getAsJsonPrimitive(jsonObject, property);
+        JsonElement jsonElement = jsonObject.get(property);
         
         try {
-            return castToString(jsonPrimitive);
+            return castToString(jsonElement);
         }
         
         catch (IllegalArgumentException exception) {
@@ -351,15 +415,31 @@ public class JsonUtils
         return getAsString(castToJsonObject(jsonElement), property);
     }
     
+    public static Integer getAsInt(JsonRequest request, String property)
+    {
+        if (request == null || property == null || !request.hasArgument(property))
+            return null;
+        
+        JsonElement jsonElement = request.getArgument(property);
+        
+        try {
+            return castToInt(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static Integer getAsInt(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
             return null;
         
-        JsonPrimitive jsonPrimitive = getAsJsonPrimitive(jsonObject, property);
+        JsonElement jsonElement = jsonObject.get(property);
         
         try {
-            return castToInt(jsonPrimitive);
+            return castToInt(jsonElement);
         }
         
         catch (IllegalArgumentException exception) {
@@ -375,15 +455,31 @@ public class JsonUtils
         return getAsInt(castToJsonObject(jsonElement), property);
     }
     
+    public static Boolean getAsBoolean(JsonRequest request, String property)
+    {
+        if (request == null || property == null || !request.hasArgument(property))
+            return null;
+        
+        JsonElement jsonElement = request.getArgument(property);
+        
+        try {
+            return castToBoolean(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static Boolean getAsBoolean(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
             return null;
         
-        JsonPrimitive jsonPrimitive = getAsJsonPrimitive(jsonObject, property);
+        JsonElement jsonElement = jsonObject.get(property);
         
         try {
-            return castToBoolean(jsonPrimitive);
+            return castToBoolean(jsonElement);
         }
         
         catch (IllegalArgumentException exception) {
@@ -399,15 +495,31 @@ public class JsonUtils
         return getAsBoolean(castToJsonObject(jsonElement), property);
     }
     
+    public static List<String> getAsStringList(JsonRequest request, String property)
+    {
+        if (request == null || property == null || !request.hasArgument(property))
+            return null;
+        
+        JsonElement jsonElement = request.getArgument(property);
+        
+        try {
+            return castToStringList(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static List<String> getAsStringList(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
             return null;
         
-        JsonArray jsonArray = getAsJsonArray(jsonObject, property);
+        JsonElement jsonElement = jsonObject.get(property);
         
         try {
-            return castToStringList(jsonArray);
+            return castToStringList(jsonElement);
         }
         
         catch (IllegalArgumentException exception) {
@@ -423,15 +535,31 @@ public class JsonUtils
         return getAsStringList(castToJsonObject(jsonElement), property);
     }
     
+    public static List<Integer> getAsIntList(JsonRequest request, String property)
+    {
+        if (request == null || property == null || !request.hasArgument(property))
+            return null;
+        
+        JsonElement jsonElement = request.getArgument(property);
+        
+        try {
+            return castToIntList(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static List<Integer> getAsIntList(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
             return null;
         
-        JsonArray jsonArray = getAsJsonArray(jsonObject, property);
+        JsonElement jsonElement = jsonObject.get(property);
         
         try {
-            return castToIntList(jsonArray);
+            return castToIntList(jsonElement);
         }
         
         catch (IllegalArgumentException exception) {
@@ -447,15 +575,31 @@ public class JsonUtils
         return getAsIntList(castToJsonObject(jsonElement), property);
     }
     
+    public static List<Boolean> getAsBooleanList(JsonRequest request, String property)
+    {
+        if (request == null || property == null || !request.hasArgument(property))
+            return null;
+        
+        JsonElement jsonElement = request.getArgument(property);
+        
+        try {
+            return castToBooleanList(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static List<Boolean> getAsBooleanList(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
             return null;
         
-        JsonArray jsonArray = getAsJsonArray(jsonObject, property);
+        JsonElement jsonElement = jsonObject.get(property);
         
         try {
-            return castToBooleanList(jsonArray);
+            return castToBooleanList(jsonElement);
         }
         
         catch (IllegalArgumentException exception) {
@@ -471,15 +615,31 @@ public class JsonUtils
         return getAsBooleanList(castToJsonObject(jsonElement), property);
     }
     
+    public static Map<String, String> getAsStringMap(JsonRequest request, String property)
+    {
+        if (request == null || property == null || !request.hasArgument(property))
+            return null;
+        
+        JsonElement jsonElement = request.getArgument(property);
+        
+        try {
+            return castToStringMap(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static Map<String, String> getAsStringMap(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
             return null;
         
-        JsonObject jsonObject2 = getAsJsonObject(jsonObject, property);
+        JsonElement jsonElement = jsonObject.get(property);
         
         try {
-            return castToStringMap(jsonObject2);
+            return castToStringMap(jsonElement);
         }
         
         catch (IllegalArgumentException exception) {
@@ -495,15 +655,31 @@ public class JsonUtils
         return getAsStringMap(castToJsonObject(jsonElement), property);
     }
     
+    public static Map<String, Integer> getAsIntMap(JsonRequest request, String property)
+    {
+        if (request == null || property == null || !request.hasArgument(property))
+            return null;
+        
+        JsonElement jsonElement = request.getArgument(property);
+        
+        try {
+            return castToIntMap(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static Map<String, Integer> getAsIntMap(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
             return null;
         
-        JsonObject jsonObject2 = getAsJsonObject(jsonObject, property);
+        JsonElement jsonElement = jsonObject.get(property);
         
         try {
-            return castToIntMap(jsonObject2);
+            return castToIntMap(jsonElement);
         }
         
         catch (IllegalArgumentException exception) {
@@ -519,15 +695,31 @@ public class JsonUtils
         return getAsIntMap(castToJsonObject(jsonElement), property);
     }
     
+    public static Map<String, Boolean> getAsBooleanMap(JsonRequest request, String property)
+    {
+        if (request == null || property == null || !request.hasArgument(property))
+            return null;
+        
+        JsonElement jsonElement = request.getArgument(property);
+        
+        try {
+            return castToBooleanMap(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static Map<String, Boolean> getAsBooleanMap(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
             return null;
         
-        JsonObject jsonObject2 = getAsJsonObject(jsonObject, property);
+        JsonElement jsonElement = jsonObject.get(property);
         
         try {
-            return castToBooleanMap(jsonObject2);
+            return castToBooleanMap(jsonElement);
         }
         
         catch (IllegalArgumentException exception) {
@@ -541,6 +733,16 @@ public class JsonUtils
             return null;
         
         return getAsBooleanMap(castToJsonObject(jsonElement), property);
+    }
+    
+    public static String getToString(JsonRequest request, String property)
+    {
+        if (request == null || property == null || !request.hasArgument(property))
+            return null;
+        
+        JsonElement jsonElement = request.getArgument(property);
+        
+        return toString(jsonElement);
     }
     
     public static String getToString(JsonObject jsonObject, String property)
