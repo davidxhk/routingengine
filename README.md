@@ -1,23 +1,57 @@
-# Demonstration
+# Setup
 
-To see a demonstration of the routing engine, run the following commands on your Unix machine (e.g. MacOS)
+To install RoutingEngine, run the following commands:
 
     git clone https://github.com/han-keong/routingengine
     
     cd routingengine
     
     javac -cp "lib/*" -d bin src/main/java/com/routingengine/*.java src/main/java/com/routingengine/*/*.java
-    
-    java -cp "bin:lib/*" com.routingengine.RoutingEngine 50000
 
-If you have a Windows machine and use [Git Bash][git_bash] (with Unix commands), you might need to [replace the last line with the following][forum_thread]
+# Demonstration
 
-    java -cp "bin\;lib/*" com.routingengine.RoutingEngine 50000
+* To see a demonstration of the routing engine, run the following command:
 
-After the program terminates, you can examine the output again by opening `logfile.txt` in the project root folder.
+  - On your Unix machine (e.g. MacOS)
+  ```
+  java -cp "bin:lib/*" com.routingengine.examples.RoutingEngineExample 50000
+  ```
+
+  - On Windows with [Git Bash][git_bash]
+  ```
+  java -cp "bin\;lib/*" com.routingengine.examples.RoutingEngineExample 50000
+  ```
+
+
+* To run the server, run the following command:
+
+  - On your Unix machine (e.g. MacOS)
+  ```
+  java -cp "bin:lib/*" com.routingengine.server.Server 50000
+  ```
+
+  - On Windows with [Git Bash][git_bash]
+  ```
+  java -cp "bin\;lib/*" com.routingengine.server.Server 50000
+  ```
+
+
+* To see a demonstration of the client, start the server (see above) and run the following command:
+
+  - On your Unix machine (e.g. MacOS)
+  ```
+  java -cp "bin:lib/*" com.routingengine.examples.ClientExample 50000
+  ```
+
+  - On Windows with [Git Bash][git_bash]
+  ```
+  java -cp "bin\;lib/*" com.routingengine.examples.ClientExample 50000
+  ```
+
+* After running each of the above commands, you can examine the output again by opening `logfile.txt` in the project root folder.
 
 [git_bash]: https://www.atlassian.com/git/tutorials/install-git#windows
-[forum_thread]: https://groups.google.com/forum/#!topic/msysgit/E16M9hCW2_4
+
 
 # Routing Engine
 
@@ -201,6 +235,17 @@ Lastly, if the administrator would just like to have a summary of all the number
 [get_agent_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_agent_status_tests.md
 [get_queue_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_queue_status_tests.md
 [get_status_overview]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_status_overview_tests.md
+
+
+
+
+
+
+
+
+
+
+
 
 
 
