@@ -65,9 +65,9 @@ To install `RoutingEngine`, do the following:
 
 # Routing Engine
 
-This routing engine solution is a server application which is based on [WebSockets][websockets] and adopts a custom-made JSON request-response protocol.
+This routing engine solution is a server application which is based on [WebSockets][websockets].
 
-The JSON protocol has been designed for three kinds of users:
+It adopts a custom-made JSON request-response protocol, which has been designed for three kinds of users:
 
   1. [*Support Requests*](#support-request-methods) (submitted by customers)
   2. [*Agents*](#agent-methods)
@@ -247,6 +247,7 @@ Lastly, if the administrator would just like to have a summary of all the number
 [get_agent_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_agent_status_tests.md
 [get_queue_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_queue_status_tests.md
 [get_status_overview]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_status_overview_tests.md
+
 
 
 
