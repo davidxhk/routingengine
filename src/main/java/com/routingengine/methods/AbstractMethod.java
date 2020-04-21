@@ -1,5 +1,6 @@
 package com.routingengine.methods;
 
+import static com.routingengine.Logger.log;
 import static com.routingengine.json.JsonUtils.getAsString;
 import com.routingengine.InetEntity;
 import com.routingengine.RoutingEngine;
@@ -21,20 +22,34 @@ public abstract class AbstractMethod
     @Override
     public final JsonResponse handleRequest(JsonRequest request)
     {
-        beforeHandle(request);
+        JsonResponse response;
         
-        JsonResponse response = handle(request);
+        try {
+            beforeHandle(request);
+            
+            response = handle(request);
+        }
+        
+        catch (IllegalArgumentException | IllegalStateException exception) {
+            response = JsonResponse.failure(request, exception);
+        }
         
         afterHandle(request, response);
         
         return response;
     }
     
-    protected void beforeHandle(JsonRequest request) { }
+    protected void beforeHandle(JsonRequest request)
+    {
+        log("[request] " + request.toString());
+    }
     
     protected abstract JsonResponse handle(JsonRequest request);
     
-    protected void afterHandle(JsonRequest request, JsonResponse response) { }
+    protected void afterHandle(JsonRequest request, JsonResponse response)
+    {
+        log("[response] " + response.toString());
+    }
     
     protected static final void ensureMissingException(IllegalArgumentException exception)
     {

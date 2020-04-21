@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import com.routingengine.client.Client;
-import com.routingengine.client.ClientConnectionHandler;
-import com.routingengine.json.JsonResponse;
+import com.routingengine.client.LogClientConnectionHandler;
 
 
 public class ClientExample
@@ -36,7 +35,7 @@ public class ClientExample
             
             Client client = new Client(hostname, port);
             
-            client.setConnectionHandler(new ClientConnectionHandler()
+            client.setConnectionHandler(new LogClientConnectionHandler()
             {
                 @Override
                 public final void runMainLoop()
@@ -49,16 +48,16 @@ public class ClientExample
                     awaitResponse();
                     
                     newSupportRequest("bob", "bob@gmail.com", 1);
-                    supportRequestUUIDs.add(getUUIDFromResponse(awaitResponse()));
+                    supportRequestUUIDs.add(getSupportRequest(awaitResponse()).getUUID().toString());
                     
                     newSupportRequest("amy", "amy@gmail.com", "GENERAL_ENQUIRY");
-                    supportRequestUUIDs.add(getUUIDFromResponse(awaitResponse()));
+                    supportRequestUUIDs.add(getSupportRequest(awaitResponse()).getUUID().toString());
                     
                     newSupportRequest("tom", "tom@gmail.com", 0);
-                    supportRequestUUIDs.add(getUUIDFromResponse(awaitResponse()));
+                    supportRequestUUIDs.add(getSupportRequest(awaitResponse()).getUUID().toString());
                     
                     newSupportRequest("kat", "kat@gmail.com", "CHECK_SUBSCRIPTION");
-                    supportRequestUUIDs.add(getUUIDFromResponse(awaitResponse()));
+                    supportRequestUUIDs.add(getSupportRequest(awaitResponse()).getUUID().toString());
                     
                     checkSupportRequest(supportRequestUUIDs.get(0));
                     awaitResponse();
@@ -76,10 +75,10 @@ public class ClientExample
                     awaitResponse();
                     
                     newAgent("rainbow_agent_1", Map.of(2, true));
-                    agentUUIDs.add(getUUIDFromResponse(awaitResponse()));
+                    agentUUIDs.add(getAgent(awaitResponse()).getUUID().toString());
                     
                     newAgent("rainbow_agent_2", Map.of("CHECK_SUBSCRIPTION", true));
-                    agentUUIDs.add(getUUIDFromResponse(awaitResponse()));
+                    agentUUIDs.add(getAgent(awaitResponse()).getUUID().toString());
                     
                     checkAgentWithUUID(agentUUIDs.get(0));
                     awaitResponse();
@@ -142,33 +141,6 @@ public class ClientExample
                     awaitResponse();
                     
                     exit();
-                }
-                
-                @Override
-                protected JsonResponse awaitResponse()
-                    throws IOException, InterruptedException
-                {
-                    JsonResponse response = super.awaitResponse();
-                    
-                    log(response.toString());
-                    
-                    return response;
-                }
-                
-                @Override
-                protected JsonResponse nextJsonResponse()
-                    throws IOException, InterruptedException
-                {
-                    JsonResponse response = super.nextJsonResponse();
-                    
-                    log(response.toString());
-                    
-                    return response;
-                }
-                
-                private final String getUUIDFromResponse(JsonResponse response)
-                {
-                    return response.getPayload().getAsJsonObject().get("uuid").getAsString();
                 }
             });
             

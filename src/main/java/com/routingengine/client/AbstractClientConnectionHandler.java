@@ -1,5 +1,7 @@
 package com.routingengine.client;
 
+import static com.routingengine.json.JsonProtocol.EXIT_COMMAND;
+import static com.routingengine.json.JsonUtils.castToJsonObject;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,11 +14,15 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import com.routingengine.Agent;
 import com.routingengine.Logger;
+import com.routingengine.SupportRequest;
 import com.routingengine.json.JsonConnectionHandler;
 import com.routingengine.json.JsonReader;
 import com.routingengine.json.JsonResponse;
+import com.routingengine.json.JsonUtils;
 import com.routingengine.json.JsonWriter;
+import com.routingengine.json.JsonProtocol.ExitConnectionException;
 import com.routingengine.json.JsonProtocol.JsonProtocolException;
 import com.routingengine.websocket.WebSocketJsonReader;
 import com.routingengine.websocket.WebSocketJsonWriter;
@@ -56,7 +62,19 @@ public abstract class AbstractClientConnectionHandler extends JsonConnectionHand
     
     protected void log(String message)
     {
-        Logger.log(message);
+        Logger.log("Client " + message);
+    }
+    
+    protected void exit()
+        throws IOException, ExitConnectionException
+    {
+        jsonWriter.writeString(EXIT_COMMAND);
+        
+        jsonWriter.flush();
+        
+        close();
+        
+        throw new ExitConnectionException();
     }
     
     public final void close()
@@ -67,25 +85,52 @@ public abstract class AbstractClientConnectionHandler extends JsonConnectionHand
         executorService.shutdownNow();
     }
     
+    protected final Agent getAgent(JsonResponse response)
+    {
+        return Agent.fromJson(castToJsonObject(response.getPayload()));
+    }
+    
+    protected final SupportRequest getAssignedSupportRequest(JsonResponse response)
+    {
+        return getAgent(response).getAssignedSupportRequest();
+    }
+    
+    protected final SupportRequest getSupportRequest(JsonResponse response)
+    {
+        return SupportRequest.fromJson(castToJsonObject(response.getPayload()));
+    }
+    
+    protected final Agent getAssignedAgent(JsonResponse response)
+    {
+        return getSupportRequest(response).getAssignedAgent();
+    }
+    
+    protected final void ensureFailedResponseHasErrorPayload(JsonResponse response, String error)
+        throws IOException
+    {
+        String payload = JsonUtils.toString(response.getPayload());
+        
+        if (!error.matches(payload)) {
+            log("got unexpected error: "+ payload);
+            
+            exit();
+        }
+    }
+    
     protected JsonResponse awaitResponse()
         throws IOException, InterruptedException
     {
         JsonResponse response = nextJsonResponse();
         
         if (response.isPending()) {
-            log("got pending response: " + response);
-            
             PendingResponse pendingResponse = getPendingResponse(response.getTicketNumber());
             
             while (true) {
                 try {
                     response = pendingResponse.getFutureJsonResponse(PENDING_TIMEOUT);
                     
-                    if (response.isPending()) {
+                    if (response.isPending())
                         pendingResponse.reset();
-                        
-                        log("got pending response: " + response);
-                    }
                     
                     else {
                         pendingResponse.remove();

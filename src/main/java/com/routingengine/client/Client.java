@@ -60,7 +60,7 @@ public final class Client
         }
         
         catch (ExitConnectionException exception) {
-            log("Client signalled to close");
+            log("Client exiting");
             
             close();
         }

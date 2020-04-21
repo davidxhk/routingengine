@@ -1,10 +1,7 @@
 package com.routingengine.examples;
 
-import static com.routingengine.json.JsonUtils.castToString;
-import static com.routingengine.json.JsonUtils.getAsJsonObject;
 import java.io.IOException;
 import java.util.Map;
-import com.google.gson.JsonObject;
 import com.routingengine.Logger;
 import com.routingengine.json.JsonResponse;
 
@@ -21,50 +18,42 @@ public class AgentClientConnectionHandler extends CustomerClientConnectionHandle
         
         randomSleep();
         
-        log("creating new agent");
         newAgent("agent_" + id, Map.of(type, true));
+        
         JsonResponse response = awaitResponse();
         
-        String agentUUIDString = getUUID(response);
+        String agentUUIDString = getAgent(response).getUUID().toString();
+        
         log("uuid -> " + agentUUIDString);
         
         randomSleep();
         
-        log("updating availability");
         updateAgentAvailabilityWithUUID(agentUUIDString, true);
+        
         awaitResponse();
         
         randomSleep();
         
         for (int i = 0; i < numberOfSupportRequestsToService; i++) {
-            log("taking support request");
             takeSupportRequestWithUUID(agentUUIDString);
+            
             response = awaitResponse();
             
             if (!response.didSucceed()) {
-                String error = castToString(response.getPayload());
+                ensureFailedResponseHasErrorPayload(response, "take support request timeout");
                 
-                if ("take support request timeout".matches(error))
-                    continue;
-                
-                else {
-                    log("got unexpected error -> "+ error);
-                    
-                    log("exiting");
-                    exit();
-                }
+                continue;
             }
             
-            String supportRequestUUIDString = getUUID(getAssignedSupportRequest(response));
+            String supportRequestUUIDString = getAssignedSupportRequest(response).getUUID().toString();
             
             randomSleep();
             
-            log("closing support request");
             closeSupportRequest(supportRequestUUIDString);
+            
             awaitResponse();
         }
         
-        log("exiting");
         exit();
     }
     
@@ -72,10 +61,5 @@ public class AgentClientConnectionHandler extends CustomerClientConnectionHandle
     protected void log(String message)
     {
         Logger.log("Agent " + id + " " + message);
-    }
-    
-    private static final JsonObject getAssignedSupportRequest(JsonResponse response)
-    {
-        return getAsJsonObject(response.getPayload(), "assigned_support_request");
     }
 }

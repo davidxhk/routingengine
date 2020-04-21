@@ -271,6 +271,22 @@ public class JsonUtils
         }
     }
     
+    public static JsonPrimitive getAsJsonPrimitive(JsonResponse response, String property)
+    {
+        if (response == null || property == null)
+            return null;
+        
+        JsonElement payload = response.getPayload();
+        
+        try {
+            return getAsJsonPrimitive(payload, property);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static JsonPrimitive getAsJsonPrimitive(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
@@ -304,6 +320,22 @@ public class JsonUtils
         
         try {
             return castToJsonObject(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
+    public static JsonObject getAsJsonObject(JsonResponse response, String property)
+    {
+        if (response == null || property == null)
+            return null;
+        
+        JsonElement payload = response.getPayload();
+        
+        try {
+            return getAsJsonObject(payload, property);
         }
         
         catch (IllegalArgumentException exception) {
@@ -351,6 +383,22 @@ public class JsonUtils
         }
     }
     
+    public static JsonArray getAsJsonArray(JsonResponse response, String property)
+    {
+        if (response == null || property == null)
+            return null;
+        
+        JsonElement payload = response.getPayload();
+        
+        try {
+            return getAsJsonArray(payload, property);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static JsonArray getAsJsonArray(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
@@ -384,6 +432,22 @@ public class JsonUtils
         
         try {
             return castToString(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
+    public static String getAsString(JsonResponse response, String property)
+    {
+        if (response == null || property == null)
+            return null;
+        
+        JsonElement payload = response.getPayload();
+        
+        try {
+            return getAsString(payload, property);
         }
         
         catch (IllegalArgumentException exception) {
@@ -431,6 +495,22 @@ public class JsonUtils
         }
     }
     
+    public static Integer getAsInt(JsonResponse response, String property)
+    {
+        if (response == null || property == null)
+            return null;
+        
+        JsonElement payload = response.getPayload();
+        
+        try {
+            return getAsInt(payload, property);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static Integer getAsInt(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
@@ -464,6 +544,22 @@ public class JsonUtils
         
         try {
             return castToBoolean(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
+    public static Boolean getAsBoolean(JsonResponse response, String property)
+    {
+        if (response == null || property == null)
+            return null;
+        
+        JsonElement payload = response.getPayload();
+        
+        try {
+            return getAsBoolean(payload, property);
         }
         
         catch (IllegalArgumentException exception) {
@@ -511,6 +607,22 @@ public class JsonUtils
         }
     }
     
+    public static List<String> getAsStringList(JsonResponse response, String property)
+    {
+        if (response == null || property == null)
+            return null;
+        
+        JsonElement payload = response.getPayload();
+        
+        try {
+            return getAsStringList(payload, property);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static List<String> getAsStringList(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
@@ -544,6 +656,22 @@ public class JsonUtils
         
         try {
             return castToIntList(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
+    public static List<Integer> getAsIntList(JsonResponse response, String property)
+    {
+        if (response == null || property == null)
+            return null;
+        
+        JsonElement payload = response.getPayload();
+        
+        try {
+            return getAsIntList(payload, property);
         }
         
         catch (IllegalArgumentException exception) {
@@ -591,6 +719,22 @@ public class JsonUtils
         }
     }
     
+    public static List<Boolean> getAsBooleanList(JsonResponse response, String property)
+    {
+        if (response == null || property == null)
+            return null;
+        
+        JsonElement payload = response.getPayload();
+        
+        try {
+            return getAsBooleanList(payload, property);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static List<Boolean> getAsBooleanList(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
@@ -624,6 +768,22 @@ public class JsonUtils
         
         try {
             return castToStringMap(jsonElement);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
+    public static Map<String, String> getAsStringMap(JsonResponse response, String property)
+    {
+        if (response == null || property == null)
+            return null;
+        
+        JsonElement payload = response.getPayload();
+        
+        try {
+            return getAsStringMap(payload, property);
         }
         
         catch (IllegalArgumentException exception) {
@@ -671,6 +831,22 @@ public class JsonUtils
         }
     }
     
+    public static Map<String, Integer> getAsIntMap(JsonResponse response, String property)
+    {
+        if (response == null || property == null)
+            return null;
+        
+        JsonElement payload = response.getPayload();
+        
+        try {
+            return getAsIntMap(payload, property);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static Map<String, Integer> getAsIntMap(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
@@ -711,6 +887,22 @@ public class JsonUtils
         }
     }
     
+    public static Map<String, Boolean> getAsBooleanMap(JsonResponse response, String property)
+    {
+        if (response == null || property == null)
+            return null;
+        
+        JsonElement payload = response.getPayload();
+        
+        try {
+            return getAsBooleanMap(payload, property);
+        }
+        
+        catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(sanitize(property) + " " + exception.getMessage());
+        }
+    }
+    
     public static Map<String, Boolean> getAsBooleanMap(JsonObject jsonObject, String property)
     {
         if (jsonObject == null || property == null || !jsonObject.has(property))
@@ -743,6 +935,16 @@ public class JsonUtils
         JsonElement jsonElement = request.getArgument(property);
         
         return toString(jsonElement);
+    }
+    
+    public static String getToString(JsonResponse response, String property)
+    {
+        if (response == null || property == null)
+            return null;
+        
+        JsonElement payload = response.getPayload();
+        
+        return getToString(payload, property);
     }
     
     public static String getToString(JsonObject jsonObject, String property)

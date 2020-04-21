@@ -120,8 +120,6 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
                 continue;
             }
             
-            log("Server got request –> " + jsonRequest.toString());
-            
             jsonRequest.setArgument("address", getAddress());
             
             int ticketNumber = TICKET_COUNTER.getAndIncrement();
@@ -244,19 +242,9 @@ public final class ServerConnectionHandler extends JsonConnectionHandler
             this.jsonRequest = request;
             
             futureResponse = executorService.submit(() -> {
-                JsonResponse response;
-                
-                try {
-                    response = methodManager.handle(request);
-                }
-                
-                catch (IllegalArgumentException | IllegalStateException exception) {
-                    response = JsonResponse.failure(request, exception);
-                }
-                
-                response.setTicketNumber(ticketNumber);
-                
-                return response;
+                return methodManager
+                    .handle(request)
+                    .setTicketNumber(ticketNumber);
             });
             
             pendingResponse = JsonResponse
