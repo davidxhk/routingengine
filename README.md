@@ -1,12 +1,21 @@
 # Setup
 
-To install `RoutingEngine`, run the following commands on your Unix machine (e.g. MacOS) or on Windows with [Git Bash][git_bash]:
+To install `RoutingEngine`, do the following:
 
+  - Ensure that you have installed [Java SDK 11][java_sdk_11] at minimum.
+  
+  - Run the following commands on your Unix machine (e.g. MacOS) or on Windows with [Git Bash][git_bash]:
+    ```
     git clone https://github.com/han-keong/routingengine
     
     cd routingengine
     
     javac -cp "lib/*" -d bin src/main/java/com/routingengine/*.java src/main/java/com/routingengine/*/*.java
+    ```
+
+[java_sdk_11]: https://www.oracle.com/java/technologies/javase-jdk11-downloads.html
+[git_bash]: https://www.atlassian.com/git/tutorials/install-git#windows
+
 
 # Demonstration
 
@@ -52,8 +61,6 @@ To install `RoutingEngine`, run the following commands on your Unix machine (e.g
       ```
 
 * After running each of the above commands, you can examine the output again by opening `logfile.txt` in the project root folder.
-
-[git_bash]: https://www.atlassian.com/git/tutorials/install-git#windows
 
 
 # Routing Engine
@@ -238,6 +245,12 @@ Lastly, if the administrator would just like to have a summary of all the number
 [get_agent_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_agent_status_tests.md
 [get_queue_status]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_queue_status_tests.md
 [get_status_overview]: https://github.com/han-keong/routingengine/blob/master/src/test/docs/get_status_overview_tests.md
+
+
+
+
+
+
 
 
 
